@@ -144,12 +144,15 @@ app.use('/api/telegram', miniappRoutes);
 const aiRoutes = require('./routes/ai');
 app.use('/api/ai', aiRoutes);
 
-// Telegram Bot (only start if token is provided)
+// Advanced Telegram Bot (only start if token is provided)
 if (process.env.TELEGRAM_BOT_TOKEN) {
-  const telegramBot = require('./telegram-bot');
-  console.log('🤖 Telegram Bot integration enabled');
+  const advancedTelegramBot = require('./advanced-telegram-bot');
+  console.log('🤖 Advanced Maya Telegram Bot integration enabled');
+  console.log('🧠 AI Persona: Maya - Professional Travel Agent');
+  console.log('🛠️ MCP Tools: Weather, Flights, Hotels, Halal Restaurants, Prayer Times');
+  console.log('👤 User Profiling: Advanced personalization and data collection');
 } else {
-  console.log('⚠️ Telegram Bot token not provided - Bot integration disabled');
+  console.log('⚠️ Telegram Bot token not provided - Advanced Bot integration disabled');
 }
 
 // Error handling middleware

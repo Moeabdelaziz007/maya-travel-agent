@@ -41,6 +41,9 @@ const SignupForm: React.FC<SignupFormProps> = ({ onSuccess, onSwitchToLogin }) =
       if (error) {
         setError(error.message);
       } else {
+        // Show success message about email confirmation
+        setError('');
+        alert(`تم إنشاء الحساب بنجاح! يرجى التحقق من بريدك الإلكتروني (${email}) وتأكيد الحساب بالضغط على الرابط المرسل إليك.`);
         onSuccess();
       }
     } catch (err) {
