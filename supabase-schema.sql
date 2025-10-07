@@ -145,3 +145,105 @@ INSERT INTO public.destinations (name, country, image_url, rating, price_range, 
 ('New York', 'USA', 'https://images.unsplash.com/photo-1496442226666-8d4d0e62e6e9?w=400', 4.6, '$$$$', 'Apr-Jun, Sep-Nov', 'The city that never sleeps, offering endless entertainment and culture.'),
 ('Santorini', 'Greece', 'https://images.unsplash.com/photo-1570077188670-e3a8d69ac5ff?w=400', 4.9, '$$$', 'May-Oct', 'Breathtaking sunsets, white-washed buildings, and crystal-clear waters.'),
 ('Dubai', 'UAE', 'https://images.unsplash.com/photo-1512453979798-5ea266f8880c?w=400', 4.5, '$$$', 'Nov-Mar', 'Ultra-modern city with world-class shopping, dining, and entertainment.');
+
+-- ==========================================================
+-- Telegram Profiles + Messages + Payments + Storage Bucket
+-- ==========================================================
+
+-- Create profiles table for Telegram users
+CREATE TABLE IF NOT EXISTS public.profiles (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  telegram_id BIGINT UNIQUE NOT NULL,
+  username TEXT,
+  avatar_url TEXT,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+ALTER TABLE public.profiles ENABLE ROW LEVEL SECURITY;
+
+-- RLS: Allow users to manage only their own profile based on JWT sub (Telegram id)
+CREATE POLICY IF NOT EXISTS "Users manage own profile (telegram)" ON public.profiles
+  FOR ALL
+  USING (((current_setting('request.jwt.claims', true)::jsonb ->> 'sub')::bigint) = telegram_id)
+  WITH CHECK (((current_setting('request.jwt.claims', true)::jsonb ->> 'sub')::bigint) = telegram_id);
+
+-- Create messages table
+CREATE TABLE IF NOT EXISTS public.messages (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  user_id UUID REFERENCES public.users(id) ON DELETE CASCADE,
+  content TEXT NOT NULL,
+  role TEXT NOT NULL CHECK (role IN ('user','assistant','system')),
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+ALTER TABLE public.messages ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY IF NOT EXISTS "Users can view own messages" ON public.messages
+  FOR SELECT USING (auth.uid() = user_id);
+
+CREATE POLICY IF NOT EXISTS "Users can insert own messages" ON public.messages
+  FOR INSERT WITH CHECK (auth.uid() = user_id);
+
+CREATE POLICY IF NOT EXISTS "Users can delete own messages" ON public.messages
+  FOR DELETE USING (auth.uid() = user_id);
+
+-- Create payments table
+CREATE TABLE IF NOT EXISTS public.payments (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  user_id UUID REFERENCES public.users(id) ON DELETE SET NULL,
+  amount DECIMAL(10,2) NOT NULL,
+  currency TEXT NOT NULL DEFAULT 'usd',
+  status TEXT NOT NULL DEFAULT 'created' CHECK (status IN ('created','pending','completed','failed','refunded')),
+  stripe_session_id TEXT,
+  description TEXT,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+  updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+ALTER TABLE public.payments ENABLE ROW LEVEL SECURITY;
+
+CREATE INDEX IF NOT EXISTS idx_payments_user_id ON public.payments(user_id);
+CREATE INDEX IF NOT EXISTS idx_payments_status ON public.payments(status);
+CREATE INDEX IF NOT EXISTS idx_payments_stripe_session_id ON public.payments(stripe_session_id);
+
+CREATE POLICY IF NOT EXISTS "Users can view own payments" ON public.payments
+  FOR SELECT USING (auth.uid() = user_id);
+
+CREATE POLICY IF NOT EXISTS "Users can insert own payments" ON public.payments
+  FOR INSERT WITH CHECK (auth.uid() = user_id);
+
+CREATE POLICY IF NOT EXISTS "Users can update own payments" ON public.payments
+  FOR UPDATE USING (auth.uid() = user_id);
+
+-- Storage bucket for avatars
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1 FROM storage.buckets WHERE id = 'avatars'
+  ) THEN
+    INSERT INTO storage.buckets (id, name, public) VALUES ('avatars', 'avatars', false);
+  END IF;
+END $$;
+
+-- Allow users to manage their own objects in avatars bucket
+CREATE POLICY IF NOT EXISTS "Avatar objects read own" ON storage.objects
+  FOR SELECT USING (
+    bucket_id = 'avatars' AND owner = auth.uid()
+  );
+
+CREATE POLICY IF NOT EXISTS "Avatar objects insert own" ON storage.objects
+  FOR INSERT WITH CHECK (
+    bucket_id = 'avatars' AND owner = auth.uid()
+  );
+
+CREATE POLICY IF NOT EXISTS "Avatar objects update own" ON storage.objects
+  FOR UPDATE USING (
+    bucket_id = 'avatars' AND owner = auth.uid()
+  );
+
+CREATE POLICY IF NOT EXISTS "Avatar objects delete own" ON storage.objects
+  FOR DELETE USING (
+    bucket_id = 'avatars' AND owner = auth.uid()
+  );
+
+-- Note: Public read via signed URLs does not require a public read policy
