@@ -30,6 +30,16 @@ app.get('/', (req, res) => {
     });
 });
 
+// Health check endpoint
+app.get('/api/health', (req, res) => {
+    res.json({
+        status: 'healthy',
+        timestamp: new Date().toISOString(),
+        uptime: process.uptime(),
+        memory: process.memoryUsage()
+    });
+});
+
 // Trip routes
 app.get('/api/trips', (req, res) => {
     res.json({
