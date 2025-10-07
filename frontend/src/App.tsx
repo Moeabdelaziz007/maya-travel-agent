@@ -12,6 +12,9 @@ import {
   User,
   Search
 } from 'lucide-react';
+import { AuthProvider, useAuth } from './components/Auth/AuthProvider';
+import LoginForm from './components/Auth/LoginForm';
+import SignupForm from './components/Auth/SignupForm';
 import TripPlanner from './components/TripPlanner';
 import Destinations from './components/Destinations';
 import BudgetTracker from './components/BudgetTracker';
@@ -28,8 +31,11 @@ interface Trip {
   image: string;
 }
 
-const App: React.FC = () => {
+const AppContent: React.FC = () => {
+  const { user, loading } = useAuth();
   const [activeTab, setActiveTab] = useState('planner');
+  const [showAuth, setShowAuth] = useState(false);
+  const [authMode, setAuthMode] = useState<'login' | 'signup'>('login');
   const [trips, setTrips] = useState<Trip[]>([
     {
       id: '1',
@@ -75,6 +81,40 @@ const App: React.FC = () => {
         return <TripPlanner trips={trips} setTrips={setTrips} />;
     }
   };
+
+  // Show loading spinner while checking auth
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto mb-4"></div>
+          <h1 className="text-2xl font-bold maya-text">Maya Trips</h1>
+          <p className="text-gray-600 mt-2">Loading your travel assistant...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Show auth forms if not logged in
+  if (!user) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 flex items-center justify-center p-4">
+        <div className="w-full max-w-md">
+          {authMode === 'login' ? (
+            <LoginForm 
+              onSuccess={() => setShowAuth(false)} 
+              onSwitchToSignup={() => setAuthMode('signup')} 
+            />
+          ) : (
+            <SignupForm 
+              onSuccess={() => setShowAuth(false)} 
+              onSwitchToLogin={() => setAuthMode('login')} 
+            />
+          )}
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50">
@@ -164,6 +204,14 @@ const App: React.FC = () => {
         {renderContent()}
       </motion.main>
     </div>
+  );
+};
+
+const App: React.FC = () => {
+  return (
+    <AuthProvider>
+      <AppContent />
+    </AuthProvider>
   );
 };
 
