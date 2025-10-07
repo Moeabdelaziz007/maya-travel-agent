@@ -1,6 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const mongoose = require('mongoose');
+const bodyParser = require('body-parser');
 require('dotenv').config();
 
 const app = express();
@@ -8,6 +9,8 @@ const PORT = process.env.PORT || 5000;
 
 // Middleware
 app.use(cors());
+// Stripe webhook requires raw body; mount raw parser just for that route
+app.use('/api/payment/webhook', bodyParser.raw({ type: 'application/json' }));
 app.use(express.json());
 
 // MongoDB Connection (Optional - using Supabase instead)
@@ -90,6 +93,10 @@ app.get('/api/destinations', (req, res) => {
 // Payment routes
 const paymentRoutes = require('./routes/payment');
 app.use('/api/payment', paymentRoutes);
+
+// Stripe webhook route
+const stripeWebhook = require('./routes/stripe-webhook');
+app.use('/api/payment', stripeWebhook);
 
 // Mini App routes
 const miniappRoutes = require('./routes/miniapp');

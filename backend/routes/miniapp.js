@@ -1,5 +1,34 @@
 const express = require('express');
+const crypto = require('crypto');
+const jwt = require('jsonwebtoken');
+const { createClient } = require('@supabase/supabase-js');
 const router = express.Router();
+
+// Supabase service client (service role)
+const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_ROLE_KEY);
+
+// Verify Telegram initData per Telegram WebApp docs
+function verifyTelegramInitData(initData, botToken) {
+  try {
+    if (!initData || !botToken) return null;
+    const urlSearchParams = new URLSearchParams(initData);
+    const hash = urlSearchParams.get('hash');
+    urlSearchParams.delete('hash');
+    const dataCheckString = Array.from(urlSearchParams.entries())
+      .sort(([aKey], [bKey]) => aKey.localeCompare(bKey))
+      .map(([key, value]) => `${key}=${value}`)
+      .join('\n');
+    const secret = crypto.createHmac('sha256', 'WebAppData').update(botToken).digest();
+    const computedHash = crypto.createHmac('sha256', secret).update(dataCheckString).digest('hex');
+    if (computedHash !== hash) return null;
+
+    const userJson = urlSearchParams.get('user');
+    const user = userJson ? JSON.parse(userJson) : null;
+    return user;
+  } catch (e) {
+    return null;
+  }
+}
 
 // Mini App service integration
 class MiniAppService {
@@ -149,6 +178,39 @@ class MiniAppService {
     }
   }
 }
+
+// Telegram WebApp auth via initData
+router.post('/auth/telegram', async (req, res) => {
+  try {
+    const { initData } = req.body;
+    const user = verifyTelegramInitData(initData, process.env.TELEGRAM_BOT_TOKEN);
+    if (!user) {
+      return res.status(401).json({ error: 'Invalid Telegram data' });
+    }
+
+    const { id, username, photo_url } = user;
+
+    // Upsert profile
+    const { data: profile, error } = await supabase
+      .from('profiles')
+      .upsert({ telegram_id: id, username, avatar_url: photo_url })
+      .select()
+      .single();
+
+    if (error) return res.status(500).json({ error: error.message });
+
+    // Issue short-lived JWT with sub = telegram_id for RLS
+    const token = jwt.sign(
+      { sub: String(id) },
+      process.env.JWT_SECRET || 'dev_jwt_secret',
+      { expiresIn: '1h' }
+    );
+
+    res.json({ token, profile });
+  } catch (e) {
+    res.status(500).json({ error: 'Internal server error', message: e.message });
+  }
+});
 
 // Send message to user
 router.post('/send-message', async (req, res) => {
