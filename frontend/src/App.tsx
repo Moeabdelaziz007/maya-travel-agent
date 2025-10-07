@@ -20,7 +20,8 @@ import BudgetTracker from './components/BudgetTracker';
 import TripHistory from './components/TripHistory';
 import AIAssistant from './components/AIAssistant';
 import ErrorBoundary from './components/ErrorBoundary';
-import { initTelegramWebApp, isTelegramWebApp, getTelegramUser } from './telegram-webapp';
+import AuthCallback from './pages/AuthCallback';
+import { initTelegramWebApp, isTelegramWebApp } from './telegram-webapp';
 
 interface Trip {
   id: string;
@@ -36,6 +37,19 @@ const AppContent: React.FC = () => {
   const { user, loading } = useAuth();
   const [activeTab, setActiveTab] = useState('planner');
   const [authMode, setAuthMode] = useState<'login' | 'signup'>('login');
+
+  // Check if we're on an auth callback page
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const hashParams = new URLSearchParams(window.location.hash.substring(1));
+    
+    // Check for auth callback parameters
+    if (urlParams.get('access_token') || urlParams.get('error') || 
+        hashParams.get('access_token') || hashParams.get('error')) {
+      // We're on an auth callback page, let AuthCallback component handle it
+      return;
+    }
+  }, []);
 
   // Initialize Telegram WebApp
   useEffect(() => {
@@ -89,6 +103,15 @@ const AppContent: React.FC = () => {
     }
   };
 
+  // Check if we're on an auth callback page and show the callback component
+  const urlParams = new URLSearchParams(window.location.search);
+  const hashParams = new URLSearchParams(window.location.hash.substring(1));
+  
+  if (urlParams.get('access_token') || urlParams.get('error') || 
+      hashParams.get('access_token') || hashParams.get('error')) {
+    return <AuthCallback />;
+  }
+
   // Show loading spinner while checking auth
   if (loading) {
     return (
@@ -109,12 +132,12 @@ const AppContent: React.FC = () => {
         <div className="w-full max-w-md">
           {authMode === 'login' ? (
             <LoginForm 
-              onSuccess={() => setShowAuth(false)} 
+              onSuccess={() => {/* Handle login success */}} 
               onSwitchToSignup={() => setAuthMode('signup')} 
             />
           ) : (
             <SignupForm 
-              onSuccess={() => setShowAuth(false)} 
+              onSuccess={() => {/* Handle signup success */}} 
               onSwitchToLogin={() => setAuthMode('login')} 
             />
           )}
