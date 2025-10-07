@@ -255,6 +255,55 @@ router.post('/payment-recommendations', async (req, res) => {
 });
 
 /**
+ * POST /api/ai/multimodal/analyze
+ * Analyze images/videos for trip planning insights
+ */
+router.post('/multimodal/analyze', async (req, res) => {
+  try {
+    const { prompt, imageUrls = [], videoUrl = null, options = {} } = req.body || {};
+
+    if ((!imageUrls || imageUrls.length === 0) && !videoUrl) {
+      return res.status(400).json({
+        success: false,
+        error: 'At least one image URL or a video URL is required'
+      });
+    }
+
+    // Allow caller to optionally enable KV cache offload and FlashAttention 3
+    const analysisOptions = {
+      temperature: typeof options.temperature === 'number' ? options.temperature : 0.4,
+      maxTokens: typeof options.maxTokens === 'number' ? options.maxTokens : 900,
+      enableKvCacheOffload: options.enableKvCacheOffload === true,
+      attentionImpl: options.attentionImpl || null
+    };
+
+    const response = await zaiClient.analyzeMedia({ prompt, imageUrls, videoUrl }, analysisOptions);
+
+    if (response.success) {
+      return res.json({
+        success: true,
+        analysis: response.content,
+        providerData: response.data || null,
+        timestamp: new Date().toISOString()
+      });
+    }
+
+    return res.status(500).json({
+      success: false,
+      error: response.error || 'Failed to analyze media',
+      analysis: response.content
+    });
+  } catch (error) {
+    console.error('Multimodal Analyze Error:', error);
+    return res.status(500).json({
+      success: false,
+      error: 'Internal server error',
+      message: error.message
+    });
+  }
+});
+
+/**
  * GET /api/ai/health
  * Health check for AI service
  */

@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { aiService } from '../api/services';
 import { motion } from 'framer-motion';
 import { 
   Plus, 
@@ -34,6 +35,10 @@ const TripPlanner: React.FC<TripPlannerProps> = ({ trips, setTrips }) => {
     endDate: '',
     budget: 0
   });
+  const [mediaUrl, setMediaUrl] = useState('');
+  const [videoUrl, setVideoUrl] = useState('');
+  const [analysis, setAnalysis] = useState<string | null>(null);
+  const [analyzing, setAnalyzing] = useState(false);
 
   const handleAddTrip = () => {
     if (newTrip.destination && newTrip.startDate && newTrip.endDate) {
@@ -58,6 +63,30 @@ const TripPlanner: React.FC<TripPlannerProps> = ({ trips, setTrips }) => {
       case 'ongoing': return 'bg-green-100 text-green-800';
       case 'completed': return 'bg-blue-100 text-blue-800';
       default: return 'bg-gray-100 text-gray-800';
+    }
+  };
+
+  const handleAnalyzeMedia = async () => {
+    if (!mediaUrl && !videoUrl) return;
+    setAnalyzing(true);
+    setAnalysis(null);
+    try {
+      const { data } = await aiService.analyzeMedia({
+        prompt: `Analyze this media for trip planning to ${newTrip.destination || 'the shown place'}.` ,
+        imageUrls: mediaUrl ? [mediaUrl] : [],
+        videoUrl: videoUrl || null,
+        options: {
+          enableKvCacheOffload: true,
+          attentionImpl: 'flash-attn-3'
+        }
+      });
+      setAnalysis(data?.analysis || 'No analysis available');
+    } catch (err) {
+      setAnalysis('Failed to analyze media. Please try again.');
+      // eslint-disable-next-line no-console
+      console.error(err);
+    } finally {
+      setAnalyzing(false);
     }
   };
 
@@ -127,8 +156,28 @@ const TripPlanner: React.FC<TripPlannerProps> = ({ trips, setTrips }) => {
                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               />
             </div>
+            <div className="md:col-span-2">
+              <label className="block text-sm font-medium text-gray-700 mb-2">Image URL (optional)</label>
+              <input
+                type="url"
+                value={mediaUrl}
+                onChange={(e) => setMediaUrl(e.target.value)}
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                placeholder="https://...jpg"
+              />
+            </div>
+            <div className="md:col-span-2">
+              <label className="block text-sm font-medium text-gray-700 mb-2">Video URL (optional)</label>
+              <input
+                type="url"
+                value={videoUrl}
+                onChange={(e) => setVideoUrl(e.target.value)}
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                placeholder="https://...mp4"
+              />
+            </div>
           </div>
-          <div className="flex space-x-3 mt-6">
+          <div className="flex flex-wrap items-center gap-3 mt-6">
             <motion.button
               onClick={handleAddTrip}
               className="px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
@@ -136,6 +185,15 @@ const TripPlanner: React.FC<TripPlannerProps> = ({ trips, setTrips }) => {
               whileTap={{ scale: 0.95 }}
             >
               Add Trip
+            </motion.button>
+            <motion.button
+              onClick={handleAnalyzeMedia}
+              className="px-6 py-3 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors disabled:opacity-60"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              disabled={analyzing || (!mediaUrl && !videoUrl)}
+            >
+              {analyzing ? 'Analyzing…' : 'Analyze Media'}
             </motion.button>
             <motion.button
               onClick={() => setShowAddForm(false)}
@@ -146,6 +204,11 @@ const TripPlanner: React.FC<TripPlannerProps> = ({ trips, setTrips }) => {
               Cancel
             </motion.button>
           </div>
+          {analysis && (
+            <div className="mt-4 p-4 bg-purple-50 border border-purple-100 rounded-lg text-sm text-purple-900 whitespace-pre-wrap">
+              {analysis}
+            </div>
+          )}
         </motion.div>
       )}
 

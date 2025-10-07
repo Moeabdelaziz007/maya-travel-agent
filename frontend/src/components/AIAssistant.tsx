@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { aiService } from '../api/services';
 import { motion } from 'framer-motion';
 import { 
   Bot, 
@@ -44,6 +45,10 @@ const AIAssistant: React.FC = () => {
   const [inputMessage, setInputMessage] = useState('');
   const [isListening, setIsListening] = useState(false);
   const [isTyping, setIsTyping] = useState(false);
+  const [mediaUrl, setMediaUrl] = useState('');
+  const [videoUrl, setVideoUrl] = useState('');
+  const [mediaReply, setMediaReply] = useState<string | null>(null);
+  const [analyzing, setAnalyzing] = useState(false);
 
   const handleSendMessage = async () => {
     if (!inputMessage.trim()) return;
@@ -125,6 +130,27 @@ const AIAssistant: React.FC = () => {
   const toggleListening = () => {
     setIsListening(!isListening);
     // Voice recognition logic would go here
+  };
+
+  const handleAnalyzeMedia = async () => {
+    if (!mediaUrl && !videoUrl) return;
+    setAnalyzing(true);
+    setMediaReply(null);
+    try {
+      const { data } = await aiService.analyzeMedia({
+        prompt: inputMessage || 'Analyze this media for trip planning.',
+        imageUrls: mediaUrl ? [mediaUrl] : [],
+        videoUrl: videoUrl || null,
+        options: { enableKvCacheOffload: true, attentionImpl: 'flash-attn-3' }
+      });
+      setMediaReply(data?.analysis || 'No analysis available');
+    } catch (e) {
+      setMediaReply('Failed to analyze media.');
+      // eslint-disable-next-line no-console
+      console.error(e);
+    } finally {
+      setAnalyzing(false);
+    }
   };
 
   return (
@@ -252,7 +278,7 @@ const AIAssistant: React.FC = () => {
 
         {/* Input */}
         <div className="border-t p-4">
-          <div className="flex items-center space-x-3">
+        <div className="flex items-center space-x-3">
             <motion.button
               onClick={toggleListening}
               className={`p-2 rounded-lg transition-colors ${
@@ -285,6 +311,36 @@ const AIAssistant: React.FC = () => {
               <Send className="w-5 h-5" />
             </motion.button>
           </div>
+        <div className="mt-3 grid grid-cols-1 md:grid-cols-3 gap-3">
+          <input
+            type="url"
+            value={mediaUrl}
+            onChange={(e) => setMediaUrl(e.target.value)}
+            placeholder="Image URL (optional)"
+            className="px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+          />
+          <input
+            type="url"
+            value={videoUrl}
+            onChange={(e) => setVideoUrl(e.target.value)}
+            placeholder="Video URL (optional)"
+            className="px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+          />
+          <motion.button
+            onClick={handleAnalyzeMedia}
+            disabled={analyzing || (!mediaUrl && !videoUrl)}
+            className="px-4 py-3 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors disabled:opacity-60"
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+          >
+            {analyzing ? 'Analyzing…' : 'Analyze Media'}
+          </motion.button>
+        </div>
+        {mediaReply && (
+          <div className="mt-3 p-3 bg-purple-50 border border-purple-100 rounded-lg text-sm text-purple-900 whitespace-pre-wrap">
+            {mediaReply}
+          </div>
+        )}
         </div>
       </div>
     </div>

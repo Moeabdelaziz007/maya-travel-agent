@@ -36,7 +36,11 @@ export const aiService = {
   sendMessage: (message: string) => api.post('/ai/chat', { message }),
   
   // Get AI suggestions
-  getSuggestions: (context: any) => api.post('/ai/suggestions', context)
+  getSuggestions: (context: any) => api.post('/ai/suggestions', context),
+
+  // Analyze images/videos for trip planning insights
+  analyzeMedia: (params: { prompt?: string; imageUrls?: string[]; videoUrl?: string | null; options?: { temperature?: number; maxTokens?: number; enableKvCacheOffload?: boolean; attentionImpl?: string | null } }) =>
+    api.post('/ai/multimodal/analyze', params)
 };
 
 // Budget Services
