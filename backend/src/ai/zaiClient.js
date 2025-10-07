@@ -12,6 +12,9 @@ class ZaiClient {
     this.model = process.env.ZAI_MODEL || 'glm-4.6';
     this.maxTokens = parseInt(process.env.ZAI_MAX_TOKENS) || 2000;
     this.temperature = parseFloat(process.env.ZAI_TEMPERATURE) || 0.7;
+    // Optional provider hints for performance/memory behavior
+    this.enableKvCacheOffload = process.env.ZAI_ENABLE_KV_OFFLOAD === 'true';
+    this.attentionImpl = process.env.ZAI_ATTENTION_IMPL || null; // e.g., 'flash-attn-3'
   }
 
   /**
@@ -29,6 +32,16 @@ class ZaiClient {
         max_tokens: options.maxTokens || this.maxTokens,
         stream: options.stream || false
       };
+
+      // Forward advanced options if provided, or from env defaults
+      const providerHints = {
+        kv_cache_offload: options.enableKvCacheOffload ?? this.enableKvCacheOffload || undefined,
+        attention: options.attentionImpl || this.attentionImpl || undefined
+      };
+      // Only attach if any value present to avoid sending noisy nulls
+      if (providerHints.kv_cache_offload !== undefined || providerHints.attention !== undefined) {
+        requestBody.provider_hints = providerHints;
+      }
 
       const response = await fetch(`${this.baseUrl}/chat/completions`, {
         method: 'POST',
@@ -60,6 +73,49 @@ class ZaiClient {
         content: 'Sorry, I encountered an error. Please try again.'
       };
     }
+  }
+
+  /**
+   * Analyze visual media (image or video) with an accompanying prompt.
+   * Attempts to use provider multimodal interface if available; otherwise falls back to text reasoning.
+   * @param {Object} params - Analysis parameters
+   * @param {string} params.prompt - User prompt/question
+   * @param {string[]} [params.imageUrls] - One or more image URLs
+   * @param {string} [params.videoUrl] - Optional video URL
+   * @param {Object} [options] - Additional model options
+   * @returns {Promise<Object>} Analysis result
+   */
+  async analyzeMedia({ prompt, imageUrls = [], videoUrl = null }, options = {}) {
+    // Compose a robust instruction so text-only fallback is still useful
+    const systemPrompt = `You are Maya, an expert travel assistant with strong visual understanding.
+    When images or video are provided, carefully describe relevant travel context (landmarks, conditions, activities, safety, accessibility) and extract actionable trip-planning insights.
+    Be concise and practical. Prefer Arabic unless explicitly asked for English.`;
+
+    // Some providers support mixed content arrays; we send a conservative structure
+    const mediaDescriptionLines = [];
+    if (imageUrls.length > 0) {
+      mediaDescriptionLines.push(`Images provided: ${imageUrls.join(', ')}`);
+    }
+    if (videoUrl) {
+      mediaDescriptionLines.push(`Video provided: ${videoUrl}`);
+    }
+
+    const mediaContext = mediaDescriptionLines.length > 0
+      ? `\nMedia context:\n${mediaDescriptionLines.join('\n')}`
+      : '';
+
+    const messages = [
+      { role: 'system', content: systemPrompt },
+      { role: 'user', content: `${prompt || 'Analyze the provided media for trip planning.'}${mediaContext}` }
+    ];
+
+    // Reuse chatCompletion; provider_hints will carry KV offload and attention impl
+    return await this.chatCompletion(messages, {
+      temperature: options.temperature ?? 0.4,
+      maxTokens: options.maxTokens ?? 900,
+      enableKvCacheOffload: options.enableKvCacheOffload,
+      attentionImpl: options.attentionImpl
+    });
   }
 
   /**

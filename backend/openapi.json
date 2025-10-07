@@ -1,0 +1,44 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Maya Trips Public API",
+    "version": "1.0.0",
+    "description": "Open APIs for local developers to integrate travel planning, AI chat, and analytics."
+  },
+  "servers": [{ "url": "/api" }],
+  "paths": {
+    "/public/ping": {
+      "get": {
+        "summary": "Health check",
+        "responses": { "200": { "description": "OK" } }
+      }
+    },
+    "/ai/chat": {
+      "post": {
+        "summary": "Chat with Maya AI",
+        "requestBody": { "required": true },
+        "responses": { "200": { "description": "AI reply" } }
+      }
+    },
+    "/ai/multimodal/analyze": {
+      "post": {
+        "summary": "Analyze images/videos for trip insights",
+        "requestBody": { "required": true },
+        "responses": { "200": { "description": "Analysis" } }
+      }
+    },
+    "/analytics/events": {
+      "post": {
+        "summary": "Ingest analytics events",
+        "responses": { "200": { "description": "Accepted" } }
+      }
+    },
+    "/analytics/summary": {
+      "get": {
+        "summary": "Get analytics summary",
+        "responses": { "200": { "description": "Summary" } }
+      }
+    }
+  }
+}
+

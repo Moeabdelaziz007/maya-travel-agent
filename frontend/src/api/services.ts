@@ -33,10 +33,21 @@ export const destinationService = {
 // AI Assistant Services
 export const aiService = {
   // Send message to AI
-  sendMessage: (message: string) => api.post('/ai/chat', { message }),
+  sendMessage: (message: string, opts?: { useTools?: boolean; conversationHistory?: Array<{role: string; content: string}> }) =>
+    api.post('/ai/chat', { message, useTools: !!opts?.useTools, conversationHistory: opts?.conversationHistory || [] }),
   
   // Get AI suggestions
-  getSuggestions: (context: any) => api.post('/ai/suggestions', context)
+  getSuggestions: (context: any) => api.post('/ai/suggestions', context),
+
+  // Analyze images/videos for trip planning insights
+  analyzeMedia: (params: { prompt?: string; imageUrls?: string[]; videoUrl?: string | null; options?: { temperature?: number; maxTokens?: number; enableKvCacheOffload?: boolean; attentionImpl?: string | null } }) =>
+    api.post('/ai/multimodal/analyze', params)
+};
+
+// Analytics API
+export const analyticsService = {
+  track: (event: { type: string; userId?: string; payload?: any }) => api.post('/analytics/events', event),
+  summary: () => api.get('/analytics/summary')
 };
 
 // Budget Services

@@ -6,6 +6,8 @@
 const express = require('express');
 const router = express.Router();
 const ZaiClient = require('../src/ai/zaiClient');
+const { Tools, getToolSchemas } = require('../src/ai/tools');
+const { buildCulturalSystemPrompt } = require('../src/ai/culture');
 
 // Initialize Z.ai client
 const zaiClient = new ZaiClient();
@@ -30,7 +32,7 @@ router.use(validateApiKey);
  */
 router.post('/chat', async (req, res) => {
   try {
-    const { message, userId, conversationHistory = [] } = req.body;
+    const { message, userId, conversationHistory = [], useTools = false, region = 'ar' } = req.body;
 
     if (!message) {
       return res.status(400).json({
@@ -41,7 +43,73 @@ router.post('/chat', async (req, res) => {
 
     console.log(`🤖 Maya AI Chat - User: ${userId}, Message: ${message.substring(0, 50)}...`);
 
-    const response = await zaiClient.generateChatResponse(message, conversationHistory);
+    let response;
+    if (!useTools) {
+      const systemCulture = { role: 'system', content: buildCulturalSystemPrompt(region) };
+      response = await zaiClient.chatCompletion([
+        systemCulture,
+        ...conversationHistory,
+        { role: 'user', content: message }
+      ], { maxTokens: 900 });
+    } else {
+      // Basic tool-calling orchestration loop (single step for simplicity)
+      const toolSchemas = getToolSchemas();
+      const toolListStr = toolSchemas.map(t => `- ${t.name}: ${t.description}`).join('\n');
+
+      const toolAwareHistory = [
+        ...conversationHistory,
+        { role: 'system', content: `You can call tools by replying in JSON with {"tool":"name","arguments":{...}}. Available tools:\n${toolListStr}\nIf no tool is needed, answer normally.` }
+      ];
+
+      const first = await zaiClient.chatCompletion([
+        { role: 'system', content: 'You are Maya, a helpful travel assistant.' },
+        { role: 'system', content: buildCulturalSystemPrompt(region) },
+        ...toolAwareHistory,
+        { role: 'user', content: message }
+      ], {
+        maxTokens: 500,
+        enableKvCacheOffload: true,
+        attentionImpl: 'flash-attn-3'
+      });
+
+      if (!first.success) {
+        response = first;
+      } else {
+        const content = first.content?.trim() || '';
+        let toolCall = null;
+        try {
+          if (content.startsWith('{') && content.endsWith('}')) {
+            toolCall = JSON.parse(content);
+          }
+        } catch (_e) {}
+
+        if (toolCall && toolCall.tool && typeof Tools[toolCall.tool] === 'function') {
+          let toolResult;
+          try {
+            toolResult = await Tools[toolCall.tool](toolCall.arguments || {});
+          } catch (e) {
+            toolResult = { error: e.message || 'Tool execution failed' };
+          }
+
+          // Feed tool result back to the model for final answer
+          const second = await zaiClient.chatCompletion([
+            { role: 'system', content: 'You are Maya, a helpful travel assistant.' },
+            { role: 'system', content: buildCulturalSystemPrompt(region) },
+            ...toolAwareHistory,
+            { role: 'user', content: message },
+            { role: 'tool', content: JSON.stringify({ tool: toolCall.tool, result: toolResult }) }
+          ], {
+            maxTokens: 700,
+            enableKvCacheOffload: true,
+            attentionImpl: 'flash-attn-3'
+          });
+          response = second;
+        } else {
+          // No tool call, just return the first content
+          response = first;
+        }
+      }
+    }
 
     if (response.success) {
       res.json({
@@ -247,6 +315,55 @@ router.post('/payment-recommendations', async (req, res) => {
   } catch (error) {
     console.error('Payment Recommendations Error:', error);
     res.status(500).json({
+      success: false,
+      error: 'Internal server error',
+      message: error.message
+    });
+  }
+});
+
+/**
+ * POST /api/ai/multimodal/analyze
+ * Analyze images/videos for trip planning insights
+ */
+router.post('/multimodal/analyze', async (req, res) => {
+  try {
+    const { prompt, imageUrls = [], videoUrl = null, options = {} } = req.body || {};
+
+    if ((!imageUrls || imageUrls.length === 0) && !videoUrl) {
+      return res.status(400).json({
+        success: false,
+        error: 'At least one image URL or a video URL is required'
+      });
+    }
+
+    // Allow caller to optionally enable KV cache offload and FlashAttention 3
+    const analysisOptions = {
+      temperature: typeof options.temperature === 'number' ? options.temperature : 0.4,
+      maxTokens: typeof options.maxTokens === 'number' ? options.maxTokens : 900,
+      enableKvCacheOffload: options.enableKvCacheOffload === true,
+      attentionImpl: options.attentionImpl || null
+    };
+
+    const response = await zaiClient.analyzeMedia({ prompt, imageUrls, videoUrl }, analysisOptions);
+
+    if (response.success) {
+      return res.json({
+        success: true,
+        analysis: response.content,
+        providerData: response.data || null,
+        timestamp: new Date().toISOString()
+      });
+    }
+
+    return res.status(500).json({
+      success: false,
+      error: response.error || 'Failed to analyze media',
+      analysis: response.content
+    });
+  } catch (error) {
+    console.error('Multimodal Analyze Error:', error);
+    return res.status(500).json({
       success: false,
       error: 'Internal server error',
       message: error.message
