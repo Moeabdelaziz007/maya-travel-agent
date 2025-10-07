@@ -59,24 +59,63 @@ const AIAssistant: React.FC = () => {
     setInputMessage('');
     setIsTyping(true);
 
-    // Simulate AI response
-    setTimeout(() => {
+    try {
+      // Call Z.ai GLM-4.6 API
+      const response = await fetch('/api/ai/chat', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          message: inputMessage,
+          userId: 'user_' + Date.now(),
+          conversationHistory: messages.slice(-5).map(msg => ({
+            role: msg.isUser ? 'user' : 'assistant',
+            content: msg.text
+          }))
+        })
+      });
+
+      const data = await response.json();
+
       const aiResponse: Message = {
         id: (Date.now() + 1).toString(),
-        text: `شكراً لك على سؤالك! بناءً على طلبك، يمكنني مساعدتك في تخطيط رحلة رائعة. دعني أقترح عليك بعض الخيارات المثيرة للاهتمام...`,
+        text: data.success ? data.reply : 'عذراً، حدث خطأ في الاتصال. يرجى المحاولة مرة أخرى.',
         isUser: false,
         timestamp: new Date(),
-        suggestions: [
+        suggestions: data.success ? [
           'أخبرني المزيد عن هذا الاقتراح',
           'ما هي التكلفة المتوقعة؟',
           'متى أفضل وقت للزيارة؟',
           'أريد خيارات أخرى'
+        ] : [
+          'حاول مرة أخرى',
+          'اتصل بالدعم الفني',
+          'استخدم خيارات أخرى'
         ]
       };
       
       setMessages(prev => [...prev, aiResponse]);
       setIsTyping(false);
-    }, 2000);
+
+    } catch (error) {
+      console.error('AI Chat Error:', error);
+      
+      const errorResponse: Message = {
+        id: (Date.now() + 1).toString(),
+        text: 'عذراً، حدث خطأ في الاتصال. يرجى المحاولة مرة أخرى.',
+        isUser: false,
+        timestamp: new Date(),
+        suggestions: [
+          'حاول مرة أخرى',
+          'تحقق من الاتصال',
+          'اتصل بالدعم الفني'
+        ]
+      };
+      
+      setMessages(prev => [...prev, errorResponse]);
+      setIsTyping(false);
+    }
   };
 
   const handleSuggestionClick = (suggestion: string) => {

@@ -29,7 +29,7 @@ AI Travel Assistant (Frontend + Backend) powered by Maya Trips Persona.
 ## Getting Started
 
 ### Prerequisites
-- Node.js (v16 or higher)
+- Node.js (v18 or higher)
 - npm or yarn
 - Git
 
@@ -62,6 +62,51 @@ AI Travel Assistant (Frontend + Backend) powered by Maya Trips Persona.
 
 ### Development Commands
 
+#### Frontend Development
+```bash
+cd frontend
+
+# Start development server
+npm run dev
+
+# Run tests
+npm run test
+npm run test:ui
+npm run test:coverage
+
+# Linting and formatting
+npm run lint
+npm run lint:fix
+npm run format
+npm run format:check
+
+# Type checking
+npm run type-check
+
+# Build for production
+npm run build
+
+# E2E testing
+npm run e2e
+npm run e2e:ui
+
+# Accessibility testing
+npm run a11y-check
+```
+
+#### Backend Development
+```bash
+cd backend
+
+# Start development server
+npm run dev
+
+# Start production server
+npm run start
+```
+
+### Development Commands
+
 ```bash
 # Install all dependencies
 npm run install:all
@@ -91,6 +136,107 @@ npm run start
 └── README.md         # Project overview
 ```
 
+## Testing
+
+### Running Tests
+```bash
+# Unit tests
+cd frontend && npm run test
+
+# E2E tests
+cd frontend && npm run e2e
+
+# All tests with coverage
+cd frontend && npm run test:coverage
+```
+
+### Test Coverage
+We aim for >80% test coverage for critical components. Run `npm run test:coverage` to see current coverage.
+
+## Troubleshooting
+
+### Common Issues
+
+1. **Port already in use**
+   ```bash
+   # Kill processes on ports 3000 and 5000
+   lsof -ti:3000 | xargs kill -9
+   lsof -ti:5000 | xargs kill -9
+   ```
+
+2. **Node modules issues**
+   ```bash
+   # Clean install
+   rm -rf node_modules package-lock.json
+   rm -rf frontend/node_modules frontend/package-lock.json
+   rm -rf backend/node_modules backend/package-lock.json
+   npm run install:all
+   ```
+
+3. **TypeScript errors**
+   ```bash
+   cd frontend && npm run type-check
+   ```
+
+4. **Linting errors**
+   ```bash
+   cd frontend && npm run lint:fix
+   ```
+
+5. **Build failures**
+   ```bash
+   cd frontend && npm run build
+   ```
+
+## Performance
+
+### Bundle Analysis
+```bash
+cd frontend && npm run build
+# Check dist/ folder for bundle sizes
+```
+
+### Lighthouse Audit
+```bash
+# Install lighthouse globally
+npm install -g lighthouse
+
+# Run audit
+lighthouse http://localhost:3000 --output html --output-path ./lighthouse-report.html
+```
+
+## Security
+
+### Security Audit
+```bash
+npm audit
+cd frontend && npm audit
+cd backend && npm audit
+```
+
+### Dependency Updates
+```bash
+npm update
+cd frontend && npm update
+cd backend && npm update
+```
+
 ## Contributing
 
 This project is part of the Maya Trips ecosystem - your intelligent travel companion.
+
+### Development Workflow
+1. Create a feature branch: `git checkout -b feature/your-feature`
+2. Make your changes
+3. Run tests: `npm run test`
+4. Run linting: `npm run lint`
+5. Commit your changes: `git commit -m "Add your feature"`
+6. Push to your branch: `git push origin feature/your-feature`
+7. Create a Pull Request
+
+### Code Standards
+- Follow TypeScript best practices
+- Write tests for new features
+- Ensure accessibility compliance
+- Follow the existing code style
+- Update documentation as needed

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { 
   Plane, 
@@ -6,7 +6,6 @@ import {
   Calendar, 
   DollarSign, 
   Compass, 
-  Star,
   Bot,
   Settings,
   User,
@@ -20,6 +19,8 @@ import Destinations from './components/Destinations';
 import BudgetTracker from './components/BudgetTracker';
 import TripHistory from './components/TripHistory';
 import AIAssistant from './components/AIAssistant';
+import ErrorBoundary from './components/ErrorBoundary';
+import { initTelegramWebApp, isTelegramWebApp, getTelegramUser } from './telegram-webapp';
 
 interface Trip {
   id: string;
@@ -34,8 +35,14 @@ interface Trip {
 const AppContent: React.FC = () => {
   const { user, loading } = useAuth();
   const [activeTab, setActiveTab] = useState('planner');
-  const [showAuth, setShowAuth] = useState(false);
   const [authMode, setAuthMode] = useState<'login' | 'signup'>('login');
+
+  // Initialize Telegram WebApp
+  useEffect(() => {
+    if (isTelegramWebApp()) {
+      initTelegramWebApp();
+    }
+  }, []);
   const [trips, setTrips] = useState<Trip[]>([
     {
       id: '1',
@@ -209,9 +216,11 @@ const AppContent: React.FC = () => {
 
 const App: React.FC = () => {
   return (
-    <AuthProvider>
-      <AppContent />
-    </AuthProvider>
+    <ErrorBoundary>
+      <AuthProvider>
+        <AppContent />
+      </AuthProvider>
+    </ErrorBoundary>
   );
 };
 

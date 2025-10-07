@@ -10,15 +10,17 @@ const PORT = process.env.PORT || 5000;
 app.use(cors());
 app.use(express.json());
 
-// MongoDB Connection
-const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/maya-trips';
+// MongoDB Connection (Optional - using Supabase instead)
+// const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/maya-trips';
 
-mongoose.connect(MONGODB_URI, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-})
-.then(() => console.log('✅ Connected to MongoDB'))
-.catch(err => console.error('❌ MongoDB connection error:', err));
+// mongoose.connect(MONGODB_URI, {
+//     useNewUrlParser: true,
+//     useUnifiedTopology: true,
+// })
+// .then(() => console.log('✅ Connected to MongoDB'))
+// .catch(err => console.error('❌ MongoDB connection error:', err));
+
+console.log('✅ Using Supabase as database (MongoDB not required)');
 
 // Routes
 app.get('/', (req, res) => {
@@ -84,6 +86,26 @@ app.get('/api/destinations', (req, res) => {
         ]
     });
 });
+
+// Payment routes
+const paymentRoutes = require('./routes/payment');
+app.use('/api/payment', paymentRoutes);
+
+// Mini App routes
+const miniappRoutes = require('./routes/miniapp');
+app.use('/api/telegram', miniappRoutes);
+
+// AI routes (Z.ai GLM-4.6)
+const aiRoutes = require('./routes/ai');
+app.use('/api/ai', aiRoutes);
+
+// Telegram Bot (only start if token is provided)
+if (process.env.TELEGRAM_BOT_TOKEN) {
+  const telegramBot = require('./telegram-bot');
+  console.log('🤖 Telegram Bot integration enabled');
+} else {
+  console.log('⚠️ Telegram Bot token not provided - Bot integration disabled');
+}
 
 // Error handling middleware
 app.use((err, req, res, next) => {
