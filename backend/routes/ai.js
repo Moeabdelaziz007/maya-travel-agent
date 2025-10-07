@@ -7,6 +7,7 @@ const express = require('express');
 const router = express.Router();
 const ZaiClient = require('../src/ai/zaiClient');
 const { Tools, getToolSchemas } = require('../src/ai/tools');
+const { buildCulturalSystemPrompt } = require('../src/ai/culture');
 
 // Initialize Z.ai client
 const zaiClient = new ZaiClient();
@@ -31,7 +32,7 @@ router.use(validateApiKey);
  */
 router.post('/chat', async (req, res) => {
   try {
-    const { message, userId, conversationHistory = [], useTools = false } = req.body;
+    const { message, userId, conversationHistory = [], useTools = false, region = 'ar' } = req.body;
 
     if (!message) {
       return res.status(400).json({
@@ -44,7 +45,12 @@ router.post('/chat', async (req, res) => {
 
     let response;
     if (!useTools) {
-      response = await zaiClient.generateChatResponse(message, conversationHistory);
+      const systemCulture = { role: 'system', content: buildCulturalSystemPrompt(region) };
+      response = await zaiClient.chatCompletion([
+        systemCulture,
+        ...conversationHistory,
+        { role: 'user', content: message }
+      ], { maxTokens: 900 });
     } else {
       // Basic tool-calling orchestration loop (single step for simplicity)
       const toolSchemas = getToolSchemas();
@@ -56,7 +62,8 @@ router.post('/chat', async (req, res) => {
       ];
 
       const first = await zaiClient.chatCompletion([
-        { role: 'system', content: 'You are Maya, a helpful travel assistant. Prefer Arabic responses.' },
+        { role: 'system', content: 'You are Maya, a helpful travel assistant.' },
+        { role: 'system', content: buildCulturalSystemPrompt(region) },
         ...toolAwareHistory,
         { role: 'user', content: message }
       ], {
@@ -86,7 +93,8 @@ router.post('/chat', async (req, res) => {
 
           // Feed tool result back to the model for final answer
           const second = await zaiClient.chatCompletion([
-            { role: 'system', content: 'You are Maya, a helpful travel assistant. Prefer Arabic responses.' },
+            { role: 'system', content: 'You are Maya, a helpful travel assistant.' },
+            { role: 'system', content: buildCulturalSystemPrompt(region) },
             ...toolAwareHistory,
             { role: 'user', content: message },
             { role: 'tool', content: JSON.stringify({ tool: toolCall.tool, result: toolResult }) }

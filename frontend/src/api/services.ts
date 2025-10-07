@@ -44,6 +44,12 @@ export const aiService = {
     api.post('/ai/multimodal/analyze', params)
 };
 
+// Analytics API
+export const analyticsService = {
+  track: (event: { type: string; userId?: string; payload?: any }) => api.post('/analytics/events', event),
+  summary: () => api.get('/analytics/summary')
+};
+
 // Budget Services
 export const budgetService = {
   // Get budget summary

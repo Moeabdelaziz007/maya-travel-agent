@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { aiService } from '../api/services';
+import { aiService, analyticsService } from '../api/services';
 import { motion } from 'framer-motion';
 import { 
   Bot, 
@@ -62,12 +62,14 @@ const AIAssistant: React.FC = () => {
     };
 
     setMessages(prev => [...prev, userMessage]);
+    try { await analyticsService.track({ type: 'chat_message', payload: { length: inputMessage.length } }); } catch {}
     setInputMessage('');
     setIsTyping(true);
 
     try {
       const history = messages.slice(-5).map(msg => ({ role: msg.isUser ? 'user' : 'assistant', content: msg.text }));
       const { data } = await aiService.sendMessage(inputMessage, { useTools, conversationHistory: history });
+      try { await analyticsService.track({ type: 'chat_reply', payload: { success: !!data?.success } }); } catch {}
 
       const aiResponse: Message = {
         id: (Date.now() + 1).toString(),

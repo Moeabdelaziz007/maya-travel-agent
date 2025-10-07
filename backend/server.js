@@ -32,6 +32,21 @@ app.get('/', (req, res) => {
     });
 });
 
+// Public API: ping
+app.get('/api/public/ping', (req, res) => {
+    res.json({ ok: true, ts: Date.now() });
+});
+
+// OpenAPI spec
+app.get('/api/openapi.json', (req, res) => {
+    try {
+        const spec = require('./openapi.json');
+        res.json(spec);
+    } catch (e) {
+        res.status(500).json({ error: 'Spec not found' });
+    }
+});
+
 // Health check endpoint
 app.get('/api/health', (req, res) => {
     res.json({
@@ -85,6 +100,29 @@ app.get('/api/destinations', (req, res) => {
             }
         ]
     });
+});
+
+// Analytics ingestion (in-memory demo)
+const analyticsEvents = [];
+app.post('/api/analytics/events', (req, res) => {
+    const { type, userId, payload } = req.body || {};
+    analyticsEvents.push({
+        type: type || 'unknown',
+        userId: userId || null,
+        payload: payload || {},
+        ts: Date.now(),
+        ua: req.headers['user-agent'] || ''
+    });
+    res.json({ success: true });
+});
+
+app.get('/api/analytics/summary', (req, res) => {
+    const byType = analyticsEvents.reduce((acc, ev) => {
+        acc[ev.type] = (acc[ev.type] || 0) + 1;
+        return acc;
+    }, {});
+    const total = analyticsEvents.length;
+    res.json({ total, byType, last10: analyticsEvents.slice(-10).reverse() });
 });
 
 // Payment routes
