@@ -33,7 +33,8 @@ export const destinationService = {
 // AI Assistant Services
 export const aiService = {
   // Send message to AI
-  sendMessage: (message: string) => api.post('/ai/chat', { message }),
+  sendMessage: (message: string, opts?: { useTools?: boolean; conversationHistory?: Array<{role: string; content: string}> }) =>
+    api.post('/ai/chat', { message, useTools: !!opts?.useTools, conversationHistory: opts?.conversationHistory || [] }),
   
   // Get AI suggestions
   getSuggestions: (context: any) => api.post('/ai/suggestions', context),

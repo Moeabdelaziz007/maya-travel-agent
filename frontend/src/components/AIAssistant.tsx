@@ -49,6 +49,7 @@ const AIAssistant: React.FC = () => {
   const [videoUrl, setVideoUrl] = useState('');
   const [mediaReply, setMediaReply] = useState<string | null>(null);
   const [analyzing, setAnalyzing] = useState(false);
+  const [useTools, setUseTools] = useState(true);
 
   const handleSendMessage = async () => {
     if (!inputMessage.trim()) return;
@@ -65,27 +66,12 @@ const AIAssistant: React.FC = () => {
     setIsTyping(true);
 
     try {
-      // Call Z.ai GLM-4.6 API
-      const response = await fetch('/api/ai/chat', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          message: inputMessage,
-          userId: 'user_' + Date.now(),
-          conversationHistory: messages.slice(-5).map(msg => ({
-            role: msg.isUser ? 'user' : 'assistant',
-            content: msg.text
-          }))
-        })
-      });
-
-      const data = await response.json();
+      const history = messages.slice(-5).map(msg => ({ role: msg.isUser ? 'user' : 'assistant', content: msg.text }));
+      const { data } = await aiService.sendMessage(inputMessage, { useTools, conversationHistory: history });
 
       const aiResponse: Message = {
         id: (Date.now() + 1).toString(),
-        text: data.success ? data.reply : 'عذراً، حدث خطأ في الاتصال. يرجى المحاولة مرة أخرى.',
+        text: data?.success ? data.reply : 'عذراً، حدث خطأ في الاتصال. يرجى المحاولة مرة أخرى.',
         isUser: false,
         timestamp: new Date(),
         suggestions: data.success ? [
