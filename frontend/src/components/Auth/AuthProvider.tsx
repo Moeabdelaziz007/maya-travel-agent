@@ -33,9 +33,12 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    console.log('🔐 AuthProvider: Initializing auth state')
     // Get initial session
     const getInitialSession = async () => {
-      const { session } = await AuthService.getCurrentSession();
+      console.log('🔐 AuthProvider: Getting initial session')
+      const { session, error } = await AuthService.getCurrentSession();
+      console.log('🔐 AuthProvider: Initial session result:', { hasSession: !!session, userId: session?.user?.id, error: error?.message })
       setSession(session);
       setUser(session?.user ?? null);
       setLoading(false);
@@ -46,6 +49,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     // Listen for auth changes
     const { data: { subscription } } = AuthService.onAuthStateChange(
       async (event, session) => {
+        console.log('🔐 AuthProvider: Auth state change:', { event, hasSession: !!session, userId: session?.user?.id })
         setSession(session);
         setUser(session?.user ?? null);
         setLoading(false);

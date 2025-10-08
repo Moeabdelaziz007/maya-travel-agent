@@ -5,6 +5,7 @@ import { User, Session, AuthError } from '@supabase/supabase-js'
 export class AuthService {
   // Sign up with email and password
   static async signUp(email: string, password: string, fullName?: string) {
+    console.log('🔐 AuthService.signUp called:', { email, hasPassword: !!password, fullName })
     try {
       const { data, error } = await supabase.auth.signUp({
         email,
@@ -15,25 +16,32 @@ export class AuthService {
           },
         },
       })
-      
+
+      console.log('🔐 AuthService.signUp result:', { success: !error, userId: data?.user?.id, error: error?.message })
+
       if (error) throw error
       return { data, error: null }
     } catch (error) {
+      console.error('🔐 AuthService.signUp error:', error)
       return { data: null, error: error as AuthError }
     }
   }
 
   // Sign in with email and password
   static async signIn(email: string, password: string) {
+    console.log('🔐 AuthService.signIn called:', { email, hasPassword: !!password })
     try {
       const { data, error } = await supabase.auth.signInWithPassword({
         email,
         password,
       })
-      
+
+      console.log('🔐 AuthService.signIn result:', { success: !error, userId: data?.user?.id, error: error?.message })
+
       if (error) throw error
       return { data, error: null }
     } catch (error) {
+      console.error('🔐 AuthService.signIn error:', error)
       return { data: null, error: error as AuthError }
     }
   }

@@ -7,16 +7,20 @@ type Tables = Database['public']['Tables']
 export class TripService {
   // Get all trips for a user
   static async getTrips(userId: string) {
+    console.log('🗄️ TripService.getTrips called:', { userId })
     try {
       const { data, error } = await supabase
         .from('trips')
         .select('*')
         .eq('user_id', userId)
         .order('created_at', { ascending: false })
-      
+
+      console.log('🗄️ TripService.getTrips result:', { count: data?.length, error: error?.message })
+
       if (error) throw error
       return { data, error: null }
     } catch (error) {
+      console.error('🗄️ TripService.getTrips error:', error)
       return { data: null, error }
     }
   }
