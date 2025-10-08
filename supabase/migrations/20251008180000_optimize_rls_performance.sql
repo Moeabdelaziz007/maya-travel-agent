@@ -2,7 +2,7 @@
 -- This migration fixes the performance warning by replacing auth.uid() with (select auth.uid())
 -- Date: 2025-10-08
 
--- Drop existing policies
+-- Drop existing policies for confirmed existing tables only
 DROP POLICY IF EXISTS "Users can view own profile" ON public.user_profiles;
 DROP POLICY IF EXISTS "Users can view own data" ON public.user_profiles;
 DROP POLICY IF EXISTS "Users can update own profile" ON public.user_profiles;
@@ -16,10 +16,6 @@ DROP POLICY IF EXISTS "Users can update own expenses" ON public.expenses;
 DROP POLICY IF EXISTS "Users can delete own expenses" ON public.expenses;
 DROP POLICY IF EXISTS "Users can view own conversations" ON public.ai_conversations;
 DROP POLICY IF EXISTS "Users can create own conversations" ON public.ai_conversations;
-DROP POLICY IF EXISTS "Users can view own analytics" ON public.analytics_events;
-DROP POLICY IF EXISTS "Users can create own analytics" ON public.analytics_events;
-DROP POLICY IF EXISTS "Users can view own subscription" ON public.subscriptions;
-DROP POLICY IF EXISTS "Users can view own payments" ON public.payments;
 
 -- Recreate optimized policies with (select auth.uid())
 
@@ -79,32 +75,6 @@ CREATE POLICY "Users can create own conversations" ON public.ai_conversations
   FOR INSERT
   WITH CHECK ((select auth.uid()) = user_id);
 
--- Analytics Events policies
-CREATE POLICY "Users can view own analytics" ON public.analytics_events
-  FOR SELECT
-  USING ((select auth.uid()) = user_id);
-
-CREATE POLICY "Users can create own analytics" ON public.analytics_events
-  FOR INSERT
-  WITH CHECK ((select auth.uid()) = user_id);
-
--- Subscriptions policies
-CREATE POLICY "Users can view own subscription" ON public.subscriptions
-  FOR SELECT
-  USING ((select auth.uid()) = user_id);
-
-CREATE POLICY "Users can update own subscription" ON public.subscriptions
-  FOR UPDATE
-  USING ((select auth.uid()) = user_id);
-
--- Payments policies  
-CREATE POLICY "Users can view own payments" ON public.payments
-  FOR SELECT
-  USING ((select auth.uid()) = user_id);
-
-CREATE POLICY "Users can create own payments" ON public.payments
-  FOR INSERT
-  WITH CHECK ((select auth.uid()) = user_id);
 
 -- Add comment for documentation
 COMMENT ON POLICY "Users can create their own trips" ON public.trips IS 
