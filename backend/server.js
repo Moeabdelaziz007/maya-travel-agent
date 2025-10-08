@@ -144,6 +144,10 @@ app.use('/api/telegram', miniappRoutes);
 const aiRoutes = require('./routes/ai');
 app.use('/api/ai', aiRoutes);
 
+// WhatsApp routes
+const whatsappRoutes = require('./routes/whatsapp');
+app.use('/api/whatsapp', whatsappRoutes);
+
 // Advanced Telegram Bot (only start if token is provided)
 if (process.env.TELEGRAM_BOT_TOKEN) {
   const advancedTelegramBot = require('./advanced-telegram-bot');
