@@ -7,17 +7,82 @@ const { createClient } = require('@supabase/supabase-js');
 
 class SupabaseDB {
   constructor() {
-    this.supabase = createClient(
-      process.env.SUPABASE_URL,
-      process.env.SUPABASE_SERVICE_ROLE_KEY
-    );
-    console.log('✅ Supabase client initialized');
+    // Check if Supabase is configured
+    if (!process.env.SUPABASE_URL || !process.env.SUPABASE_SERVICE_ROLE_KEY || 
+        process.env.SUPABASE_URL.includes('your_supabase') || 
+        process.env.SUPABASE_SERVICE_ROLE_KEY.includes('your_supabase')) {
+      console.log('⚠️ Supabase not configured - using in-memory storage');
+      this.supabase = null;
+      this.memoryStorage = {
+        profiles: new Map(),
+        messages: new Map(),
+        offers: this.getDefaultOffers()
+      };
+    } else {
+      this.supabase = createClient(
+        process.env.SUPABASE_URL,
+        process.env.SUPABASE_SERVICE_ROLE_KEY
+      );
+      this.memoryStorage = null;
+      console.log('✅ Supabase client initialized');
+    }
+  }
+
+  getDefaultOffers() {
+    return [
+      {
+        id: '1',
+        title: 'عرض تركيا الخاص - إسطنبول وبورصة',
+        destination: 'تركيا',
+        description: 'رحلة شاملة لمدة 7 أيام تشمل إسطنبول وبورصة مع جولات سياحية يومية',
+        price: 2499.00,
+        original_price: 3500.00,
+        discount_percentage: 29,
+        category: 'family',
+        duration_days: 7,
+        includes: ['طيران ذهاب وعودة', 'إقامة 5 نجوم', 'وجبات الإفطار', 'جولات سياحية', 'مرشد عربي'],
+        is_active: true,
+        priority: 10
+      },
+      {
+        id: '2',
+        title: 'عرض ماليزيا الذهبي',
+        destination: 'ماليزيا',
+        description: 'استكشف كوالالمبور ولنكاوي مع أفضل الفنادق والجولات',
+        price: 3299.00,
+        original_price: 4200.00,
+        discount_percentage: 21,
+        category: 'luxury',
+        duration_days: 10,
+        includes: ['طيران درجة أولى', 'فنادق 5 نجوم', 'جميع الوجبات', 'جولات خاصة', 'تأمين شامل'],
+        is_active: true,
+        priority: 9
+      },
+      {
+        id: '3',
+        title: 'مغامرة دبي الاقتصادية',
+        destination: 'الإمارات',
+        description: 'عطلة نهاية أسبوع في دبي بأسعار لا تقاوم',
+        price: 1299.00,
+        original_price: 1800.00,
+        discount_percentage: 28,
+        category: 'budget',
+        duration_days: 4,
+        includes: ['طيران اقتصادي', 'فندق 4 نجوم', 'إفطار', 'تذاكر برج خليفة'],
+        is_active: true,
+        priority: 8
+      }
+    ];
   }
 
   /**
    * Get or create user profile (using profiles table)
    */
   async getUserProfile(telegramId) {
+    if (!this.supabase) {
+      return this.memoryStorage.profiles.get(telegramId) || null;
+    }
+    
     try {
       const { data, error } = await this.supabase
         .from('profiles')
