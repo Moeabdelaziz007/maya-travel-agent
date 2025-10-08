@@ -39,9 +39,38 @@ export const aiService = {
   // Get AI suggestions
   getSuggestions: (context: any) => api.post('/ai/suggestions', context),
 
-  // Analyze images/videos for trip planning insights
+  // Analyze images/videos for trip planning insights (URL-based)
   analyzeMedia: (params: { prompt?: string; imageUrls?: string[]; videoUrl?: string | null; options?: { temperature?: number; maxTokens?: number; enableKvCacheOffload?: boolean; attentionImpl?: string | null } }) =>
-    api.post('/ai/multimodal/analyze', params)
+    api.post('/ai/multimodal/analyze', params),
+
+  // Upload and analyze files (multimodal file upload)
+  uploadAndAnalyzeFiles: async (files: File[], destination?: string, prompt?: string) => {
+    const formData = new FormData();
+    
+    files.forEach(file => {
+      formData.append('files', file);
+    });
+    
+    if (destination) {
+      formData.append('destination', destination);
+    }
+    
+    if (prompt) {
+      formData.append('prompt', prompt);
+    }
+    
+    return api.post('/ai/multimodal/upload', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+  },
+
+  // Get performance statistics (KV cache, FlashAttention metrics)
+  getPerformanceStats: () => api.get('/ai/performance'),
+
+  // Clear AI cache
+  clearCache: () => api.post('/ai/cache/clear')
 };
 
 // Analytics API

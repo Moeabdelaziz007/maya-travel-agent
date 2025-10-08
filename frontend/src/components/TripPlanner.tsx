@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { aiService } from '../api/services';
 import { motion } from 'framer-motion';
 import { 
@@ -9,7 +9,12 @@ import {
   Plane,
   Clock,
   Users,
-  Star
+  Star,
+  Upload,
+  Image as ImageIcon,
+  Video,
+  X,
+  Loader2
 } from 'lucide-react';
 
 interface Trip {
@@ -37,8 +42,12 @@ const TripPlanner: React.FC<TripPlannerProps> = ({ trips, setTrips }) => {
   });
   const [mediaUrl, setMediaUrl] = useState('');
   const [videoUrl, setVideoUrl] = useState('');
+  const [uploadedFiles, setUploadedFiles] = useState<File[]>([]);
+  const [filePreviews, setFilePreviews] = useState<{file: File; preview: string; type: 'image' | 'video'}[]>([]);
   const [analysis, setAnalysis] = useState<string | null>(null);
   const [analyzing, setAnalyzing] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState(0);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleAddTrip = () => {
     if (newTrip.destination && newTrip.startDate && newTrip.endDate) {
@@ -87,6 +96,82 @@ const TripPlanner: React.FC<TripPlannerProps> = ({ trips, setTrips }) => {
       console.error(err);
     } finally {
       setAnalyzing(false);
+    }
+  };
+
+  const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const files = event.target.files;
+    if (!files) return;
+    
+    const newFiles = Array.from(files);
+    addFiles(newFiles);
+  };
+
+  const addFiles = (files: File[]) => {
+    const validFiles = files.filter(file => {
+      const isImage = file.type.startsWith('image/');
+      const isVideo = file.type.startsWith('video/');
+      return isImage || isVideo;
+    });
+
+    setUploadedFiles(prev => [...prev, ...validFiles]);
+
+    // Generate previews
+    validFiles.forEach(file => {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        const type = file.type.startsWith('image/') ? 'image' : 'video';
+        setFilePreviews(prev => [...prev, { 
+          file, 
+          preview: reader.result as string, 
+          type 
+        }]);
+      };
+      reader.readAsDataURL(file);
+    });
+  };
+
+  const handleRemoveFile = (fileToRemove: File) => {
+    setUploadedFiles(prev => prev.filter(f => f !== fileToRemove));
+    setFilePreviews(prev => prev.filter(p => p.file !== fileToRemove));
+  };
+
+  const handleDragOver = (e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+  };
+
+  const handleDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    
+    const files = Array.from(e.dataTransfer.files);
+    addFiles(files);
+  };
+
+  const handleUploadAndAnalyze = async () => {
+    if (uploadedFiles.length === 0) return;
+    
+    setAnalyzing(true);
+    setAnalysis(null);
+    setUploadProgress(0);
+
+    try {
+      const { data } = await aiService.uploadAndAnalyzeFiles(
+        uploadedFiles,
+        newTrip.destination || undefined,
+        `Analyze these ${uploadedFiles.length} file(s) for trip planning insights.`
+      );
+      
+      setUploadProgress(100);
+      setAnalysis(data?.analysis || 'No analysis available');
+    } catch (err) {
+      setAnalysis('Failed to upload and analyze files. Please try again.');
+      // eslint-disable-next-line no-console
+      console.error(err);
+    } finally {
+      setAnalyzing(false);
+      setTimeout(() => setUploadProgress(0), 1000);
     }
   };
 
@@ -176,6 +261,87 @@ const TripPlanner: React.FC<TripPlannerProps> = ({ trips, setTrips }) => {
                 placeholder="https://...mp4"
               />
             </div>
+
+            {/* File Upload Section - NEW */}
+            <div className="md:col-span-2">
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                📸 Upload Images/Videos (Enhanced Multimodal AI)
+              </label>
+              <div
+                onDragOver={handleDragOver}
+                onDrop={handleDrop}
+                onClick={() => fileInputRef.current?.click()}
+                className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center cursor-pointer hover:border-blue-500 hover:bg-blue-50 transition-all"
+              >
+                <Upload className="w-12 h-12 text-gray-400 mx-auto mb-3" />
+                <p className="text-sm text-gray-600 mb-1">
+                  Drag & drop files here, or click to select
+                </p>
+                <p className="text-xs text-gray-500">
+                  Images (JPG, PNG, WEBP) and Videos (MP4, MOV) up to 10MB each
+                </p>
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  multiple
+                  accept="image/*,video/*"
+                  onChange={handleFileSelect}
+                  className="hidden"
+                />
+              </div>
+            </div>
+
+            {/* File Previews */}
+            {filePreviews.length > 0 && (
+              <div className="md:col-span-2">
+                <p className="text-sm font-medium text-gray-700 mb-2">
+                  Uploaded Files ({filePreviews.length})
+                </p>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                  {filePreviews.map((preview, idx) => (
+                    <div key={idx} className="relative group">
+                      <div className="aspect-square rounded-lg overflow-hidden bg-gray-100 border border-gray-200">
+                        {preview.type === 'image' ? (
+                          <img
+                            src={preview.preview}
+                            alt={preview.file.name}
+                            className="w-full h-full object-cover"
+                          />
+                        ) : (
+                          <div className="w-full h-full flex items-center justify-center bg-gray-200">
+                            <Video className="w-8 h-8 text-gray-500" />
+                          </div>
+                        )}
+                      </div>
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleRemoveFile(preview.file);
+                        }}
+                        className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity"
+                      >
+                        <X className="w-4 h-4" />
+                      </button>
+                      <p className="text-xs text-gray-600 mt-1 truncate">
+                        {preview.file.name}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Upload Progress */}
+            {uploadProgress > 0 && uploadProgress < 100 && (
+              <div className="md:col-span-2">
+                <div className="w-full bg-gray-200 rounded-full h-2">
+                  <div
+                    className="bg-blue-500 h-2 rounded-full transition-all duration-300"
+                    style={{ width: `${uploadProgress}%` }}
+                  />
+                </div>
+              </div>
+            )}
           </div>
           <div className="flex flex-wrap items-center gap-3 mt-6">
             <motion.button
@@ -186,15 +352,53 @@ const TripPlanner: React.FC<TripPlannerProps> = ({ trips, setTrips }) => {
             >
               Add Trip
             </motion.button>
-            <motion.button
-              onClick={handleAnalyzeMedia}
-              className="px-6 py-3 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors disabled:opacity-60"
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              disabled={analyzing || (!mediaUrl && !videoUrl)}
-            >
-              {analyzing ? 'Analyzing…' : 'Analyze Media'}
-            </motion.button>
+            
+            {/* URL-based analysis */}
+            {(mediaUrl || videoUrl) && (
+              <motion.button
+                onClick={handleAnalyzeMedia}
+                className="px-6 py-3 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors disabled:opacity-60 flex items-center gap-2"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                disabled={analyzing}
+              >
+                {analyzing ? (
+                  <>
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                    Analyzing URLs...
+                  </>
+                ) : (
+                  <>
+                    <ImageIcon className="w-4 h-4" />
+                    Analyze URL Media
+                  </>
+                )}
+              </motion.button>
+            )}
+            
+            {/* File upload analysis */}
+            {uploadedFiles.length > 0 && (
+              <motion.button
+                onClick={handleUploadAndAnalyze}
+                className="px-6 py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-lg hover:from-purple-700 hover:to-pink-700 transition-all disabled:opacity-60 flex items-center gap-2 shadow-lg"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                disabled={analyzing}
+              >
+                {analyzing ? (
+                  <>
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                    Uploading & Analyzing...
+                  </>
+                ) : (
+                  <>
+                    <Upload className="w-4 h-4" />
+                    Upload & Analyze ({uploadedFiles.length})
+                  </>
+                )}
+              </motion.button>
+            )}
+            
             <motion.button
               onClick={() => setShowAddForm(false)}
               className="px-6 py-3 bg-gray-300 text-gray-700 rounded-lg hover:bg-gray-400 transition-colors"

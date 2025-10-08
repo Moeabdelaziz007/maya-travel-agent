@@ -2,6 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
+const path = require('path');
 require('dotenv').config();
 
 const app = express();
@@ -12,6 +13,11 @@ app.use(cors());
 // Stripe webhook requires raw body; mount raw parser just for that route
 app.use('/api/payment/webhook', bodyParser.raw({ type: 'application/json' }));
 app.use(express.json());
+
+// Serve uploaded files statically
+const uploadDir = process.env.UPLOAD_DIR || './uploads';
+app.use('/uploads', express.static(path.join(__dirname, uploadDir)));
+console.log(`📁 Serving static files from: ${uploadDir}`);
 
 // MongoDB Connection (Optional - using Supabase instead)
 // const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/maya-trips';

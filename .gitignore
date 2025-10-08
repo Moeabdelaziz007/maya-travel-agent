@@ -1,3 +1,12 @@
 node_modules
 backend/.env
 backend/.env.temp
+
+# Uploads directory (keep structure, ignore files)
+backend/uploads/*
+!backend/uploads/.gitkeep
+
+# Build artifacts
+dist/
+build/
+*.log
