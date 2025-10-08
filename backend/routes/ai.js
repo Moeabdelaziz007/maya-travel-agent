@@ -1,13 +1,35 @@
 /**
  * AI Routes for Maya Trips
  * Z.ai GLM-4.6 Integration
+ * Enhanced with multimodal file upload support
  */
 
 const express = require('express');
 const router = express.Router();
+const multer = require('multer');
 const ZaiClient = require('../src/ai/zaiClient');
 const { Tools, getToolSchemas } = require('../src/ai/tools');
 const { buildCulturalSystemPrompt } = require('../src/ai/culture');
+
+// Configure multer for file uploads
+const upload = multer({
+  storage: multer.memoryStorage(),
+  limits: {
+    fileSize: 10 * 1024 * 1024, // 10MB limit
+    files: 5 // Maximum 5 files
+  },
+  fileFilter: (req, file, cb) => {
+    // Allow images and videos
+    const allowedTypes = /jpeg|jpg|png|gif|webp|mp4|mpeg|mov|avi|webm/;
+    const mimeType = allowedTypes.test(file.mimetype);
+    const extname = allowedTypes.test(file.originalname.toLowerCase());
+    
+    if (mimeType && extname) {
+      return cb(null, true);
+    }
+    cb(new Error('Invalid file type. Only images and videos are allowed.'));
+  }
+});
 
 // Initialize Z.ai client
 const zaiClient = new ZaiClient();
@@ -415,14 +437,128 @@ router.get('/models', (req, res) => {
         'budget_analysis',
         'destination_insights',
         'payment_recommendations',
-        'multilingual_support'
+        'multilingual_support',
+        'multimodal_analysis',
+        'kv_cache_optimization',
+        'flash_attention_3'
       ],
       languages: ['Arabic', 'English'],
       maxTokens: 2000,
-      temperature: 0.7
+      temperature: 0.7,
+      features: {
+        kvCache: true,
+        flashAttention: true,
+        multimodal: true
+      }
     },
     timestamp: new Date().toISOString()
   });
+});
+
+/**
+ * POST /api/ai/multimodal/upload
+ * Upload and process images/videos for trip planning
+ */
+router.post('/multimodal/upload', upload.array('files', 5), async (req, res) => {
+  try {
+    const { prompt, destination } = req.body;
+    
+    if (!req.files || req.files.length === 0) {
+      return res.status(400).json({
+        success: false,
+        error: 'No files uploaded'
+      });
+    }
+
+    console.log(`📤 Processing ${req.files.length} file(s) for trip planning`);
+
+    // Process uploaded files
+    const processedFiles = await zaiClient.processMultimodalFiles(
+      req.files.map(file => ({
+        buffer: file.buffer,
+        originalName: file.originalname,
+        mimeType: file.mimetype
+      }))
+    );
+
+    // Extract URLs from processed files
+    const imageUrls = processedFiles
+      .filter(f => f.success && f.metadata.mediaType === 'image')
+      .map(f => f.metadata.url);
+    
+    const videoFile = processedFiles
+      .find(f => f.success && f.metadata.mediaType === 'video');
+
+    // Analyze with AI
+    const analysis = await zaiClient.analyzeMedia({
+      prompt: prompt || `Analyze these media files for trip planning${destination ? ` to ${destination}` : ''}.`,
+      imageUrls,
+      videoUrl: videoFile ? videoFile.metadata.url : null
+    }, {
+      enableKvCacheOffload: true,
+      attentionImpl: 'flash-attn-3',
+      taskType: 'multimodal'
+    });
+
+    res.json({
+      success: true,
+      files: processedFiles,
+      analysis: analysis.content,
+      metadata: {
+        imageCount: imageUrls.length,
+        hasVideo: !!videoFile,
+        prompt: prompt || 'Default analysis'
+      },
+      timestamp: new Date().toISOString()
+    });
+
+  } catch (error) {
+    console.error('File upload error:', error);
+    res.status(500).json({
+      success: false,
+      error: error.message || 'Failed to process files'
+    });
+  }
+});
+
+/**
+ * GET /api/ai/performance
+ * Get performance statistics and optimization metrics
+ */
+router.get('/performance', (req, res) => {
+  try {
+    const stats = zaiClient.getPerformanceStats();
+    res.json({
+      success: true,
+      performance: stats,
+      timestamp: new Date().toISOString()
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      error: error.message
+    });
+  }
+});
+
+/**
+ * POST /api/ai/cache/clear
+ * Clear AI cache
+ */
+router.post('/cache/clear', (req, res) => {
+  try {
+    zaiClient.cacheManager.clear();
+    res.json({
+      success: true,
+      message: 'Cache cleared successfully',
+      timestamp: new Date().toISOString()
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      error: error.message
+    });
+  }
 });
 
 module.exports = router;

@@ -1,9 +1,13 @@
 /**
  * Z.ai GLM-4.6 API Client
  * Professional integration for Maya Trips AI Assistant
+ * Enhanced with KV cache offloading, multimodal support, and FlashAttention 3
  */
 
 const fetch = require('node-fetch');
+const { getGlobalCacheManager } = require('./kvCacheManager');
+const { getGlobalFlashAttentionConfig } = require('./flashAttention');
+const MultimodalProcessor = require('./multimodalProcessor');
 
 class ZaiClient {
   constructor() {
@@ -13,19 +17,45 @@ class ZaiClient {
     this.model = process.env.ZAI_MODEL || 'glm-4.6';
     this.maxTokens = parseInt(process.env.ZAI_MAX_TOKENS) || 2000;
     this.temperature = parseFloat(process.env.ZAI_TEMPERATURE) || 0.7;
+    
+    // Initialize advanced features
+    this.cacheManager = getGlobalCacheManager();
+    this.flashAttention = getGlobalFlashAttentionConfig();
+    this.multimodalProcessor = new MultimodalProcessor();
+    
     // Optional provider hints for performance/memory behavior
-    this.enableKvCacheOffload = process.env.ZAI_ENABLE_KV_OFFLOAD === 'true';
-    this.attentionImpl = process.env.ZAI_ATTENTION_IMPL || null; // e.g., 'flash-attn-3'
+    this.enableKvCacheOffload = process.env.ZAI_ENABLE_KV_OFFLOAD !== 'false';
+    this.attentionImpl = process.env.ZAI_ATTENTION_IMPL || 'flash-attn-3';
+    
+    console.log('🚀 ZaiClient initialized with advanced features:');
+    console.log(`   - KV Cache Management: ${this.enableKvCacheOffload ? 'Enabled' : 'Disabled'}`);
+    console.log(`   - FlashAttention: ${this.flashAttention.enabled ? this.flashAttention.version : 'Disabled'}`);
+    console.log(`   - Multimodal Processing: Enabled`);
   }
 
   /**
    * Send chat completion request to GLM-4.6
+   * Enhanced with KV cache and FlashAttention optimization
    * @param {Array} messages - Array of message objects
    * @param {Object} options - Additional options
    * @returns {Promise<Object>} API response
    */
   async chatCompletion(messages, options = {}) {
     try {
+      // Check cache first
+      const cacheKey = this.cacheManager.generateCacheKey(messages, options);
+      const cached = this.cacheManager.get(cacheKey);
+      
+      if (cached && !options.skipCache) {
+        console.log('💾 Cache hit - returning cached response');
+        return {
+          success: true,
+          data: cached.data,
+          content: cached.content,
+          fromCache: true
+        };
+      }
+
       const requestBody = {
         model: options.model || this.model,
         messages: messages,
@@ -34,11 +64,24 @@ class ZaiClient {
         stream: options.stream || false
       };
 
-      // Forward advanced options if provided, or from env defaults
+      // Build advanced provider hints with KV cache and FlashAttention
+      const taskType = options.taskType || 'chat';
+      const flashConfig = this.flashAttention.getProviderHints(taskType, {
+        sequenceLength: this.estimateSequenceLength(messages),
+        batchSize: 1
+      });
+      
+      const cacheHints = this.cacheManager.getProviderHints();
+
       const providerHints = {
-        kv_cache_offload: options.enableKvCacheOffload !== undefined ? options.enableKvCacheOffload : (this.enableKvCacheOffload || undefined),
-        attention: options.attentionImpl || this.attentionImpl || undefined
+        kv_cache_offload: options.enableKvCacheOffload !== undefined 
+          ? options.enableKvCacheOffload 
+          : (this.enableKvCacheOffload || cacheHints.kv_cache_offload),
+        attention: options.attentionImpl || this.attentionImpl || flashConfig.attention,
+        attention_config: flashConfig.attention_config,
+        cache_strategy: cacheHints.offload_strategy
       };
+      
       // Only attach if any value present to avoid sending noisy nulls
       if (providerHints.kv_cache_offload !== undefined || providerHints.attention !== undefined) {
         requestBody.provider_hints = providerHints;
@@ -65,11 +108,22 @@ class ZaiClient {
       const message = data.choices?.[0]?.message;
       const content = message?.content || message?.reasoning_content || data.output || 'No response generated';
       
-      return {
+      const result = {
         success: true,
         data: data,
-        content: content
+        content: content,
+        fromCache: false
       };
+      
+      // Cache the successful response
+      if (!options.skipCache) {
+        this.cacheManager.set(cacheKey, {
+          data: data,
+          content: content
+        });
+      }
+      
+      return result;
 
     } catch (error) {
       console.error('Z.ai API Error:', error);
@@ -284,6 +338,51 @@ class ZaiClient {
       temperature: 0.6,
       maxTokens: 1000
     });
+  }
+
+  /**
+   * Estimate sequence length from messages
+   * @param {Array} messages - Message array
+   * @returns {number} Estimated token count
+   */
+  estimateSequenceLength(messages) {
+    // Rough estimate: 1 token ≈ 4 characters
+    const totalChars = messages.reduce((sum, msg) => 
+      sum + (typeof msg.content === 'string' ? msg.content.length : 0), 0);
+    return Math.ceil(totalChars / 4);
+  }
+
+  /**
+   * Process multimodal files (images/videos)
+   * @param {Array<Buffer>} files - Array of file buffers with metadata
+   * @returns {Promise<Array<Object>>} Processing results
+   */
+  async processMultimodalFiles(files) {
+    const results = [];
+    for (const file of files) {
+      const result = await this.multimodalProcessor.processFileBuffer(
+        file.buffer,
+        file.originalName,
+        file.mimeType
+      );
+      results.push(result);
+    }
+    return results;
+  }
+
+  /**
+   * Get performance statistics
+   * @returns {Object} Performance stats
+   */
+  getPerformanceStats() {
+    return {
+      cache: this.cacheManager.getStats(),
+      flashAttention: this.flashAttention.toJSON(),
+      multimodal: {
+        uploadDir: this.multimodalProcessor.uploadDir,
+        maxFileSize: this.multimodalProcessor.maxFileSize
+      }
+    };
   }
 
   /**
