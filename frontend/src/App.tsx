@@ -109,12 +109,12 @@ const AppContent: React.FC = () => {
         <div className="w-full max-w-md">
           {authMode === 'login' ? (
             <LoginForm 
-              onSuccess={() => setShowAuth(false)} 
+              onSuccess={() => {}} 
               onSwitchToSignup={() => setAuthMode('signup')} 
             />
           ) : (
             <SignupForm 
-              onSuccess={() => setShowAuth(false)} 
+              onSuccess={() => {}} 
               onSwitchToLogin={() => setAuthMode('login')} 
             />
           )}

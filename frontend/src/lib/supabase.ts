@@ -1,14 +1,14 @@
 import { createClient } from '@supabase/supabase-js'
 
-const supabaseUrl = process.env.REACT_APP_SUPABASE_URL || 'YOUR_SUPABASE_URL'
-const supabaseAnonKey = process.env.REACT_APP_SUPABASE_ANON_KEY || 'YOUR_SUPABASE_ANON_KEY'
+// Prefer Vite env vars; fall back to process.env to support alternative tooling
+const supabaseUrl = (import.meta as any)?.env?.VITE_SUPABASE_URL || process.env.VITE_SUPABASE_URL || 'YOUR_SUPABASE_URL'
+const supabaseAnonKey = (import.meta as any)?.env?.VITE_SUPABASE_ANON_KEY || process.env.VITE_SUPABASE_ANON_KEY || 'YOUR_SUPABASE_ANON_KEY'
 
-console.log('🔧 Supabase Config:', {
-  url: supabaseUrl,
-  hasAnonKey: !!supabaseAnonKey,
-  urlPlaceholder: supabaseUrl === 'YOUR_SUPABASE_URL',
-  keyPlaceholder: supabaseAnonKey === 'YOUR_SUPABASE_ANON_KEY'
-})
+if (supabaseUrl === 'YOUR_SUPABASE_URL' || supabaseAnonKey === 'YOUR_SUPABASE_ANON_KEY') {
+  // Intentionally avoid logging secrets; only warn about placeholders
+  // eslint-disable-next-line no-console
+  console.warn('⚠️ Supabase env vars are not configured. Set VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY.')
+}
 
 export const supabase = createClient(supabaseUrl, supabaseAnonKey)
 

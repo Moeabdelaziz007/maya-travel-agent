@@ -1,5 +1,6 @@
 import { supabase } from './supabase'
 import { User, Session, AuthError } from '@supabase/supabase-js'
+import { UserService } from './database'
 
 // Auth service for Maya Trips
 export class AuthService {
@@ -20,6 +21,15 @@ export class AuthService {
       console.log('🔐 AuthService.signUp result:', { success: !error, userId: data?.user?.id, error: error?.message })
 
       if (error) throw error
+      // Provision profile row for user if available (may be null until email confirmed depending on project settings)
+      if (data?.user) {
+        await UserService.ensureUserProfile({
+          id: data.user.id,
+          email: data.user.email || email,
+          full_name: (data.user.user_metadata as any)?.full_name ?? fullName ?? null,
+          avatar_url: (data.user.user_metadata as any)?.avatar_url ?? null,
+        })
+      }
       return { data, error: null }
     } catch (error) {
       console.error('🔐 AuthService.signUp error:', error)
@@ -39,6 +49,14 @@ export class AuthService {
       console.log('🔐 AuthService.signIn result:', { success: !error, userId: data?.user?.id, error: error?.message })
 
       if (error) throw error
+      if (data?.user) {
+        await UserService.ensureUserProfile({
+          id: data.user.id,
+          email: data.user.email || email,
+          full_name: (data.user.user_metadata as any)?.full_name ?? null,
+          avatar_url: (data.user.user_metadata as any)?.avatar_url ?? null,
+        })
+      }
       return { data, error: null }
     } catch (error) {
       console.error('🔐 AuthService.signIn error:', error)
@@ -157,6 +175,18 @@ export class AuthService {
 
   // Listen to auth state changes
   static onAuthStateChange(callback: (event: string, session: Session | null) => void) {
-    return supabase.auth.onAuthStateChange(callback)
+    return supabase.auth.onAuthStateChange(async (event, session) => {
+      // Best-effort ensure profile on session-authenticated events
+      const user = session?.user
+      if (user) {
+        await UserService.ensureUserProfile({
+          id: user.id,
+          email: user.email || '',
+          full_name: (user.user_metadata as any)?.full_name ?? null,
+          avatar_url: (user.user_metadata as any)?.avatar_url ?? null,
+        })
+      }
+      callback(event, session)
+    })
   }
 }

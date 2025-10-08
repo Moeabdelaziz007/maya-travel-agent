@@ -241,3 +241,31 @@ export class AIConversationService {
     }
   }
 }
+
+// User service
+export class UserService {
+  /**
+   * Ensure a row exists in `users` for the given auth user.
+   * Safe to call multiple times; it will upsert by primary key.
+   */
+  static async ensureUserProfile(params: {
+    id: string
+    email: string
+    full_name?: string | null
+    avatar_url?: string | null
+  }) {
+    const { id, email, full_name, avatar_url } = params
+    try {
+      const { error } = await supabase
+        .from('users')
+        .upsert(
+          [{ id, email, full_name: full_name ?? null, avatar_url: avatar_url ?? null }],
+          { onConflict: 'id' }
+        )
+      if (error) throw error
+      return { error: null }
+    } catch (error) {
+      return { error }
+    }
+  }
+}
