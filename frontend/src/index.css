@@ -4,40 +4,149 @@
 @tailwind components;
 @tailwind utilities;
 
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
+All colors MUST be HSL.
+*/
+
+@layer base {
+  :root {
+    /* Holographic travel theme - purple/blue/cyan spectrum */
+    --background: 240 15% 6%;
+    --foreground: 210 100% 98%;
+
+    --card: 240 20% 10%;
+    --card-foreground: 210 100% 98%;
+
+    --popover: 240 25% 8%;
+    --popover-foreground: 210 100% 98%;
+
+    /* Primary: Vibrant purple */
+    --primary: 270 100% 65%;
+    --primary-foreground: 0 0% 100%;
+    --primary-glow: 270 100% 75%;
+
+    /* Secondary: Electric blue */
+    --secondary: 220 100% 55%;
+    --secondary-foreground: 0 0% 100%;
+
+    /* Muted: Dark with subtle blue */
+    --muted: 240 15% 15%;
+    --muted-foreground: 210 20% 70%;
+
+    /* Accent: Cyan highlight */
+    --accent: 185 100% 50%;
+    --accent-foreground: 240 15% 6%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 240 20% 20%;
+    --input: 240 20% 15%;
+    --ring: 270 100% 65%;
+
+    --radius: 1rem;
+
+    /* Gradients for holographic effects */
+    --gradient-primary: linear-gradient(135deg, hsl(270 100% 65%), hsl(220 100% 55%), hsl(185 100% 50%));
+    --gradient-card: linear-gradient(135deg, hsl(240 25% 12%), hsl(240 20% 10%));
+    --gradient-glass: linear-gradient(135deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.02));
+    --gradient-hero: linear-gradient(135deg, hsl(280 100% 70% / 0.2) 0%, hsl(220 100% 70% / 0.2) 50%, hsl(190 100% 60% / 0.2) 100%);
+    
+    /* Shadows with color glow */
+    --shadow-glow: 0 0 40px hsl(270 100% 65% / 0.3);
+    --shadow-card: 0 20px 60px rgba(0, 0, 0, 0.5), 0 0 40px hsl(270 100% 65% / 0.1);
+    
+    /* Sidebar */
+    --sidebar-background: 240 20% 8%;
+    --sidebar-foreground: 210 100% 98%;
+    --sidebar-primary: 270 100% 65%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 240 20% 15%;
+    --sidebar-accent-foreground: 210 100% 98%;
+    --sidebar-border: 240 20% 20%;
+    --sidebar-ring: 270 100% 65%;
+  }
 }
 
-body {
-  font-family: 'Inter', system-ui, -apple-system, sans-serif;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  min-height: 100vh;
-}
+@layer base {
+  * {
+    @apply border-border;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
 
-.glass-effect {
-  background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-}
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    font-feature-settings: "rlig" 1, "calt" 1;
+    min-height: 100vh;
+  }
 
-.gradient-text {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
+  /* Glassmorphic effects */
+  .glass {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.02));
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
 
-.maya-gradient {
-  background: linear-gradient(135deg, #0ea5e9 0%, #8b5cf6 100%);
-}
+  .glass-card {
+    background: linear-gradient(135deg, hsl(240 25% 12%), hsl(240 20% 10%));
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
 
-.maya-text {
-  background: linear-gradient(135deg, #0ea5e9 0%, #8b5cf6 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  .glass-effect {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+  }
+
+  /* Gradient text effects */
+  .gradient-text {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .maya-gradient {
+    background: linear-gradient(135deg, #0ea5e9 0%, #8b5cf6 100%);
+  }
+
+  .maya-text {
+    background: linear-gradient(135deg, #0ea5e9 0%, #8b5cf6 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  /* Holographic border animation */
+  @keyframes holo-border {
+    0%, 100% {
+      border-color: hsl(270 100% 65%);
+      box-shadow: 0 0 20px hsl(270 100% 65% / 0.3);
+    }
+    33% {
+      border-color: hsl(220 100% 55%);
+      box-shadow: 0 0 20px hsl(220 100% 55% / 0.3);
+    }
+    66% {
+      border-color: hsl(185 100% 50%);
+      box-shadow: 0 0 20px hsl(185 100% 50% / 0.3);
+    }
+  }
+
+  .holo-border {
+    animation: holo-border 4s ease-in-out infinite;
+  }
+
+  /* Smooth transitions */
+  * {
+    transition-property: color, background-color, border-color, text-decoration-color, fill, stroke;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transition-duration: 200ms;
+  }
 }
 
 /* Custom scrollbar */

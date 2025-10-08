@@ -2,6 +2,16 @@ import { supabase } from './supabase'
 import { Session, AuthError, AuthChangeEvent } from '@supabase/supabase-js'
 import { UserService } from './database'
 
+type UserMetadata = {
+  full_name?: string | null
+  avatar_url?: string | null
+}
+
+// Get site URL from environment or fallback to window.location.origin
+const getSiteUrl = () => {
+  return (import.meta as any)?.env?.VITE_SITE_URL || window.location.origin
+}
+
 // Auth service for Maya Trips
 export class AuthService {
   // Sign up with email and password
@@ -15,6 +25,7 @@ export class AuthService {
           data: {
             full_name: fullName,
           },
+          emailRedirectTo: `${getSiteUrl()}/auth/callback`,
         },
       })
 
@@ -26,8 +37,8 @@ export class AuthService {
         await UserService.ensureUserProfile({
           id: data.user.id,
           email: data.user.email || email,
-          full_name: (data.user.user_metadata as any)?.full_name ?? fullName ?? null,
-          avatar_url: (data.user.user_metadata as any)?.avatar_url ?? null,
+          full_name: (data.user.user_metadata as UserMetadata)?.full_name ?? fullName ?? null,
+          avatar_url: (data.user.user_metadata as UserMetadata)?.avatar_url ?? null,
         })
       }
       return { data, error: null }
@@ -53,8 +64,8 @@ export class AuthService {
         await UserService.ensureUserProfile({
           id: data.user.id,
           email: data.user.email || email,
-          full_name: (data.user.user_metadata as any)?.full_name ?? null,
-          avatar_url: (data.user.user_metadata as any)?.avatar_url ?? null,
+          full_name: (data.user.user_metadata as UserMetadata)?.full_name ?? null,
+          avatar_url: (data.user.user_metadata as UserMetadata)?.avatar_url ?? null,
         })
       }
       return { data, error: null }
@@ -70,7 +81,7 @@ export class AuthService {
       const { data, error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
-          redirectTo: `${window.location.origin}/auth/callback`,
+          redirectTo: `${getSiteUrl()}/auth/callback`,
         },
       })
       
@@ -87,7 +98,7 @@ export class AuthService {
       const { data, error } = await supabase.auth.signInWithOAuth({
         provider: 'github',
         options: {
-          redirectTo: `${window.location.origin}/auth/callback`,
+          redirectTo: `${getSiteUrl()}/auth/callback`,
         },
       })
       
@@ -135,7 +146,7 @@ export class AuthService {
   static async resetPassword(email: string) {
     try {
       const { data, error } = await supabase.auth.resetPasswordForEmail(email, {
-        redirectTo: `${window.location.origin}/auth/reset-password`,
+        redirectTo: `${getSiteUrl()}/auth/reset-password`,
       })
       
       if (error) throw error
@@ -182,8 +193,8 @@ export class AuthService {
         await UserService.ensureUserProfile({
           id: user.id,
           email: user.email || '',
-          full_name: (user.user_metadata as any)?.full_name ?? null,
-          avatar_url: (user.user_metadata as any)?.avatar_url ?? null,
+          full_name: (user.user_metadata as UserMetadata)?.full_name ?? null,
+          avatar_url: (user.user_metadata as UserMetadata)?.avatar_url ?? null,
         })
       }
       callback(event, session)

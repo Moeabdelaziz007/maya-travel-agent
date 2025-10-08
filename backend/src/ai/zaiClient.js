@@ -35,8 +35,8 @@ class ZaiClient {
 
       // Forward advanced options if provided, or from env defaults
       const providerHints = {
-        kv_cache_offload: options.enableKvCacheOffload ?? this.enableKvCacheOffload || undefined,
-        attention: options.attentionImpl || this.attentionImpl || undefined
+        kv_cache_offload: options.enableKvCacheOffload ?? this.enableKvCacheOffload,
+        attention: options.attentionImpl || this.attentionImpl
       };
       // Only attach if any value present to avoid sending noisy nulls
       if (providerHints.kv_cache_offload !== undefined || providerHints.attention !== undefined) {

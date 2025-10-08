@@ -1,0 +1,28 @@
+project_id = "lamkfboxekqjbguvhrfn"
+
+[functions.whatsapp-webhook]
+verify_jwt = false
+
+[functions.telegram-webhook]
+verify_jwt = false
+
+[functions.trip-ai-chat]
+verify_jwt = false
+
+[functions.create-subscription]
+verify_jwt = false
+
+[functions.stripe-webhook]
+verify_jwt = false
+
+[functions.create-checkout]
+verify_jwt = false
+
+[functions.check-subscription]
+verify_jwt = true
+
+[functions.customer-portal]
+verify_jwt = true
+
+[functions.telegram-webapp]
+verify_jwt = false

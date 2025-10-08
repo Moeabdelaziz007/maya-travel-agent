@@ -226,8 +226,7 @@ bot.on('callback_query', async (callbackQuery) => {
           body: JSON.stringify({
             amount: paymentAmount,
             currency: 'USD',
-            description: 'Maya Trips Payment',
-            customerEmail: callbackQuery.from.email
+            description: 'Maya Trips Payment'
           }),
         });
 
