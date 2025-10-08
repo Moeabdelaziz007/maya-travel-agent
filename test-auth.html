@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Maya Trips - Auth Test Suite</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            padding: 30px;
+        }
+        
+        h1 {
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+        }
+        
+        .test-section {
+            margin-bottom: 30px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+        }
+        
+        .test-title {
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 10px;
+        }
+        
+        button {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.3s;
+            margin-right: 10px;
+            margin-bottom: 10px;
+        }
+        
+        button:hover {
+            background: #5568d3;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }
+        
+        button.run-all {
+            background: #10b981;
+        }
+        
+        button.run-all:hover {
+            background: #059669;
+        }
+        
+        button.clear {
+            background: #ef4444;
+        }
+        
+        button.clear:hover {
+            background: #dc2626;
+        }
+        
+        .result {
+            margin-top: 15px;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+        
+        .result.success {
+            background: #d1fae5;
+            border: 2px solid #10b981;
+            color: #065f46;
+        }
+        
+        .result.error {
+            background: #fee2e2;
+            border: 2px solid #ef4444;
+            color: #991b1b;
+        }
+        
+        .result.info {
+            background: #dbeafe;
+            border: 2px solid #3b82f6;
+            color: #1e40af;
+        }
+        
+        .summary {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 30px;
+            border: 2px solid #667eea;
+        }
+        
+        .summary h2 {
+            color: #667eea;
+            margin-bottom: 15px;
+        }
+        
+        .stat {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        
+        .stat:last-child {
+            border-bottom: none;
+        }
+        
+        .stat-label {
+            font-weight: 600;
+        }
+        
+        .stat-value {
+            color: #667eea;
+            font-weight: bold;
+        }
+        
+        .badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: bold;
+            margin-left: 10px;
+        }
+        
+        .badge.pass {
+            background: #d1fae5;
+            color: #065f46;
+        }
+        
+        .badge.fail {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+        
+        .loading {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-right: 8px;
+            vertical-align: middle;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔐 Maya Trips - Authentication Test Suite</h1>
+        <p class="subtitle">Automated tests for signup and login functionality</p>
+        
+        <!-- Demo Credentials -->
+        <div class="test-section">
+            <div class="test-title">📋 Demo Credentials</div>
+            <div class="result info">
+Email: demo@mayatrips.com
+Password: demo123
+
+These credentials are pre-configured and should always work.
+            </div>
+        </div>
+        
+        <!-- Test 1 -->
+        <div class="test-section">
+            <div class="test-title">Test 1: Demo Login <span id="test1-badge"></span></div>
+            <button onclick="test1()">Run Test</button>
+            <div id="test1-result"></div>
+        </div>
+        
+        <!-- Test 2 -->
+        <div class="test-section">
+            <div class="test-title">Test 2: Create New Account <span id="test2-badge"></span></div>
+            <button onclick="test2()">Run Test</button>
+            <div id="test2-result"></div>
+        </div>
+        
+        <!-- Test 3 -->
+        <div class="test-section">
+            <div class="test-title">Test 3: Login with New Account <span id="test3-badge"></span></div>
+            <button onclick="test3()">Run Test</button>
+            <div id="test3-result"></div>
+        </div>
+        
+        <!-- Test 4 -->
+        <div class="test-section">
+            <div class="test-title">Test 4: Wrong Password <span id="test4-badge"></span></div>
+            <button onclick="test4()">Run Test</button>
+            <div id="test4-result"></div>
+        </div>
+        
+        <!-- Test 5 -->
+        <div class="test-section">
+            <div class="test-title">Test 5: Duplicate Account <span id="test5-badge"></span></div>
+            <button onclick="test5()">Run Test</button>
+            <div id="test5-result"></div>
+        </div>
+        
+        <!-- Test 6 -->
+        <div class="test-section">
+            <div class="test-title">Test 6: Session Persistence <span id="test6-badge"></span></div>
+            <button onclick="test6()">Run Test</button>
+            <div id="test6-result"></div>
+        </div>
+        
+        <!-- Actions -->
+        <div style="margin-top: 30px; text-align: center;">
+            <button class="run-all" onclick="runAllTests()">▶️ Run All Tests</button>
+            <button class="clear" onclick="clearSession()">🗑️ Clear Session</button>
+            <button onclick="viewSession()">👁️ View Session</button>
+        </div>
+        
+        <!-- Summary -->
+        <div class="summary" id="summary" style="display: none;">
+            <h2>📊 Test Summary</h2>
+            <div class="stat">
+                <span class="stat-label">Total Tests:</span>
+                <span class="stat-value" id="total-tests">0</span>
+            </div>
+            <div class="stat">
+                <span class="stat-label">Passed:</span>
+                <span class="stat-value" style="color: #10b981;" id="passed-tests">0</span>
+            </div>
+            <div class="stat">
+                <span class="stat-label">Failed:</span>
+                <span class="stat-value" style="color: #ef4444;" id="failed-tests">0</span>
+            </div>
+            <div class="stat">
+                <span class="stat-label">Success Rate:</span>
+                <span class="stat-value" id="success-rate">0%</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const STORAGE_KEY = 'maya_auth_session';
+        let testResults = [];
+
+        // Mock Auth Implementation (same as in mockAuth.ts)
+        class MockAuth {
+            static users = new Map([
+                ['demo@mayatrips.com', {
+                    email: 'demo@mayatrips.com',
+                    password: 'demo123',
+                    user: {
+                        id: 'demo-user-1',
+                        email: 'demo@mayatrips.com',
+                        full_name: 'Demo User',
+                        created_at: new Date().toISOString()
+                    }
+                }]
+            ]);
+
+            static createSession(user) {
+                return {
+                    user,
+                    access_token: `mock_token_${Date.now()}`,
+                    expires_at: Date.now() + (7 * 24 * 60 * 60 * 1000)
+                };
+            }
+
+            static saveSession(session) {
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(session));
+            }
+
+            static getSession() {
+                const data = localStorage.getItem(STORAGE_KEY);
+                return data ? JSON.parse(data) : null;
+            }
+
+            static signIn(email, password) {
+                const userData = this.users.get(email);
+                if (!userData) {
+                    return { success: false, error: 'Invalid email or password' };
+                }
+                if (userData.password !== password) {
+                    return { success: false, error: 'Invalid email or password' };
+                }
+                const session = this.createSession(userData.user);
+                this.saveSession(session);
+                return { success: true, user: userData.user, session };
+            }
+
+            static signUp(email, password, fullName) {
+                if (this.users.has(email)) {
+                    return { success: false, error: 'User already exists' };
+                }
+                const user = {
+                    id: `user-${Date.now()}`,
+                    email,
+                    full_name: fullName,
+                    created_at: new Date().toISOString()
+                };
+                this.users.set(email, { email, password, user });
+                const session = this.createSession(user);
+                this.saveSession(session);
+                return { success: true, user, session };
+            }
+
+            static signOut() {
+                localStorage.removeItem(STORAGE_KEY);
+                return { success: true };
+            }
+        }
+
+        function displayResult(testId, result, message) {
+            const resultDiv = document.getElementById(`${testId}-result`);
+            const badge = document.getElementById(`${testId}-badge`);
+            
+            const className = result ? 'success' : 'error';
+            const badgeClass = result ? 'pass' : 'fail';
+            const badgeText = result ? 'PASS' : 'FAIL';
+            
+            resultDiv.innerHTML = `<div class="result ${className}">${message}</div>`;
+            badge.innerHTML = `<span class="badge ${badgeClass}">${badgeText}</span>`;
+            
+            testResults.push({ test: testId, passed: result });
+            return result;
+        }
+
+        function showLoading(testId) {
+            const resultDiv = document.getElementById(`${testId}-result`);
+            resultDiv.innerHTML = `<div class="result info"><span class="loading"></span>Running test...</div>`;
+        }
+
+        async function test1() {
+            showLoading('test1');
+            await new Promise(resolve => setTimeout(resolve, 500));
+            
+            MockAuth.signOut();
+            const result = MockAuth.signIn('demo@mayatrips.com', 'demo123');
+            
+            if (result.success) {
+                displayResult('test1', true, 
+                    `✅ SUCCESS!\n\nDemo user logged in successfully.\nUser ID: ${result.user.id}\nEmail: ${result.user.email}\nFull Name: ${result.user.full_name}`
+                );
+            } else {
+                displayResult('test1', false, `❌ FAILED!\n\nError: ${result.error}`);
+            }
+        }
+
+        async function test2() {
+            showLoading('test2');
+            await new Promise(resolve => setTimeout(resolve, 500));
+            
+            MockAuth.signOut();
+            const testEmail = `test${Date.now()}@example.com`;
+            const result = MockAuth.signUp(testEmail, 'test123456', 'Test User');
+            
+            if (result.success) {
+                displayResult('test2', true, 
+                    `✅ SUCCESS!\n\nNew account created successfully.\nUser ID: ${result.user.id}\nEmail: ${result.user.email}\nFull Name: ${result.user.full_name}`
+                );
+            } else {
+                displayResult('test2', false, `❌ FAILED!\n\nError: ${result.error}`);
+            }
+        }
+
+        async function test3() {
+            showLoading('test3');
+            await new Promise(resolve => setTimeout(resolve, 500));
+            
+            // First create an account
+            MockAuth.signOut();
+            const testEmail = `login${Date.now()}@example.com`;
+            const signupResult = MockAuth.signUp(testEmail, 'pass123', 'Login Test User');
+            
+            if (!signupResult.success) {
+                displayResult('test3', false, `❌ FAILED!\n\nCouldn't create test account: ${signupResult.error}`);
+                return;
+            }
+            
+            // Sign out
+            MockAuth.signOut();
+            
+            // Try to log in
+            const loginResult = MockAuth.signIn(testEmail, 'pass123');
+            
+            if (loginResult.success) {
+                displayResult('test3', true, 
+                    `✅ SUCCESS!\n\nLogged in with new account.\nEmail: ${loginResult.user.email}`
+                );
+            } else {
+                displayResult('test3', false, `❌ FAILED!\n\nError: ${loginResult.error}`);
+            }
+        }
+
+        async function test4() {
+            showLoading('test4');
+            await new Promise(resolve => setTimeout(resolve, 500));
+            
+            MockAuth.signOut();
+            const result = MockAuth.signIn('demo@mayatrips.com', 'wrongpassword');
+            
+            if (!result.success && result.error === 'Invalid email or password') {
+                displayResult('test4', true, 
+                    `✅ SUCCESS!\n\nCorrectly rejected wrong password.\nError message: "${result.error}"`
+                );
+            } else {
+                displayResult('test4', false, `❌ FAILED!\n\nShould have rejected wrong password but didn't!`);
+            }
+        }
+
+        async function test5() {
+            showLoading('test5');
+            await new Promise(resolve => setTimeout(resolve, 500));
+            
+            MockAuth.signOut();
+            const result = MockAuth.signUp('demo@mayatrips.com', 'anypassword', 'Duplicate');
+            
+            if (!result.success && result.error === 'User already exists') {
+                displayResult('test5', true, 
+                    `✅ SUCCESS!\n\nCorrectly rejected duplicate email.\nError message: "${result.error}"`
+                );
+            } else {
+                displayResult('test5', false, `❌ FAILED!\n\nShould have rejected duplicate email but didn't!`);
+            }
+        }
+
+        async function test6() {
+            showLoading('test6');
+            await new Promise(resolve => setTimeout(resolve, 500));
+            
+            // Create session
+            MockAuth.signOut();
+            MockAuth.signIn('demo@mayatrips.com', 'demo123');
+            
+            // Check if session persists
+            const session = MockAuth.getSession();
+            
+            if (session && session.user && session.access_token) {
+                displayResult('test6', true, 
+                    `✅ SUCCESS!\n\nSession persisted in localStorage.\nToken: ${session.access_token.substring(0, 30)}...\nExpires: ${new Date(session.expires_at).toLocaleString()}`
+                );
+            } else {
+                displayResult('test6', false, `❌ FAILED!\n\nSession not found in localStorage!`);
+            }
+        }
+
+        async function runAllTests() {
+            testResults = [];
+            document.getElementById('summary').style.display = 'none';
+            
+            await test1();
+            await test2();
+            await test3();
+            await test4();
+            await test5();
+            await test6();
+            
+            // Show summary
+            const total = testResults.length;
+            const passed = testResults.filter(r => r.passed).length;
+            const failed = total - passed;
+            const rate = ((passed / total) * 100).toFixed(0);
+            
+            document.getElementById('total-tests').textContent = total;
+            document.getElementById('passed-tests').textContent = passed;
+            document.getElementById('failed-tests').textContent = failed;
+            document.getElementById('success-rate').textContent = `${rate}%`;
+            
+            document.getElementById('summary').style.display = 'block';
+            document.getElementById('summary').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function clearSession() {
+            MockAuth.signOut();
+            alert('✅ Session cleared! localStorage has been wiped clean.');
+        }
+
+        function viewSession() {
+            const session = MockAuth.getSession();
+            if (session) {
+                alert(`Current Session:\n\n${JSON.stringify(session, null, 2)}`);
+            } else {
+                alert('No active session found.');
+            }
+        }
+    </script>
+</body>
+</html>
