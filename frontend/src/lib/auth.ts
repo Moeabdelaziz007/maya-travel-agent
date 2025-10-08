@@ -1,5 +1,5 @@
 import { supabase } from './supabase'
-import { User, Session, AuthError } from '@supabase/supabase-js'
+import { Session, AuthError, AuthChangeEvent } from '@supabase/supabase-js'
 import { UserService } from './database'
 
 // Auth service for Maya Trips
@@ -174,8 +174,8 @@ export class AuthService {
   }
 
   // Listen to auth state changes
-  static onAuthStateChange(callback: (event: string, session: Session | null) => void) {
-    return supabase.auth.onAuthStateChange(async (event, session) => {
+  static onAuthStateChange(callback: (event: AuthChangeEvent, session: Session | null) => void) {
+    return supabase.auth.onAuthStateChange(async (event: AuthChangeEvent, session: Session | null) => {
       // Best-effort ensure profile on session-authenticated events
       const user = session?.user
       if (user) {
