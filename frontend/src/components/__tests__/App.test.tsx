@@ -1,6 +1,6 @@
 import { render, screen, waitFor } from '@testing-library/react'
 import { describe, it, expect, vi } from 'vitest'
-import App from '../App'
+import App from '../../App'
 
 // Mock the AuthProvider
 vi.mock('../Auth/AuthProvider', () => ({

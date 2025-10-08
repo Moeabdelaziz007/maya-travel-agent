@@ -8,7 +8,8 @@ const fetch = require('node-fetch');
 class ZaiClient {
   constructor() {
     this.apiKey = process.env.ZAI_API_KEY;
-    this.baseUrl = process.env.ZAI_API_BASE_URL || 'https://api.z.ai/api/paas/v4';
+    // Use Coding API endpoint for GLM Coding Plan
+    this.baseUrl = process.env.ZAI_API_BASE_URL || 'https://api.z.ai/api/coding/paas/v4';
     this.model = process.env.ZAI_MODEL || 'glm-4.6';
     this.maxTokens = parseInt(process.env.ZAI_MAX_TOKENS) || 2000;
     this.temperature = parseFloat(process.env.ZAI_TEMPERATURE) || 0.7;
@@ -35,7 +36,7 @@ class ZaiClient {
 
       // Forward advanced options if provided, or from env defaults
       const providerHints = {
-        kv_cache_offload: options.enableKvCacheOffload ?? this.enableKvCacheOffload || undefined,
+        kv_cache_offload: options.enableKvCacheOffload !== undefined ? options.enableKvCacheOffload : (this.enableKvCacheOffload || undefined),
         attention: options.attentionImpl || this.attentionImpl || undefined
       };
       // Only attach if any value present to avoid sending noisy nulls
@@ -59,10 +60,15 @@ class ZaiClient {
       }
 
       const data = await response.json();
+      
+      // Extract content from response (GLM-4.6 uses reasoning_content)
+      const message = data.choices?.[0]?.message;
+      const content = message?.content || message?.reasoning_content || data.output || 'No response generated';
+      
       return {
         success: true,
         data: data,
-        content: data.choices?.[0]?.message?.content || data.output || 'No response generated'
+        content: content
       };
 
     } catch (error) {

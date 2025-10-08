@@ -1,10 +1,20 @@
 import { supabase } from './supabase'
-import { User, Session, AuthError } from '@supabase/supabase-js'
+import { Session, AuthError } from '@supabase/supabase-js'
+import MockAuthService from './mockAuth'
+
+// Check if we should use mock auth (when Supabase is not configured)
+const USE_MOCK_AUTH = !(import.meta as any).env?.VITE_SUPABASE_URL || 
+                      (import.meta as any).env?.VITE_SUPABASE_URL?.includes('your-project') ||
+                      (import.meta as any).env?.VITE_SUPABASE_ANON_KEY?.includes('placeholder');
 
 // Auth service for Maya Trips
 export class AuthService {
   // Sign up with email and password
   static async signUp(email: string, password: string, fullName?: string) {
+    if (USE_MOCK_AUTH) {
+      return MockAuthService.signUp(email, password, fullName);
+    }
+
     try {
       const { data, error } = await supabase.auth.signUp({
         email,
@@ -26,6 +36,10 @@ export class AuthService {
 
   // Sign in with email and password
   static async signIn(email: string, password: string) {
+    if (USE_MOCK_AUTH) {
+      return MockAuthService.signIn(email, password);
+    }
+
     try {
       const { data, error } = await supabase.auth.signInWithPassword({
         email,
@@ -75,6 +89,10 @@ export class AuthService {
 
   // Sign out
   static async signOut() {
+    if (USE_MOCK_AUTH) {
+      return MockAuthService.signOut();
+    }
+
     try {
       const { error } = await supabase.auth.signOut()
       if (error) throw error
@@ -86,6 +104,10 @@ export class AuthService {
 
   // Get current user
   static async getCurrentUser() {
+    if (USE_MOCK_AUTH) {
+      return MockAuthService.getCurrentUser();
+    }
+
     try {
       const { data: { user }, error } = await supabase.auth.getUser()
       if (error) throw error
@@ -97,6 +119,10 @@ export class AuthService {
 
   // Get current session
   static async getCurrentSession() {
+    if (USE_MOCK_AUTH) {
+      return MockAuthService.getCurrentSession();
+    }
+
     try {
       const { data: { session }, error } = await supabase.auth.getSession()
       if (error) throw error
@@ -149,7 +175,11 @@ export class AuthService {
   }
 
   // Listen to auth state changes
-  static onAuthStateChange(callback: (event: string, session: Session | null) => void) {
+  static onAuthStateChange(callback: (event: string, session: any) => void) {
+    if (USE_MOCK_AUTH) {
+      return MockAuthService.onAuthStateChange(callback);
+    }
+
     return supabase.auth.onAuthStateChange(callback)
   }
 }

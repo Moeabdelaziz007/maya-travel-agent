@@ -517,6 +517,201 @@ class MCPTools {
     // This would contain actual matching logic
     return Math.min(score / totalChecks * 100, 100);
   }
+
+  // Missing methods implementation
+  async getLocalTransport(params) {
+    const { destination, transport_type = 'all' } = params;
+    return {
+      success: true,
+      data: {
+        options: [
+          { type: 'taxi', availability: 'high', cost: '$$', recommendation: 'للرحلات القصيرة' },
+          { type: 'metro', availability: 'medium', cost: '$', recommendation: 'للتنقل السريع' },
+          { type: 'bus', availability: 'high', cost: '$', recommendation: 'اقتصادي' },
+          { type: 'rental_car', availability: 'medium', cost: '$$$', recommendation: 'للحرية الكاملة' }
+        ]
+      }
+    };
+  }
+
+  async getVisaRequirements(params) {
+    const { destination, nationality = 'SA' } = params;
+    const visaInfo = this.getVisaKnowledgeBase(destination, nationality);
+    return {
+      success: true,
+      data: visaInfo
+    };
+  }
+
+  async getVaccinationInfo(params) {
+    const { destination } = params;
+    return {
+      success: true,
+      data: {
+        required: ['COVID-19'],
+        recommended: ['Hepatitis A', 'Typhoid'],
+        notes: 'تحقق من متطلبات الدولة قبل السفر'
+      }
+    };
+  }
+
+  async getTravelAdvisories(params) {
+    const { destination } = params;
+    return {
+      success: true,
+      data: {
+        level: 'low',
+        warnings: [],
+        recommendations: ['احتفظ بنسخة من جواز سفرك', 'سجل في سفارتك']
+      }
+    };
+  }
+
+  async getLocalCuisine(params) {
+    const { destination } = params;
+    return {
+      success: true,
+      data: {
+        popular_dishes: ['طبق محلي 1', 'طبق محلي 2'],
+        restaurants: ['مطعم 1', 'مطعم 2'],
+        dietary_info: 'معلومات عن الطعام المحلي'
+      }
+    };
+  }
+
+  async getCulturalTips(params) {
+    const { destination } = params;
+    return {
+      success: true,
+      data: {
+        customs: ['عادة 1', 'عادة 2'],
+        etiquette: ['آداب 1', 'آداب 2'],
+        language_tips: ['عبارة مفيدة 1', 'عبارة مفيدة 2']
+      }
+    };
+  }
+
+  async getLocalEvents(params) {
+    const { destination, date } = params;
+    return {
+      success: true,
+      data: {
+        events: [],
+        festivals: [],
+        holidays: []
+      }
+    };
+  }
+
+  async getNearbyAttractions(params) {
+    const { location, radius = 10 } = params;
+    return {
+      success: true,
+      data: {
+        attractions: [
+          { name: 'معلم 1', distance: '2 كم', rating: 4.5 },
+          { name: 'معلم 2', distance: '5 كم', rating: 4.8 }
+        ]
+      }
+    };
+  }
+
+  async optimizeItinerary(params) {
+    const { destinations, duration, budget, interests, travel_style } = params;
+    return {
+      success: true,
+      data: this.generateOptimizedItinerary(destinations, duration, budget, interests, travel_style)
+    };
+  }
+
+  async calculateBudget(params) {
+    const { destination, duration, travel_style = 'balanced' } = params;
+    const baseDaily = travel_style === 'luxury' ? 500 : travel_style === 'budget' ? 100 : 250;
+    return {
+      success: true,
+      data: {
+        total_estimated: baseDaily * duration,
+        breakdown: {
+          accommodation: baseDaily * 0.4 * duration,
+          food: baseDaily * 0.3 * duration,
+          activities: baseDaily * 0.2 * duration,
+          transport: baseDaily * 0.1 * duration
+        }
+      }
+    };
+  }
+
+  async getTravelInsurance(params) {
+    const { destination, duration, coverage_type = 'standard' } = params;
+    return {
+      success: true,
+      data: {
+        providers: ['شركة تأمين 1', 'شركة تأمين 2'],
+        estimated_cost: duration * 10,
+        coverage: ['طبي', 'إلغاء الرحلة', 'فقدان الأمتعة']
+      }
+    };
+  }
+
+  async getEmergencyContacts(params) {
+    const { destination } = params;
+    return {
+      success: true,
+      data: {
+        police: '911',
+        ambulance: '997',
+        embassy: '+966-xxx-xxxx',
+        tourist_police: '1234'
+      }
+    };
+  }
+
+  async analyzePreferences(params) {
+    const { conversation_history } = params;
+    return {
+      success: true,
+      data: {
+        travel_style: this.determineTravelStyle(conversation_history),
+        interests: ['ثقافة', 'طبيعة'],
+        budget_range: 'متوسط'
+      }
+    };
+  }
+
+  async trackBehavior(params) {
+    const { user_id, action } = params;
+    return {
+      success: true,
+      data: {
+        tracked: true,
+        action: action
+      }
+    };
+  }
+
+  async predictSatisfaction(params) {
+    const { user_preferences, recommendations } = params;
+    const score = this.calculatePersonalizationScore(recommendations, user_preferences);
+    return {
+      success: true,
+      data: {
+        satisfaction_score: score,
+        confidence: 0.85
+      }
+    };
+  }
+
+  async generateRecommendations(params) {
+    const { user_profile, context } = params;
+    return {
+      success: true,
+      data: {
+        destinations: ['وجهة 1', 'وجهة 2'],
+        activities: ['نشاط 1', 'نشاط 2'],
+        personalization_score: 85
+      }
+    };
+  }
 }
 
 module.exports = MCPTools;

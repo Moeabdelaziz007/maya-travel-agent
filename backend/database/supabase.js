@@ -105,6 +105,20 @@ class SupabaseDB {
    * Create new user profile (using profiles table)
    */
   async createUserProfile(telegramId, userData) {
+    if (!this.supabase) {
+      const profile = {
+        telegram_id: telegramId,
+        username: userData.username || null,
+        avatar_url: userData.avatar_url || null,
+        preferences: userData.preferences || {},
+        travel_history: [],
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString()
+      };
+      this.memoryStorage.profiles.set(telegramId, profile);
+      return profile;
+    }
+    
     try {
       const { data, error } = await this.supabase
         .from('profiles')
@@ -132,6 +146,14 @@ class SupabaseDB {
    * Update user profile (using profiles table)
    */
   async updateUserProfile(telegramId, updates) {
+    if (!this.supabase) {
+      const profile = this.memoryStorage.profiles.get(telegramId);
+      if (!profile) return null;
+      const updated = { ...profile, ...updates, updated_at: new Date().toISOString() };
+      this.memoryStorage.profiles.set(telegramId, updated);
+      return updated;
+    }
+    
     try {
       const { data, error } = await this.supabase
         .from('profiles')
@@ -155,6 +177,21 @@ class SupabaseDB {
    * Save conversation message (using messages table)
    */
   async saveConversationMessage(telegramId, message, isUser = true) {
+    if (!this.supabase) {
+      if (!this.memoryStorage.messages.has(telegramId)) {
+        this.memoryStorage.messages.set(telegramId, []);
+      }
+      const msg = {
+        telegram_id: telegramId,
+        content: message,
+        role: isUser ? 'user' : 'assistant',
+        is_telegram: true,
+        created_at: new Date().toISOString()
+      };
+      this.memoryStorage.messages.get(telegramId).push(msg);
+      return msg;
+    }
+    
     try {
       const { data, error } = await this.supabase
         .from('messages')
@@ -180,6 +217,15 @@ class SupabaseDB {
    * Get conversation history (using messages table)
    */
   async getConversationHistory(telegramId, limit = 20) {
+    if (!this.supabase) {
+      const messages = this.memoryStorage.messages.get(telegramId) || [];
+      return messages.slice(-limit).map(msg => ({
+        message: msg.content,
+        is_user: msg.role === 'user',
+        timestamp: msg.created_at
+      }));
+    }
+    
     try {
       const { data, error } = await this.supabase
         .from('messages')
@@ -273,6 +319,26 @@ class SupabaseDB {
    * Get all travel offers
    */
   async getTravelOffers(filters = {}) {
+    if (!this.supabase) {
+      let offers = this.memoryStorage.offers.filter(o => o.is_active);
+      
+      if (filters.destination) {
+        offers = offers.filter(o => 
+          o.destination.toLowerCase().includes(filters.destination.toLowerCase())
+        );
+      }
+      
+      if (filters.maxPrice) {
+        offers = offers.filter(o => o.price <= filters.maxPrice);
+      }
+      
+      if (filters.category) {
+        offers = offers.filter(o => o.category === filters.category);
+      }
+      
+      return offers.sort((a, b) => b.priority - a.priority).slice(0, 10);
+    }
+    
     try {
       let query = this.supabase
         .from('travel_offers')
