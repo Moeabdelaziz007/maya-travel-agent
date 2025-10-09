@@ -17,7 +17,20 @@
     "start": "concurrently \"npm run start:backend\" \"npm run start:frontend\"",
     "start:frontend": "cd frontend && npm run start",
     "start:backend": "cd backend && npm run start",
-    "install:all": "npm install && cd frontend && npm install && cd ../backend && npm install"
+    "install:all": "npm install && cd frontend && npm install && cd ../backend && npm install",
+    "setup": "./scripts/setup-dev.sh",
+    "deploy": "./scripts/deploy.sh",
+    "deploy:frontend": "./scripts/deploy.sh frontend",
+    "deploy:supabase": "./scripts/deploy.sh supabase",
+    "migrate": "./scripts/migrate-db.sh run",
+    "migrate:list": "./scripts/migrate-db.sh list",
+    "migrate:reset": "./scripts/migrate-db.sh reset",
+    "migrate:seed": "./scripts/migrate-db.sh seed",
+    "check-quality": "./scripts/check-quality.sh",
+    "check:frontend": "./scripts/check-quality.sh frontend",
+    "check:backend": "./scripts/check-quality.sh backend",
+    "check:security": "./scripts/check-quality.sh security",
+    "clean": "rm -rf node_modules frontend/node_modules backend/node_modules && npm run install:all"
   },
   "devDependencies": {
     "concurrently": "^8.2.0"

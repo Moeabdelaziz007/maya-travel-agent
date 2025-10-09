@@ -47,7 +47,21 @@
         "-y",
         "@modelcontextprotocol/server-knowledge-graph"
       ]
+    },
+    "git": {
+      "command": "uvx",
+      "args": [
+        "mcp-server-git",
+        "--repository",
+        "https://github.com/Moeabdelaziz007/maya-travel-agent.git"
+      ]
+    },
+    "memory": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-memory"
+      ]
     }
   }
-}}
 }

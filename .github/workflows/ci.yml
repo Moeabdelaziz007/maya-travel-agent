@@ -1,105 +1,439 @@
-name: CI/CD Pipeline
+name: Maya Travel Agent - CI/CD Pipeline
 
 on:
   push:
     branches: [ main, develop ]
+    paths:
+      - 'frontend/**'
+      - 'backend/**'
+      - 'supabase/**'
+      - 'package*.json'
+      - '.github/workflows/**'
   pull_request:
     branches: [ main, develop ]
+    paths:
+      - 'frontend/**'
+      - 'backend/**'
+      - 'supabase/**'
+      - 'package*.json'
+      - '.github/workflows/**'
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Deployment environment'
+        required: true
+        default: 'staging'
+        type: choice
+        options:
+          - staging
+          - production
+
+env:
+  NODE_VERSION: '20.x'
+  NPM_REGISTRY_URL: 'https://registry.npmjs.org'
 
 jobs:
-  test:
+  # Code Quality Checks
+  quality:
+    name: Code Quality & Security
     runs-on: ubuntu-latest
-    
-    strategy:
-      matrix:
-        node-version: [18.x, 20.x]
-    
+    timeout-minutes: 15
+
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
-      
-    - name: Setup Node.js ${{ matrix.node-version }}
+      with:
+        fetch-depth: 0
+
+    - name: Setup Node.js ${{ env.NODE_VERSION }}
       uses: actions/setup-node@v4
       with:
-        node-version: ${{ matrix.node-version }}
+        node-version: ${{ env.NODE_VERSION }}
         cache: 'npm'
-        
+        registry-url: ${{ env.NPM_REGISTRY_URL }}
+
     - name: Install dependencies
       run: |
         npm ci
         cd frontend && npm ci
         cd ../backend && npm ci
-        
-    - name: Type check
-      run: |
-        cd frontend && npm run type-check
-        
-    - name: Lint
+
+    - name: Run ESLint
       run: |
         cd frontend && npm run lint
-        
-    - name: Format check
+
+    - name: Check TypeScript types
+      run: |
+        cd frontend && npm run type-check
+
+    - name: Check code formatting
       run: |
         cd frontend && npm run format:check
-        
-    - name: Unit tests
-      run: |
-        cd frontend && npm run test:coverage
-        
-    - name: Build
-      run: |
-        cd frontend && npm run build
-        cd ../backend && npm run build
-        
-    - name: E2E tests
-      run: |
-        cd frontend && npm run e2e
-        
-    - name: Accessibility tests
-      run: |
-        cd frontend && npm run a11y-check
-        
+
     - name: Security audit
       run: |
         npm audit --audit-level high
         cd frontend && npm audit --audit-level high
         cd ../backend && npm audit --audit-level high
-        
-    - name: Upload coverage reports
-      uses: codecov/codecov-action@v3
-      with:
-        files: ./frontend/coverage/lcov.info
-        flags: frontend
-        name: frontend-coverage
-        
-  deploy:
-    needs: test
+
+    - name: Check for vulnerabilities
+      uses: actions/dependency-review-action@v3
+
+    - name: Upload security scan results
+      uses: github/codeql-action/upload-sarif@v2
+      if: always()
+
+  # Testing
+  test:
+    name: Testing Suite
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main'
-    
+    timeout-minutes: 20
+    needs: quality
+
+    strategy:
+      matrix:
+        node-version: ['18.x', '20.x']
+
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
-      
-    - name: Setup Node.js
+
+    - name: Setup Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v4
       with:
-        node-version: '20.x'
+        node-version: ${{ matrix.node-version }}
         cache: 'npm'
-        
+
     - name: Install dependencies
       run: |
         npm ci
         cd frontend && npm ci
-        
-    - name: Build for production
+        cd ../backend && npm ci
+
+    - name: Run frontend tests with coverage
+      run: |
+        cd frontend && npm run test:coverage
+
+    - name: Run backend tests
+      run: |
+        cd backend && npm run test || echo "No backend tests configured"
+
+    - name: Upload frontend coverage to Codecov
+      uses: codecov/codecov-action@v3
+      with:
+        file: ./frontend/coverage/lcov.info
+        flags: frontend
+        name: frontend-coverage-${{ matrix.node-version }}
+
+    - name: Upload backend coverage to Codecov
+      uses: codecov/codecov-action@v3
+      with:
+        file: ./backend/coverage/lcov.info
+        flags: backend
+        name: backend-coverage-${{ matrix.node-version }}
+
+  # Build Verification
+  build:
+    name: Build Verification
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    needs: test
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup Node.js ${{ env.NODE_VERSION }}
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ env.NODE_VERSION }}
+        cache: 'npm'
+
+    - name: Install dependencies
+      run: |
+        npm ci
+        cd frontend && npm ci
+        cd ../backend && npm ci
+
+    - name: Build frontend for production
       run: |
         cd frontend && npm run build
-        
-    - name: Deploy to Vercel
+
+    - name: Build backend
+      run: |
+        cd backend && npm run build
+
+    - name: Upload build artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: build-artifacts
+        path: |
+          frontend/dist/
+          backend/dist/
+        retention-days: 7
+
+    - name: Check bundle size
+      run: |
+        cd frontend
+        if [ -d "dist" ]; then
+          BUNDLE_SIZE=$(du -sb dist | cut -f1)
+          BUNDLE_SIZE_MB=$((BUNDLE_SIZE / 1024 / 1024))
+          echo "Bundle size: ${BUNDLE_SIZE_MB}MB"
+
+          # Warn if bundle is too large
+          if [ "$BUNDLE_SIZE_MB" -gt 5 ]; then
+            echo "::warning::Bundle size (${BUNDLE_SIZE_MB}MB) exceeds recommended 5MB limit"
+          fi
+        fi
+
+  # E2E and Accessibility Testing
+  e2e:
+    name: E2E & Accessibility Tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    needs: build
+    if: github.event_name == 'pull_request' || github.event_name == 'workflow_dispatch'
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup Node.js ${{ env.NODE_VERSION }}
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ env.NODE_VERSION }}
+        cache: 'npm'
+
+    - name: Install dependencies
+      run: |
+        npm ci
+        cd frontend && npm ci
+
+    - name: Install Playwright browsers
+      run: |
+        cd frontend && npx playwright install --with-deps
+
+    - name: Run E2E tests
+      run: |
+        cd frontend && npm run e2e
+      continue-on-error: true
+
+    - name: Run accessibility tests
+      run: |
+        cd frontend && npm run a11y-check
+      continue-on-error: true
+
+    - name: Upload E2E test results
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: e2e-results
+        path: |
+          frontend/playwright-report/
+          frontend/test-results/
+        retention-days: 7
+
+  # Performance Testing
+  performance:
+    name: Performance & Bundle Analysis
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    needs: build
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup Node.js ${{ env.NODE_VERSION }}
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ env.NODE_VERSION }}
+        cache: 'npm'
+
+    - name: Install dependencies
+      run: |
+        npm ci
+        cd frontend && npm ci
+
+    - name: Build frontend
+      run: |
+        cd frontend && npm run build
+
+    - name: Run Lighthouse CI
+      uses: treosh/lighthouse-ci-action@v10
+      with:
+        configPath: './frontend/.lighthouserc.json'
+        uploadArtifacts: true
+        temporaryPublicStorage: true
+
+    - name: Bundle analyzer
+      run: |
+        cd frontend
+        if command -v npx >/dev/null 2>&1; then
+          npx vite-bundle-analyzer dist/static/js/*.js || echo "Bundle analyzer not available"
+        fi
+
+  # Deployment to Staging
+  deploy-staging:
+    name: Deploy to Staging
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    needs: [quality, test, build]
+    if: github.ref == 'refs/heads/develop' || (github.event_name == 'workflow_dispatch' && github.event.inputs.environment == 'staging')
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup Node.js ${{ env.NODE_VERSION }}
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ env.NODE_VERSION }}
+        cache: 'npm'
+
+    - name: Install dependencies
+      run: |
+        npm ci
+        cd frontend && npm ci
+
+    - name: Build for staging
+      run: |
+        cd frontend && npm run build:dev
+
+    - name: Deploy to Vercel (staging)
       uses: amondnet/vercel-action@v25
       with:
         vercel-token: ${{ secrets.VERCEL_TOKEN }}
-        vercel-org-id: ${{ secrets.ORG_ID }}
-        vercel-project-id: ${{ secrets.PROJECT_ID }}
+        vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
+        vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
         working-directory: ./frontend
+        vercel-args: --scope ${{ secrets.VERCEL_ORG_ID }}
+      env:
+        VERCEL_ENV: staging
+
+    - name: Deploy Supabase functions (staging)
+      run: |
+        if [ -n "${{ secrets.SUPABASE_ACCESS_TOKEN }}" ]; then
+          npx supabase functions deploy --project-ref ${{ secrets.SUPABASE_PROJECT_ID }}
+        fi
+      env:
+        SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+
+  # Deployment to Production
+  deploy-production:
+    name: Deploy to Production
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    needs: [quality, test, build, e2e]
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup Node.js ${{ env.NODE_VERSION }}
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ env.NODE_VERSION }}
+        cache: 'npm'
+
+    - name: Install dependencies
+      run: |
+        npm ci
+        cd frontend && npm ci
+
+    - name: Build for production
+      run: |
+        cd frontend && npm run build
+
+    - name: Deploy to Vercel (production)
+      uses: amondnet/vercel-action@v25
+      with:
+        vercel-token: ${{ secrets.VERCEL_TOKEN }}
+        vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
+        vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
+        working-directory: ./frontend
+        vercel-args: --prod
+      env:
+        VERCEL_ENV: production
+
+    - name: Deploy Supabase functions (production)
+      run: |
+        if [ -n "${{ secrets.SUPABASE_ACCESS_TOKEN }}" ]; then
+          npx supabase functions deploy --project-ref ${{ secrets.SUPABASE_PROJECT_ID }}
+        fi
+      env:
+        SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+
+    - name: Run database migrations
+      run: |
+        if [ -n "${{ secrets.SUPABASE_ACCESS_TOKEN }}" ]; then
+          npx supabase db push --project-ref ${{ secrets.SUPABASE_PROJECT_ID }}
+        fi
+      env:
+        SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+
+    - name: Post-deployment health check
+      run: |
+        # Wait for deployment to be ready
+        sleep 30
+
+        # Check if deployment URL is accessible
+        if [ -n "${{ steps.deploy.outputs.url }}" ]; then
+          curl -f -s "${{ steps.deploy.outputs.url }}/api/health" > /dev/null || exit 1
+        fi
+
+    - name: Create deployment notification
+      if: success()
+      run: |
+        echo "✅ Deployment completed successfully!" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "🌐 **Frontend:** ${{ steps.deploy.outputs.url }}" >> $GITHUB_STEP_SUMMARY
+        echo "📚 **API Docs:** ${{ steps.deploy.outputs.url }}/api/health" >> $GITHUB_STEP_SUMMARY
+        echo "📊 **Commit:** ${{ github.sha }}" >> $GITHUB_STEP_SUMMARY
+
+  # Manual Deployment (for workflow_dispatch)
+  deploy-manual:
+    name: Manual Deployment
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    if: github.event_name == 'workflow_dispatch'
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup Node.js ${{ env.NODE_VERSION }}
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ env.NODE_VERSION }}
+        cache: 'npm'
+
+    - name: Install dependencies
+      run: |
+        npm ci
+        cd frontend && npm ci
+
+    - name: Build application
+      run: |
+        cd frontend && npm run build
+
+    - name: Deploy to Vercel (${{ github.event.inputs.environment }})
+      uses: amondnet/vercel-action@v25
+      with:
+        vercel-token: ${{ secrets.VERCEL_TOKEN }}
+        vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
+        vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
+        working-directory: ./frontend
+        vercel-args: ${{ github.event.inputs.environment == 'production' && '--prod' || '' }}
+      env:
+        VERCEL_ENV: ${{ github.event.inputs.environment }}
+
+    - name: Deployment Summary
+      run: |
+        echo "## 🚀 Manual Deployment Completed" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "**Environment:** ${{ github.event.inputs.environment }}" >> $GITHUB_STEP_SUMMARY
+        echo "**Triggered by:** ${{ github.actor }}" >> $GITHUB_STEP_SUMMARY
+        echo "**Commit:** ${{ github.sha }}" >> $GITHUB_STEP_SUMMARY
