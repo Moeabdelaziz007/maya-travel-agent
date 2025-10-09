@@ -1,42 +1,506 @@
 {
   "openapi": "3.0.3",
   "info": {
-    "title": "Maya Trips Public API",
+    "title": "Maya Travel Agent API",
     "version": "1.0.0",
-    "description": "Open APIs for local developers to integrate travel planning, AI chat, and analytics."
+    "description": "Comprehensive API for Maya Travel Agent - AI-powered travel planning, payment processing, and Telegram integration",
+    "contact": {
+      "name": "Maya Trips Team",
+      "url": "https://github.com/Moeabdelaziz007/maya-travel-agent"
+    },
+    "license": {
+      "name": "MIT",
+      "url": "https://opensource.org/licenses/MIT"
+    }
   },
-  "servers": [{ "url": "/api" }],
+  "servers": [
+    {
+      "url": "http://localhost:5000/api",
+      "description": "Development server"
+    },
+    {
+      "url": "https://api.maya-trips.com/api",
+      "description": "Production server"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Health",
+      "description": "Health check and status endpoints"
+    },
+    {
+      "name": "AI",
+      "description": "AI-powered travel assistance"
+    },
+    {
+      "name": "Payment",
+      "description": "Payment processing"
+    },
+    {
+      "name": "Telegram",
+      "description": "Telegram Mini App integration"
+    },
+    {
+      "name": "Analytics",
+      "description": "Analytics and tracking"
+    }
+  ],
   "paths": {
+    "/health": {
+      "get": {
+        "tags": ["Health"],
+        "summary": "Get server health status",
+        "description": "Returns server health, uptime, and memory usage",
+        "responses": {
+          "200": {
+            "description": "Server is healthy",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": { "type": "string", "example": "healthy" },
+                    "timestamp": { "type": "string", "format": "date-time" },
+                    "uptime": { "type": "number", "example": 3600 },
+                    "memory": {
+                      "type": "object",
+                      "properties": {
+                        "rss": { "type": "number" },
+                        "heapTotal": { "type": "number" },
+                        "heapUsed": { "type": "number" },
+                        "external": { "type": "number" }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/public/ping": {
       "get": {
-        "summary": "Health check",
-        "responses": { "200": { "description": "OK" } }
+        "tags": ["Health"],
+        "summary": "Simple ping endpoint",
+        "description": "Quick connectivity test",
+        "responses": {
+          "200": {
+            "description": "Pong",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "ok": { "type": "boolean", "example": true },
+                    "ts": { "type": "number", "example": 1699564800000 }
+                  }
+                }
+              }
+            }
+          }
+        }
       }
     },
     "/ai/chat": {
       "post": {
+        "tags": ["AI"],
         "summary": "Chat with Maya AI",
-        "requestBody": { "required": true },
-        "responses": { "200": { "description": "AI reply" } }
+        "description": "Send a message to Maya AI assistant and get intelligent travel advice",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["message"],
+                "properties": {
+                  "message": {
+                    "type": "string",
+                    "description": "User's message",
+                    "example": "I want to travel to Turkey"
+                  },
+                  "userId": {
+                    "type": "string",
+                    "description": "User identifier",
+                    "example": "user123"
+                  },
+                  "conversationHistory": {
+                    "type": "array",
+                    "description": "Previous conversation context",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "role": { "type": "string", "enum": ["user", "assistant", "system"] },
+                        "content": { "type": "string" }
+                      }
+                    }
+                  },
+                  "useTools": {
+                    "type": "boolean",
+                    "description": "Enable tool calling",
+                    "default": false
+                  },
+                  "region": {
+                    "type": "string",
+                    "description": "Language/region code",
+                    "enum": ["ar", "en"],
+                    "default": "ar"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "AI response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": { "type": "boolean", "example": true },
+                    "reply": { "type": "string", "example": "مرحباً! سأساعدك في التخطيط لرحلتك..." },
+                    "timestamp": { "type": "string", "format": "date-time" },
+                    "model": { "type": "string", "example": "glm-4.6" }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Error" }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limit exceeded",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/RateLimitError" }
+              }
+            }
+          },
+          "500": {
+            "description": "Server error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Error" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/ai/travel-recommendations": {
+      "post": {
+        "tags": ["AI"],
+        "summary": "Get travel recommendations",
+        "description": "Generate AI-powered travel recommendations based on destination, budget, and preferences",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["destination", "budget", "duration"],
+                "properties": {
+                  "destination": { "type": "string", "example": "Tokyo, Japan" },
+                  "budget": { "type": "number", "example": 3000 },
+                  "duration": { "type": "number", "example": 7 },
+                  "preferences": {
+                    "type": "array",
+                    "items": { "type": "string" },
+                    "example": ["culture", "food", "shopping"]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Travel recommendations",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": { "type": "boolean" },
+                    "recommendations": { "type": "string" },
+                    "destination": { "type": "string" },
+                    "budget": { "type": "number" },
+                    "duration": { "type": "number" },
+                    "timestamp": { "type": "string", "format": "date-time" }
+                  }
+                }
+              }
+            }
+          }
+        }
       }
     },
     "/ai/multimodal/analyze": {
       "post": {
-        "summary": "Analyze images/videos for trip insights",
-        "requestBody": { "required": true },
-        "responses": { "200": { "description": "Analysis" } }
+        "tags": ["AI"],
+        "summary": "Analyze images/videos",
+        "description": "Analyze images or videos for trip planning insights using multimodal AI",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "prompt": { "type": "string", "example": "Analyze this destination photo" },
+                  "imageUrls": {
+                    "type": "array",
+                    "items": { "type": "string", "format": "uri" }
+                  },
+                  "videoUrl": { "type": "string", "format": "uri" },
+                  "options": {
+                    "type": "object",
+                    "properties": {
+                      "temperature": { "type": "number", "default": 0.4 },
+                      "maxTokens": { "type": "number", "default": 900 },
+                      "enableKvCacheOffload": { "type": "boolean", "default": false },
+                      "attentionImpl": { "type": "string" }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Analysis result",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": { "type": "boolean" },
+                    "analysis": { "type": "string" },
+                    "providerData": { "type": "object" },
+                    "timestamp": { "type": "string", "format": "date-time" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/payment/create-payment-link": {
+      "post": {
+        "tags": ["Payment"],
+        "summary": "Create payment link",
+        "description": "Create a Stripe payment link for trip booking",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["amount"],
+                "properties": {
+                  "amount": { "type": "number", "minimum": 0.01, "example": 100.00 },
+                  "currency": { "type": "string", "default": "USD", "example": "USD" },
+                  "description": { "type": "string", "example": "Trip to Tokyo" },
+                  "customerEmail": { "type": "string", "format": "email" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Payment link created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": { "type": "boolean" },
+                    "paymentLink": {
+                      "type": "object",
+                      "properties": {
+                        "id": { "type": "string" },
+                        "url": { "type": "string", "format": "uri" },
+                        "amount": { "type": "number" },
+                        "currency": { "type": "string" },
+                        "description": { "type": "string" },
+                        "status": { "type": "string" }
+                      }
+                    },
+                    "message": { "type": "string" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/telegram/auth/telegram": {
+      "post": {
+        "tags": ["Telegram"],
+        "summary": "Authenticate via Telegram",
+        "description": "Authenticate users using Telegram WebApp initData",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["initData"],
+                "properties": {
+                  "initData": { "type": "string", "description": "Telegram WebApp initData" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Authentication successful",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "token": { "type": "string", "description": "JWT token" },
+                    "profile": {
+                      "type": "object",
+                      "properties": {
+                        "telegram_id": { "type": "string" },
+                        "username": { "type": "string" },
+                        "avatar_url": { "type": "string", "format": "uri" }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid Telegram data"
+          }
+        }
       }
     },
     "/analytics/events": {
       "post": {
-        "summary": "Ingest analytics events",
-        "responses": { "200": { "description": "Accepted" } }
+        "tags": ["Analytics"],
+        "summary": "Track analytics event",
+        "description": "Send analytics events for tracking user behavior",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "type": { "type": "string", "example": "page_view" },
+                  "userId": { "type": "string", "example": "user123" },
+                  "payload": {
+                    "type": "object",
+                    "additionalProperties": true
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Event tracked",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": { "type": "boolean", "example": true }
+                  }
+                }
+              }
+            }
+          }
+        }
       }
     },
     "/analytics/summary": {
       "get": {
+        "tags": ["Analytics"],
         "summary": "Get analytics summary",
-        "responses": { "200": { "description": "Summary" } }
+        "description": "Retrieve analytics summary and recent events",
+        "responses": {
+          "200": {
+            "description": "Analytics summary",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "total": { "type": "number", "example": 1250 },
+                    "byType": {
+                      "type": "object",
+                      "additionalProperties": { "type": "number" }
+                    },
+                    "last10": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "type": { "type": "string" },
+                          "userId": { "type": "string" },
+                          "payload": { "type": "object" },
+                          "ts": { "type": "number" },
+                          "ua": { "type": "string" }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Error": {
+        "type": "object",
+        "properties": {
+          "success": { "type": "boolean", "example": false },
+          "error": { "type": "string", "example": "Error message" },
+          "message": { "type": "string", "example": "Detailed error description" },
+          "code": { "type": "string", "example": "ERROR_CODE" }
+        }
+      },
+      "RateLimitError": {
+        "type": "object",
+        "properties": {
+          "success": { "type": "boolean", "example": false },
+          "error": { "type": "string", "example": "Too many requests" },
+          "retryAfter": { "type": "number", "example": 900 },
+          "limit": { "type": "number", "example": 10 },
+          "window": { "type": "string", "example": "1 minute" }
+        }
+      }
+    },
+    "securitySchemes": {
+      "BearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
       }
     }
   }
