@@ -14,17 +14,13 @@ export const Web3LoginButton = ({ onSuccess }: Web3LoginButtonProps) => {
   const { signMessageAsync } = useSignMessage();
   const { disconnect } = useDisconnect();
   const [isAuthenticating, setIsAuthenticating] = useState(false);
-
-  useEffect(() => {
-    if (isConnected && address && !isAuthenticating) {
-      handleWeb3Auth();
-    }
-  }, [isConnected, address]);
+  const [hasAttemptedAuth, setHasAttemptedAuth] = useState(false);
 
   const handleWeb3Auth = async () => {
-    if (!address) return;
+    if (!address || hasAttemptedAuth) return;
 
     setIsAuthenticating(true);
+    setHasAttemptedAuth(true);
     try {
       // Create a nonce for the user to sign
       const nonce = `Sign this message to authenticate with Maya Travel Agent.\n\nWallet: ${address}\nNonce: ${Date.now()}`;
@@ -63,14 +59,22 @@ export const Web3LoginButton = ({ onSuccess }: Web3LoginButtonProps) => {
       console.error('Web3 auth error:', error);
       toast.error(error.message || 'Failed to authenticate with Web3');
       disconnect();
+      setHasAttemptedAuth(false); // Allow retry on error
     } finally {
       setIsAuthenticating(false);
     }
   };
 
+  useEffect(() => {
+    if (isConnected && address && !isAuthenticating && !hasAttemptedAuth) {
+      handleWeb3Auth();
+    }
+  }, [isConnected, address, isAuthenticating, hasAttemptedAuth]);
+
   const handleDisconnect = () => {
     disconnect();
     supabase.auth.signOut();
+    setHasAttemptedAuth(false); // Reset auth flag on disconnect
     toast.info('Disconnected from Web3 wallet');
   };
 
