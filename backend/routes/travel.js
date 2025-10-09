@@ -1,0 +1,382 @@
+/**
+ * Travel Platform API Routes
+ * Provides endpoints for unified travel platform integration
+ */
+
+const express = require('express');
+const router = express.Router();
+const TravelPlatformClient = require('../TravelPlatformClient');
+
+// Initialize travel platform client
+const travelClient = new TravelPlatformClient();
+
+/**
+ * GET /api/travel/search
+ * Unified search across all travel platforms
+ * Query parameters:
+ * - destination: string (required)
+ * - checkin: string (YYYY-MM-DD)
+ * - checkout: string (YYYY-MM-DD)
+ * - guests: number (default: 1)
+ * - platform: string (booking|expedia|tripadvisor|kayak|all, default: all)
+ */
+router.get('/search', async (req, res) => {
+  try {
+    const {
+      destination,
+      checkin,
+      checkout,
+      guests = 1,
+      platform = 'all'
+    } = req.query;
+
+    // Validate required parameters
+    if (!destination) {
+      return res.status(400).json({
+        error: 'Missing required parameter: destination',
+        example: '/api/travel/search?destination=Paris&checkin=2024-01-15&checkout=2024-01-20&guests=2'
+      });
+    }
+
+    // Validate date formats if provided
+    if (checkin && !isValidDate(checkin)) {
+      return res.status(400).json({
+        error: 'Invalid checkin date format. Use YYYY-MM-DD',
+        received: checkin
+      });
+    }
+
+    if (checkout && !isValidDate(checkout)) {
+      return res.status(400).json({
+        error: 'Invalid checkout date format. Use YYYY-MM-DD',
+        received: checkout
+      });
+    }
+
+    // Validate platform parameter
+    const validPlatforms = ['booking', 'expedia', 'tripadvisor', 'kayak', 'all'];
+    if (!validPlatforms.includes(platform)) {
+      return res.status(400).json({
+        error: 'Invalid platform parameter',
+        validPlatforms,
+        received: platform
+      });
+    }
+
+    const searchParams = {
+      destination,
+      checkin,
+      checkout,
+      guests: parseInt(guests),
+      platform
+    };
+
+    const results = await travelClient.searchAllPlatforms(searchParams);
+
+    res.json({
+      success: true,
+      data: results,
+      searchParams,
+      totalResults: {
+        hotels: results.hotels.length,
+        flights: results.flights.length,
+        activities: results.activities.length
+      }
+    });
+
+  } catch (error) {
+    console.error('Search error:', error);
+    res.status(500).json({
+      error: 'Search failed',
+      message: error.message,
+      timestamp: new Date().toISOString()
+    });
+  }
+});
+
+/**
+ * GET /api/travel/compare
+ * Compare prices across platforms
+ * Query parameters: same as /search
+ */
+router.get('/compare', async (req, res) => {
+  try {
+    const {
+      destination,
+      checkin,
+      checkout,
+      guests = 1
+    } = req.query;
+
+    if (!destination) {
+      return res.status(400).json({
+        error: 'Missing required parameter: destination',
+        example: '/api/travel/compare?destination=Paris&checkin=2024-01-15&checkout=2024-01-20&guests=2'
+      });
+    }
+
+    const searchParams = {
+      destination,
+      checkin,
+      checkout,
+      guests: parseInt(guests),
+      platform: 'all'
+    };
+
+    const comparison = await travelClient.comparePrices(searchParams);
+
+    res.json({
+      success: true,
+      data: comparison,
+      searchParams,
+      timestamp: new Date().toISOString()
+    });
+
+  } catch (error) {
+    console.error('Compare error:', error);
+    res.status(500).json({
+      error: 'Price comparison failed',
+      message: error.message,
+      timestamp: new Date().toISOString()
+    });
+  }
+});
+
+/**
+ * POST /api/travel/book
+ * Facilitate booking across platforms
+ * Body parameters:
+ * - platform: string (required)
+ * - itemId: string (required)
+ * - bookingDetails: object (required)
+ * - userInfo: object (required)
+ */
+router.post('/book', async (req, res) => {
+  try {
+    const {
+      platform,
+      itemId,
+      bookingDetails,
+      userInfo
+    } = req.body;
+
+    // Validate required parameters
+    if (!platform || !itemId || !bookingDetails || !userInfo) {
+      return res.status(400).json({
+        error: 'Missing required parameters',
+        required: ['platform', 'itemId', 'bookingDetails', 'userInfo'],
+        received: Object.keys(req.body)
+      });
+    }
+
+    // Validate platform
+    const validPlatforms = ['booking', 'expedia', 'tripadvisor', 'kayak'];
+    if (!validPlatforms.includes(platform)) {
+      return res.status(400).json({
+        error: 'Invalid platform',
+        validPlatforms,
+        received: platform
+      });
+    }
+
+    // For now, return a placeholder booking response
+    // In a real implementation, this would integrate with each platform's booking API
+    const bookingResponse = {
+      bookingId: generateBookingId(),
+      platform,
+      itemId,
+      status: 'confirmed',
+      bookingDetails,
+      userInfo: {
+        name: userInfo.name,
+        email: userInfo.email
+      },
+      totalPrice: bookingDetails.price || 0,
+      currency: bookingDetails.currency || 'USD',
+      confirmationNumber: generateConfirmationNumber(),
+      timestamp: new Date().toISOString()
+    };
+
+    res.json({
+      success: true,
+      data: bookingResponse,
+      message: 'Booking completed successfully (placeholder implementation)'
+    });
+
+  } catch (error) {
+    console.error('Booking error:', error);
+    res.status(500).json({
+      error: 'Booking failed',
+      message: error.message,
+      timestamp: new Date().toISOString()
+    });
+  }
+});
+
+/**
+ * GET /api/travel/deals
+ * Get best deals and offers across platforms
+ * Query parameters:
+ * - destination: string (optional)
+ * - category: string (hotels|flights|activities|all, default: all)
+ * - limit: number (default: 20)
+ */
+router.get('/deals', async (req, res) => {
+  try {
+    const {
+      destination,
+      category = 'all',
+      limit = 20
+    } = req.query;
+
+    // Validate category parameter
+    const validCategories = ['hotels', 'flights', 'activities', 'all'];
+    if (!validCategories.includes(category)) {
+      return res.status(400).json({
+        error: 'Invalid category parameter',
+        validCategories,
+        received: category
+      });
+    }
+
+    const dealsParams = {
+      destination,
+      category,
+      limit: parseInt(limit)
+    };
+
+    const deals = await travelClient.getBestDeals(dealsParams);
+
+    // Filter by category if specified
+    let filteredDeals = deals;
+    if (category !== 'all') {
+      filteredDeals = {
+        [category]: deals[category] || [],
+        timestamp: deals.timestamp
+      };
+    }
+
+    res.json({
+      success: true,
+      data: filteredDeals,
+      params: dealsParams,
+      totalDeals: Object.values(filteredDeals).filter(Array.isArray).reduce((sum, arr) => sum + arr.length, 0)
+    });
+
+  } catch (error) {
+    console.error('Deals error:', error);
+    res.status(500).json({
+      error: 'Failed to fetch deals',
+      message: error.message,
+      timestamp: new Date().toISOString()
+    });
+  }
+});
+
+/**
+ * GET /api/travel/platforms
+ * Get information about available platforms and their status
+ */
+router.get('/platforms', async (req, res) => {
+  try {
+    const health = await travelClient.healthCheck();
+
+    const platforms = Object.keys(travelClient.constructor.PLATFORMS || {}).map(platform => ({
+      name: platform,
+      status: health.platforms[platform]?.status || 'unknown',
+      configured: !!process.env[`${platform.toUpperCase()}_API_KEY`],
+      baseURL: travelClient.constructor.PLATFORMS[platform]?.baseURL,
+      rateLimit: travelClient.constructor.PLATFORMS[platform]?.rateLimit
+    }));
+
+    res.json({
+      success: true,
+      data: {
+        platforms,
+        overallHealth: health.overall,
+        timestamp: health.timestamp
+      }
+    });
+
+  } catch (error) {
+    console.error('Platforms info error:', error);
+    res.status(500).json({
+      error: 'Failed to get platform information',
+      message: error.message,
+      timestamp: new Date().toISOString()
+    });
+  }
+});
+
+/**
+ * POST /api/travel/cache/clear
+ * Clear the cache (admin endpoint)
+ */
+router.post('/cache/clear', async (req, res) => {
+  try {
+    const result = travelClient.clearCache();
+    res.json({
+      success: true,
+      data: result,
+      timestamp: new Date().toISOString()
+    });
+  } catch (error) {
+    console.error('Cache clear error:', error);
+    res.status(500).json({
+      error: 'Failed to clear cache',
+      message: error.message,
+      timestamp: new Date().toISOString()
+    });
+  }
+});
+
+/**
+ * GET /api/travel/cache/stats
+ * Get cache statistics
+ */
+router.get('/cache/stats', async (req, res) => {
+  try {
+    const stats = travelClient.getCacheStats();
+    res.json({
+      success: true,
+      data: stats,
+      timestamp: new Date().toISOString()
+    });
+  } catch (error) {
+    console.error('Cache stats error:', error);
+    res.status(500).json({
+      error: 'Failed to get cache statistics',
+      message: error.message,
+      timestamp: new Date().toISOString()
+    });
+  }
+});
+
+// Helper functions
+
+/**
+ * Validate date string format (YYYY-MM-DD)
+ */
+function isValidDate(dateString) {
+  const regex = /^\d{4}-\d{2}-\d{2}$/;
+  if (!regex.test(dateString)) return false;
+
+  const date = new Date(dateString);
+  return date instanceof Date && !isNaN(date);
+}
+
+/**
+ * Generate a unique booking ID
+ */
+function generateBookingId() {
+  return `BK${Date.now()}${Math.random().toString(36).substr(2, 5).toUpperCase()}`;
+}
+
+/**
+ * Generate a confirmation number
+ */
+function generateConfirmationNumber() {
+  return `CF${Math.random().toString(36).substr(2, 8).toUpperCase()}`;
+}
+
+module.exports = router;

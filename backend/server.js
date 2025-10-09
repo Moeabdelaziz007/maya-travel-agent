@@ -137,6 +137,14 @@ app.use('/api/telegram', miniappRoutes);
 const aiRoutes = require('./routes/ai');
 app.use('/api/ai', aiRoutes);
 
+// Enhanced AI routes (Advanced AI chatbot system)
+const enhancedAIRoutes = require('./routes/enhancedAI');
+app.use('/api/enhanced-ai', enhancedAIRoutes);
+
+// Travel platform routes
+const travelRoutes = require('./routes/travel');
+app.use('/api/travel', travelRoutes);
+
 // Telegram Bot (only start if token is provided)
 if (process.env.TELEGRAM_BOT_TOKEN) {
   const telegramBot = require('./telegram-bot');

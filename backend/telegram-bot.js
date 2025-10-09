@@ -7,6 +7,15 @@ const bot = new TelegramBot(process.env.TELEGRAM_BOT_TOKEN, { polling: true });
 // Payment service integration
 const PaymentService = require('./routes/payment');
 
+// Enhanced AI services integration
+const ContextService = require('./src/ai/contextService');
+const KnowledgeBaseService = require('./src/ai/knowledgeBase');
+const UserProfileService = require('./src/ai/userProfileService');
+
+const contextService = new ContextService();
+const knowledgeBase = new KnowledgeBaseService();
+const userProfile = new UserProfileService();
+
 // Bot commands and handlers
 bot.onText(/\/start/, (msg) => {
   const chatId = msg.chat.id;
@@ -211,7 +220,15 @@ bot.on('callback_query', async (callbackQuery) => {
     } else if (data === 'stats') {
       bot.sendMessage(chatId, '📊 إحصائياتك\n\n🚀 الرحلات المخططة: 0\n💰 إجمالي الميزانية: $0\n🎯 الوجهات المفضلة: لا توجد');
     } else if (data === 'settings') {
-      bot.sendMessage(chatId, '⚙️ الإعدادات\n\n🔔 الإشعارات: مفعلة\n🌍 اللغة: العربية\n💰 العملة: USD');
+      bot.sendMessage(chatId, '⚙️ الإعدادات\n\n🔔 الإشعارات: مفعلة\n🌍 اللغة: العربية\n💰 العملة: USD\n🤖 الذكاء الاصطناعي: مفعل');
+    } else if (data === 'ai_help') {
+      bot.sendMessage(chatId, '🤖 مساعدة الذكاء الاصطناعي\n\nيمكنني مساعدتك في:\n• تخطيط رحلات مخصصة\n• تحليل الميزانية\n• معلومات الوجهات\n• نصائح السفر\n• البحث في قاعدة المعرفة\n\nاكتب رسالة باللغة العربية وسأرد عليك!');
+    } else if (data === 'ai_trip_plan') {
+      bot.sendMessage(chatId, '📋 تخطيط رحلة ذكية\n\nأخبرني عن رحلتك:\n• الوجهة المطلوبة\n• عدد الأيام\n• الميزانية المتاحة\n• نوع الرحلة (عائلية، مغامرة، استرخاء)\n\nمثال: أريد رحلة إلى اليابان لمدة أسبوع مع ميزانية 2000 دولار');
+    } else if (data === 'ai_budget') {
+      bot.sendMessage(chatId, '💰 تحليل الميزانية الذكي\n\nأخبرني عن ميزانيتك:\n• المبلغ الإجمالي\n• الوجهة\n• عدد الأشخاص\n• مدة الرحلة\n\nسأقدم لك تحليلاً مفصلاً ونصائح لتوفير المال!');
+    } else if (data === 'ai_destinations') {
+      bot.sendMessage(chatId, '🌍 معلومات الوجهات\n\nاسألني عن أي وجهة:\n• معلومات عامة\n• أفضل الأوقات للزيارة\n• التكاليف المتوقعة\n• النصائح الثقافية\n• السلامة والأمان\n\nمثال: أخبرني عن اليابان');
     } else if (data.startsWith('link_stripe_')) {
       const [, , , amount] = data.split('_');
       const paymentAmount = parseFloat(amount);
@@ -301,7 +318,7 @@ bot.on('message', async (msg) => {
   if (msg.successful_payment) {
     const chatId = msg.chat.id;
     const payment = msg.successful_payment;
-    
+
     const successMessage = `
 🎉 تم الدفع بنجاح!
 
@@ -311,8 +328,84 @@ bot.on('message', async (msg) => {
 
 شكراً لاستخدام Maya Trips! 🚀
     `;
-    
+
     bot.sendMessage(chatId, successMessage);
+  }
+
+  // Handle regular text messages for AI chat
+  if (msg.text && !msg.text.startsWith('/')) {
+    const chatId = msg.chat.id;
+    const userMessage = msg.text;
+    const userId = `telegram_${msg.from.id}`;
+
+    try {
+      // Get or create conversation context
+      const conversationId = `telegram_${chatId}_${Date.now()}`;
+
+      // Generate enhanced AI response
+      const response = await contextService.generateContextAwareResponse(
+        userId,
+        userMessage,
+        {
+          conversationId,
+          useReasoning: true,
+          includeKnowledge: true,
+          region: 'ar'
+        }
+      );
+
+      // Send AI response
+      let responseText = response.response;
+
+      // Add reasoning trace if available and user requested it
+      if (response.reasoningTrace && response.reasoningTrace.reasoningSteps) {
+        const traceSummary = response.reasoningTrace.reasoningSteps
+          .slice(0, 2)
+          .map(step => `💭 ${step.thought}`)
+          .join('\n');
+
+        responseText += `\n\n📊 مسار التفكير:\n${traceSummary}`;
+      }
+
+      // Add suggestions if available
+      if (response.suggestions && response.suggestions.length > 0) {
+        responseText += `\n\n💡 اقتراحات:\n${response.suggestions.slice(0, 2).map(s => `• ${s}`).join('\n')}`;
+      }
+
+      // Send the response
+      await bot.sendMessage(chatId, responseText, {
+        parse_mode: 'HTML',
+        reply_markup: {
+          inline_keyboard: [
+            [
+              { text: '🤖 المزيد من المساعدة', callback_data: 'ai_help' },
+              { text: '📋 تخطيط رحلة', callback_data: 'ai_trip_plan' }
+            ],
+            [
+              { text: '💰 تحليل الميزانية', callback_data: 'ai_budget' },
+              { text: '🌍 معلومات الوجهات', callback_data: 'ai_destinations' }
+            ]
+          ]
+        }
+      });
+
+      // Record user behavior for learning
+      await userProfile.recordUserBehavior(
+        userId,
+        'telegram_chat',
+        {
+          messageLength: userMessage.length,
+          responseLength: response.response.length,
+          hasReasoning: !!response.reasoningTrace,
+          suggestionsCount: response.suggestions?.length || 0
+        },
+        conversationId
+      );
+
+    } catch (error) {
+      console.error('Enhanced AI Telegram Error:', error);
+      await bot.sendMessage(chatId, 'عذراً، حدث خطأ في النظام الذكي. يرجى المحاولة مرة أخرى أو استخدام /help للمساعدة.');
+    }
   }
 });
 
