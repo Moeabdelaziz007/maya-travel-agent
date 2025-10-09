@@ -1,3 +1,13 @@
+/**
+ * @fileoverview Telegram Mini App Routes
+ * @description Handles Telegram WebApp integration, authentication, and user interactions
+ * @module routes/miniapp
+ * @requires express
+ * @requires crypto
+ * @requires jsonwebtoken
+ * @requires @supabase/supabase-js
+ */
+
 const express = require('express');
 const crypto = require('crypto');
 const jwt = require('jsonwebtoken');
@@ -7,7 +17,14 @@ const router = express.Router();
 // Supabase service client (service role)
 const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_ROLE_KEY);
 
-// Verify Telegram initData per Telegram WebApp docs
+/**
+ * Verify Telegram WebApp initData signature
+ * @description Validates the authenticity of data received from Telegram WebApp
+ * @param {string} initData - The initData string from Telegram WebApp
+ * @param {string} botToken - The Telegram bot token
+ * @returns {Object|null} Parsed user object if valid, null otherwise
+ * @see https://core.telegram.org/bots/webapps#validating-data-received-via-the-mini-app
+ */
 function verifyTelegramInitData(initData, botToken) {
   try {
     if (!initData || !botToken) return null;
@@ -30,9 +47,19 @@ function verifyTelegramInitData(initData, botToken) {
   }
 }
 
-// Mini App service integration
+/**
+ * Mini App Service Class
+ * @description Provides integration services for Telegram Mini App
+ * @class MiniAppService
+ */
 class MiniAppService {
-  // Send message to Telegram user
+  /**
+   * Send message to Telegram user
+   * @async
+   * @param {string} message - The message to send
+   * @param {string|number} chatId - Telegram chat ID
+   * @returns {Promise<{success: boolean, error?: string}>} Result object
+   */
   static async sendMessage(message, chatId) {
     try {
       // This would integrate with Telegram Bot API
@@ -49,7 +76,14 @@ class MiniAppService {
     }
   }
 
-  // Send payment link to user
+  /**
+   * Send payment link to user
+   * @async
+   * @param {number} amount - Payment amount in USD
+   * @param {string} description - Payment description
+   * @param {string|number} chatId - Telegram chat ID
+   * @returns {Promise<{success: boolean, paymentLink?: string, error?: string}>} Result with payment link
+   */
   static async sendPaymentLink(amount, description, chatId) {
     try {
       const PaymentService = require('./payment');

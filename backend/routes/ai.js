@@ -8,6 +8,7 @@ const router = express.Router();
 const ZaiClient = require('../src/ai/zaiClient');
 const { Tools, getToolSchemas } = require('../src/ai/tools');
 const { buildCulturalSystemPrompt } = require('../src/ai/culture');
+const { multimodalLimiter } = require('../middleware/rateLimiter');
 
 // Initialize Z.ai client
 const zaiClient = new ZaiClient();
@@ -325,8 +326,9 @@ router.post('/payment-recommendations', async (req, res) => {
 /**
  * POST /api/ai/multimodal/analyze
  * Analyze images/videos for trip planning insights
+ * Rate limited: 20 requests per hour
  */
-router.post('/multimodal/analyze', async (req, res) => {
+router.post('/multimodal/analyze', multimodalLimiter, async (req, res) => {
   try {
     const { prompt, imageUrls = [], videoUrl = null, options = {} } = req.body || {};
 

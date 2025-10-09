@@ -2,16 +2,39 @@ const express = require('express');
 const cors = require('cors');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
+const helmet = require('helmet');
+const compression = require('compression');
 require('dotenv').config();
 
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-// Middleware
-app.use(cors());
+// Import rate limiters
+const {
+  generalLimiter,
+  aiLimiter,
+  paymentLimiter,
+  webhookLimiter,
+  analyticsLimiter
+} = require('./middleware/rateLimiter');
+
+// Security middleware
+app.use(helmet());
+app.use(compression());
+
+// CORS configuration
+app.use(cors({
+  origin: process.env.FRONTEND_URL || 'http://localhost:3000',
+  credentials: true
+}));
+
 // Stripe webhook requires raw body; mount raw parser just for that route
 app.use('/api/payment/webhook', bodyParser.raw({ type: 'application/json' }));
-app.use(express.json());
+app.use(express.json({ limit: '10mb' }));
+app.use(express.urlencoded({ extended: true, limit: '10mb' }));
+
+// Apply general rate limiter to all API routes
+app.use('/api/', generalLimiter);
 
 // MongoDB Connection (Optional - using Supabase instead)
 // const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/maya-trips';
@@ -105,9 +128,9 @@ app.get('/api/destinations', (req, res) => {
     });
 });
 
-// Analytics ingestion (in-memory demo)
+// Analytics ingestion (in-memory demo) with rate limiting
 const analyticsEvents = [];
-app.post('/api/analytics/events', (req, res) => {
+app.post('/api/analytics/events', analyticsLimiter, (req, res) => {
     const { type, userId, payload } = req.body || {};
     analyticsEvents.push({
         type: type || 'unknown',
@@ -128,25 +151,25 @@ app.get('/api/analytics/summary', (req, res) => {
     res.json({ total, byType, last10: analyticsEvents.slice(-10).reverse() });
 });
 
-// Payment routes
+// Payment routes with rate limiting
 const paymentRoutes = require('./routes/payment');
-app.use('/api/payment', paymentRoutes);
+app.use('/api/payment', paymentLimiter, paymentRoutes);
 
-// Stripe webhook route
+// Stripe webhook route with webhook rate limiting
 const stripeWebhook = require('./routes/stripe-webhook');
-app.use('/api/payment', stripeWebhook);
+app.use('/api/payment/webhook', webhookLimiter, stripeWebhook);
 
 // Mini App routes
 const miniappRoutes = require('./routes/miniapp');
 app.use('/api/telegram', miniappRoutes);
 
-// AI routes (Z.ai GLM-4.6)
+// AI routes (Z.ai GLM-4.6) with AI rate limiting
 const aiRoutes = require('./routes/ai');
-app.use('/api/ai', aiRoutes);
+app.use('/api/ai', aiLimiter, aiRoutes);
 
-// WhatsApp routes
+// WhatsApp routes with webhook rate limiting
 const whatsappRoutes = require('./routes/whatsapp');
-app.use('/api/whatsapp', whatsappRoutes);
+app.use('/api/whatsapp', webhookLimiter, whatsappRoutes);
 
 // Advanced Telegram Bot (only start if token is provided)
 if (process.env.TELEGRAM_BOT_TOKEN) {
