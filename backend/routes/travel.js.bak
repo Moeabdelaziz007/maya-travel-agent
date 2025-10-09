@@ -123,7 +123,7 @@ router.get('/compare', async (req, res) => {
       platform: 'all'
     };
 
-    const comparison = await travelService.comparePrices(searchParams);
+    const comparison = await travelClient.comparePrices(searchParams);
 
     res.json({
       success: true,
@@ -245,7 +245,7 @@ router.get('/deals', async (req, res) => {
       limit: parseInt(limit)
     };
 
-    const deals = await travelService.getBestDeals(dealsParams);
+    const deals = await travelClient.getBestDeals(dealsParams);
 
     // Filter by category if specified
     let filteredDeals = deals;
@@ -279,14 +279,14 @@ router.get('/deals', async (req, res) => {
  */
 router.get('/platforms', async (req, res) => {
   try {
-    const health = await travelService.healthCheck();
+    const health = await travelClient.healthCheck();
 
-    const platforms = Object.keys(travelService.constructor.PLATFORMS || {}).map(platform => ({
+    const platforms = Object.keys(travelClient.constructor.PLATFORMS || {}).map(platform => ({
       name: platform,
       status: health.platforms[platform]?.status || 'unknown',
       configured: !!process.env[`${platform.toUpperCase()}_API_KEY`],
-      baseURL: travelService.constructor.PLATFORMS[platform]?.baseURL,
-      rateLimit: travelService.constructor.PLATFORMS[platform]?.rateLimit
+      baseURL: travelClient.constructor.PLATFORMS[platform]?.baseURL,
+      rateLimit: travelClient.constructor.PLATFORMS[platform]?.rateLimit
     }));
 
     res.json({
@@ -314,7 +314,7 @@ router.get('/platforms', async (req, res) => {
  */
 router.post('/cache/clear', async (req, res) => {
   try {
-    const result = travelService.clearCache();
+    const result = travelClient.clearCache();
     res.json({
       success: true,
       data: result,
@@ -336,7 +336,7 @@ router.post('/cache/clear', async (req, res) => {
  */
 router.get('/cache/stats', async (req, res) => {
   try {
-    const stats = travelService.getCacheStats();
+    const stats = travelClient.getCacheStats();
     res.json({
       success: true,
       data: stats,
