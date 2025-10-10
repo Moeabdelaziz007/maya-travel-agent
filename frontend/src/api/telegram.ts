@@ -1,5 +1,9 @@
 // Telegram API Integration
-import { getTelegramUser, getInitData, isTelegramWebApp } from '../telegram-webapp';
+import {
+  getTelegramUser,
+  getInitData,
+  isTelegramWebApp,
+} from '../telegram-webapp';
 
 export interface TelegramUser {
   id: number;
@@ -27,7 +31,7 @@ export class TelegramService {
     if (!isTelegramWebApp()) {
       return null;
     }
-    
+
     return getTelegramUser();
   }
 
@@ -43,7 +47,10 @@ export class TelegramService {
   }
 
   // Send message to user
-  static async sendMessage(message: string, chatId?: number): Promise<{ success: boolean; error?: string }> {
+  static async sendMessage(
+    message: string,
+    chatId?: number
+  ): Promise<{ success: boolean; error?: string }> {
     try {
       const response = await fetch(`${this.baseURL}/send-message`, {
         method: 'POST',
@@ -67,7 +74,11 @@ export class TelegramService {
   }
 
   // Send payment link to user
-  static async sendPaymentLink(amount: number, description: string, chatId?: number): Promise<{ success: boolean; paymentLink?: string; error?: string }> {
+  static async sendPaymentLink(
+    amount: number,
+    description: string,
+    chatId?: number
+  ): Promise<{ success: boolean; paymentLink?: string; error?: string }> {
     try {
       const response = await fetch(`${this.baseURL}/send-payment-link`, {
         method: 'POST',
@@ -92,7 +103,10 @@ export class TelegramService {
   }
 
   // Share trip with user
-  static async shareTrip(tripData: any, chatId?: number): Promise<{ success: boolean; error?: string }> {
+  static async shareTrip(
+    tripData: any,
+    chatId?: number
+  ): Promise<{ success: boolean; error?: string }> {
     try {
       const response = await fetch(`${this.baseURL}/share-trip`, {
         method: 'POST',
@@ -116,7 +130,11 @@ export class TelegramService {
   }
 
   // Get user's trips from Telegram
-  static async getUserTrips(): Promise<{ success: boolean; trips?: any[]; error?: string }> {
+  static async getUserTrips(): Promise<{
+    success: boolean;
+    trips?: any[];
+    error?: string;
+  }> {
     try {
       const response = await fetch(`${this.baseURL}/user-trips`);
       const data = await response.json();
@@ -130,7 +148,9 @@ export class TelegramService {
   }
 
   // Sync user data with Telegram
-  static async syncUserData(userData: any): Promise<{ success: boolean; error?: string }> {
+  static async syncUserData(
+    userData: any
+  ): Promise<{ success: boolean; error?: string }> {
     try {
       const response = await fetch(`${this.baseURL}/sync-user`, {
         method: 'POST',
@@ -151,7 +171,11 @@ export class TelegramService {
   }
 
   // Get bot commands
-  static async getBotCommands(): Promise<{ success: boolean; commands?: any[]; error?: string }> {
+  static async getBotCommands(): Promise<{
+    success: boolean;
+    commands?: any[];
+    error?: string;
+  }> {
     try {
       const response = await fetch(`${this.baseURL}/bot-commands`);
       const data = await response.json();
@@ -165,7 +189,10 @@ export class TelegramService {
   }
 
   // Send notification to user
-  static async sendNotification(message: string, type: 'info' | 'success' | 'warning' | 'error' = 'info'): Promise<{ success: boolean; error?: string }> {
+  static async sendNotification(
+    message: string,
+    type: 'info' | 'success' | 'warning' | 'error' = 'info'
+  ): Promise<{ success: boolean; error?: string }> {
     try {
       const response = await fetch(`${this.baseURL}/send-notification`, {
         method: 'POST',
@@ -197,11 +224,11 @@ export class TelegramService {
   static getUserDisplayName(): string {
     const user = this.getCurrentUser();
     if (!user) return 'Guest';
-    
+
     if (user.username) {
       return `@${user.username}`;
     }
-    
+
     return user.first_name + (user.last_name ? ` ${user.last_name}` : '');
   }
 
@@ -215,7 +242,7 @@ export class TelegramService {
   static formatUserInfo(): string {
     const user = this.getCurrentUser();
     if (!user) return 'Not logged in';
-    
+
     let info = user.first_name;
     if (user.last_name) {
       info += ` ${user.last_name}`;
@@ -226,7 +253,7 @@ export class TelegramService {
     if (user.is_premium) {
       info += ' ⭐';
     }
-    
+
     return info;
   }
 }

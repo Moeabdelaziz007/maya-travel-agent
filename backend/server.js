@@ -97,10 +97,11 @@ app.get('/api/health/detailed', async (req, res) => {
 });
 
 // Prometheus metrics endpoint
-app.get('/metrics', (req, res) => {
+app.get('/metrics', async (req, res) => {
   try {
+    const metricsData = await metrics.getMetrics();
     res.set('Content-Type', metrics.getRegistry().contentType);
-    res.end(metrics.getMetrics());
+    res.end(metricsData);
   } catch (error) {
     console.error('Metrics endpoint error:', error);
     res.status(500).end('# Error generating metrics\n');
