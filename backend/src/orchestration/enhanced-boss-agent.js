@@ -8,7 +8,8 @@ const SkillSystem = require('../skills/skill-system');
 const EmpathyDetectionSkill = require('../skills/empathy-detection-skill');
 const PersonalizedFriendshipSkill = require('../skills/personalized-friendship-skill');
 const DynamicVoiceAdaptationSkill = require('../skills/dynamic-voice-adaptation-skill');
-const JSONbinService = require('../cache/jsonbin-service');
+const HybridCache = require('../cache/hybrid-cache');
+const { registerDummyAgents } = require('../agents/dummy-agents');
 const logger = require('../utils/logger');
 
 class EnhancedBossAgent extends BossAgent {
@@ -22,8 +23,10 @@ class EnhancedBossAgent extends BossAgent {
       enablePersistence: config.enableSkillPersistence !== false
     });
 
-    this.jsonbinCache = new JSONbinService({
-      apiKey: config.jsonbinApiKey || process.env.JSONBIN_API_KEY
+    // Use hybrid cache for resilience
+    this.hybridCache = new HybridCache({
+      apiKey: config.jsonbinApiKey || process.env.JSONBIN_API_KEY,
+      testMode: config.testMode || process.env.NODE_ENV === 'test'
     });
 
     // Register core skills
@@ -67,6 +70,30 @@ class EnhancedBossAgent extends BossAgent {
     try {
       const MockFlightAgent = require('../agents/mock-flight-agent');
       this.registerAgent('flight_search', new MockFlightAgent());
+
+      // Register additional mock agents for testing
+      this.registerAgent('hotel_search', {
+        execute: async (context) => ({
+          agent: 'hotel_search',
+          success: true,
+          results: [
+            { name: 'Test Hotel', price: 200, rating: 4.5 },
+            { name: 'Another Hotel', price: 150, rating: 4.0 }
+          ]
+        }),
+        capabilities: ['hotel_search'],
+        priority: 1
+      });
+
+      this.registerAgent('conversation', {
+        execute: async (context) => ({
+          agent: 'conversation',
+          success: true,
+          data: { context: 'enhanced' }
+        }),
+        capabilities: ['conversation'],
+        priority: 1
+      });
 
       logger.info('✅ Mock agents registered for testing');
     } catch (error) {
