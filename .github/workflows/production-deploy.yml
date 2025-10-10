@@ -1,0 +1,233 @@
+name: Production Deployment Pipeline
+
+on:
+  push:
+    branches:
+      - main
+      - production
+  pull_request:
+    branches:
+      - main
+      - production
+
+env:
+  NODE_VERSION: "18.x"
+
+jobs:
+  # ========================================
+  # STEP 1: Lint and Code Quality
+  # ========================================
+  lint:
+    name: Code Quality Check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Lint Backend
+        run: cd backend && npm run lint
+
+      - name: Lint Frontend
+        run: cd frontend && npm run lint || true
+
+  # ========================================
+  # STEP 2: Run Tests
+  # ========================================
+  test:
+    name: Run Test Suite
+    runs-on: ubuntu-latest
+    needs: lint
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run Backend Tests
+        run: cd backend && npm test
+        env:
+          NODE_ENV: test
+
+      - name: Upload Test Results
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: test-results
+          path: backend/test-results/
+
+  # ========================================
+  # STEP 3: Build
+  # ========================================
+  build:
+    name: Build Application
+    runs-on: ubuntu-latest
+    needs: test
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build Frontend
+        run: cd frontend && npm run build
+
+      - name: Upload Build Artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: frontend-build
+          path: frontend/dist/
+
+  # ========================================
+  # STEP 4: Deploy to Staging
+  # ========================================
+  deploy-staging:
+    name: Deploy to Staging
+    runs-on: ubuntu-latest
+    needs: build
+    if: github.event_name == 'pull_request'
+    environment:
+      name: staging
+      url: https://staging.mayatravel.ai
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Deploy to Railway (Staging)
+        env:
+          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+          RAILWAY_SERVICE_BACKEND: ${{ secrets.RAILWAY_SERVICE_BACKEND_STAGING }}
+        run: |
+          npm install -g @railway/cli
+          railway link $RAILWAY_SERVICE_BACKEND
+          railway up --detach
+
+      - name: Wait for deployment
+        run: sleep 30
+
+      - name: Run Smoke Tests on Staging
+        run: |
+          cd backend
+          npm run smoke-test
+        env:
+          TEST_URL: https://staging-api.mayatravel.ai
+          TEST_API_KEY: ${{ secrets.STAGING_API_KEY }}
+
+  # ========================================
+  # STEP 5: Deploy to Production
+  # ========================================
+  deploy-production:
+    name: Deploy to Production
+    runs-on: ubuntu-latest
+    needs: build
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    environment:
+      name: production
+      url: https://mayatravel.ai
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Deploy Backend to Railway (Production)
+        env:
+          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+          RAILWAY_SERVICE_BACKEND: ${{ secrets.RAILWAY_SERVICE_BACKEND_PROD }}
+        run: |
+          npm install -g @railway/cli
+          railway link $RAILWAY_SERVICE_BACKEND
+          railway up --detach
+
+      - name: Deploy Frontend to Vercel (Production)
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+        run: |
+          npm install -g vercel
+          cd frontend
+          vercel deploy --prod --token=$VERCEL_TOKEN
+
+      - name: Wait for deployment
+        run: sleep 45
+
+      - name: Run Production Smoke Tests
+        run: |
+          cd backend
+          npm run smoke-test
+        env:
+          TEST_URL: https://api.mayatravel.ai
+          TEST_API_KEY: ${{ secrets.PRODUCTION_API_KEY }}
+
+      - name: Notify Success
+        if: success()
+        run: |
+          curl -X POST ${{ secrets.TELEGRAM_WEBHOOK_URL }} \
+            -H 'Content-Type: application/json' \
+            -d '{"text":"✅ Production deployment successful! Version: ${{ github.sha }}"}'
+
+      - name: Notify Failure
+        if: failure()
+        run: |
+          curl -X POST ${{ secrets.TELEGRAM_WEBHOOK_URL }} \
+            -H 'Content-Type: application/json' \
+            -d '{"text":"❌ Production deployment failed! Check GitHub Actions."}'
+
+  # ========================================
+  # STEP 6: Load Testing (Optional)
+  # ========================================
+  load-test:
+    name: Load Testing
+    runs-on: ubuntu-latest
+    needs: deploy-production
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Install k6
+        run: |
+          sudo gpg -k
+          sudo gpg --no-default-keyring --keyring /usr/share/keyrings/k6-archive-keyring.gpg --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys C5AD17C747E3415A3642D57D77C6C491D6AC1D69
+          echo "deb [signed-by=/usr/share/keyrings/k6-archive-keyring.gpg] https://dl.k6.io/deb stable main" | sudo tee /etc/apt/sources.list.d/k6.list
+          sudo apt-get update
+          sudo apt-get install k6
+
+      - name: Run Load Test
+        run: |
+          cd k6
+          k6 run --out json=results.json load-test.js
+        env:
+          K6_TARGET_URL: https://api.mayatravel.ai
+          K6_API_KEY: ${{ secrets.PRODUCTION_API_KEY }}
+
+      - name: Upload Load Test Results
+        uses: actions/upload-artifact@v3
+        with:
+          name: load-test-results
+          path: k6/results.json
