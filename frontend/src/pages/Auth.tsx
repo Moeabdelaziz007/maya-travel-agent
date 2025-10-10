@@ -393,7 +393,10 @@ export default function AuthPage() {
                             {Math.round((currentStep / 3) * 100)}% Complete
                           </span>
                         </div>
-                        <Progress value={(currentStep / 3) * 100} className="h-2" />
+                        <Progress
+                          value={(currentStep / 3) * 100}
+                          className="h-2"
+                        />
                       </div>
 
                       {/* Step 1: Basic Info */}
@@ -608,7 +611,8 @@ export default function AuthPage() {
                               </Button>
                             </div>
                             {formData.confirmPassword &&
-                              formData.password !== formData.confirmPassword && (
+                              formData.password !==
+                                formData.confirmPassword && (
                                 <Alert className="border-red-200 bg-red-50">
                                   <AlertCircle className="h-4 w-4 text-red-600" />
                                   <AlertDescription className="text-red-600">
@@ -657,7 +661,9 @@ export default function AuthPage() {
                               {travelPreferences.map(pref => (
                                 <div
                                   key={pref.id}
-                                  onClick={() => handlePreferenceToggle(pref.id)}
+                                  onClick={() =>
+                                    handlePreferenceToggle(pref.id)
+                                  }
                                   className={`p-3 rounded-xl border-2 cursor-pointer transition-all ${
                                     formData.preferences.includes(pref.id)
                                       ? 'border-blue-500 bg-blue-50'
@@ -665,7 +671,9 @@ export default function AuthPage() {
                                   }`}
                                 >
                                   <div className="flex items-center space-x-2">
-                                    <span className="text-2xl">{pref.icon}</span>
+                                    <span className="text-2xl">
+                                      {pref.icon}
+                                    </span>
                                     <span className="font-medium text-sm">
                                       {pref.label}
                                     </span>
@@ -685,7 +693,10 @@ export default function AuthPage() {
                                 className="pl-10 h-12"
                                 value={formData.nationality}
                                 onChange={e =>
-                                  handleInputChange('nationality', e.target.value)
+                                  handleInputChange(
+                                    'nationality',
+                                    e.target.value
+                                  )
                                 }
                               />
                             </div>
@@ -693,7 +704,10 @@ export default function AuthPage() {
 
                           <div className="flex items-start space-x-2">
                             <Checkbox id="terms" className="mt-1" />
-                            <Label htmlFor="terms" className="text-sm text-gray-600">
+                            <Label
+                              htmlFor="terms"
+                              className="text-sm text-gray-600"
+                            >
                               I agree to the Terms of Service and Privacy Policy
                             </Label>
                           </div>
@@ -704,7 +718,8 @@ export default function AuthPage() {
                               htmlFor="marketing"
                               className="text-sm text-gray-600"
                             >
-                              I'd like to receive travel deals and recommendations
+                              I'd like to receive travel deals and
+                              recommendations
                             </Label>
                           </div>
 
@@ -796,4 +811,3 @@ export default function AuthPage() {
     </div>
   );
 }
-

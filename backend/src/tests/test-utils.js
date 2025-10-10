@@ -80,7 +80,7 @@ class TestDataFactory {
       ...overrides
     }
 
-    return baseMessage
+    return baseMessage;
   }
 
   static createSkillExecutionRequest(skillName, overrides = {}) {
@@ -104,7 +104,7 @@ class TestDataFactory {
         friendship_level: 'new_acquaintance',
         situation: 'general'
       }
-    }
+    };
 
     const baseRequest = {
       skillName,
