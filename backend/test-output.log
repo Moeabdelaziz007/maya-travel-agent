@@ -1,0 +1,2088 @@
+
+> maya-trips-backend@1.0.0 test
+> jest
+
+  console.log
+    ⚠️ Skipping real database connection - using mock mode
+
+      at log (tests/utils/database-test-helpers.js:29:15)
+
+FAIL tests/__tests__/bot.test.js (9.557 s)
+  Bot Functionality Tests
+    Logger
+      ✓ should log messages correctly (384 ms)
+    Conversation Manager
+      ✓ should get context for user (47 ms)
+      ✓ should add message to conversation (3 ms)
+      ✓ should set conversation state (4 ms)
+      ✓ should get conversation history (5 ms)
+      ✓ should get conversation summary (6 ms)
+      ✕ should analyze intent from message (24 ms)
+      ✓ should get conversation statistics (2 ms)
+    Supabase Database
+      ✓ should get travel offers successfully (2 ms)
+      ✓ should handle database errors gracefully (5 ms)
+    Z.ai Client
+      ✓ should return healthy status (4 ms)
+      ✓ should handle unhealthy status (3 ms)
+      ✓ should handle health check errors (4 ms)
+    Health Monitor
+      ✓ should get health status (3 ms)
+      ✓ should get metrics summary (2 ms)
+    Intent Analysis
+      ✕ should analyze Arabic travel messages (5 ms)
+      ✕ should detect travel destination intent (4 ms)
+      ✕ should detect budget intent (1 ms)
+      ✕ should detect date intent (1 ms)
+      ✕ should handle empty or invalid messages (224 ms)
+      ✕ should detect greeting messages (9 ms)
+      ✕ should detect activity preferences (2 ms)
+    Integration Tests
+      ✓ should handle complete conversation flow (3 ms)
+
+  ● Bot Functionality Tests › Conversation Manager › should analyze intent from message
+
+    expect(received).toBeDefined()
+
+    Received: undefined
+
+      149 |       const intent = conversationManager.analyzeIntent(testMessage);
+      150 |
+    > 151 |       expect(intent).toBeDefined();
+          |                      ^
+      152 |       expect(intent).toHaveProperty('destination');
+      153 |       expect(intent).toHaveProperty('hasBudgetIntent');
+      154 |       expect(intent).toHaveProperty('hasDateIntent');
+
+      at Object.toBeDefined (tests/__tests__/bot.test.js:151:22)
+
+  ● Bot Functionality Tests › Intent Analysis › should analyze Arabic travel messages
+
+    expect(received).toBeDefined()
+
+    Received: undefined
+
+      326 |       testMessages.forEach(message => {
+      327 |         const intent = conversationManager.analyzeIntent(message);
+    > 328 |         expect(intent).toBeDefined();
+          |                        ^
+      329 |         expect(intent).toHaveProperty('destination');
+      330 |         expect(intent).toHaveProperty('hasBudgetIntent');
+      331 |         expect(intent).toHaveProperty('hasDateIntent');
+
+      at toBeDefined (tests/__tests__/bot.test.js:328:24)
+          at Array.forEach (<anonymous>)
+      at Object.forEach (tests/__tests__/bot.test.js:326:20)
+
+  ● Bot Functionality Tests › Intent Analysis › should detect travel destination intent
+
+    TypeError: Cannot read properties of undefined (reading 'destination')
+
+      340 |       const intent = conversationManager.analyzeIntent(travelMessage);
+      341 |
+    > 342 |       expect(intent.destination).toBe('تركيا');
+          |                     ^
+      343 |       expect(intent.hasBudgetIntent).toBe(false);
+      344 |       expect(intent.hasDateIntent).toBe(false);
+      345 |     });
+
+      at Object.destination (tests/__tests__/bot.test.js:342:21)
+
+  ● Bot Functionality Tests › Intent Analysis › should detect budget intent
+
+    TypeError: Cannot read properties of undefined (reading 'hasBudgetIntent')
+
+      349 |       const intent = conversationManager.analyzeIntent(budgetMessage);
+      350 |
+    > 351 |       expect(intent.hasBudgetIntent).toBe(true);
+          |                     ^
+      352 |       expect(intent.isQuestion).toBe(true);
+      353 |     });
+      354 |
+
+      at Object.hasBudgetIntent (tests/__tests__/bot.test.js:351:21)
+
+  ● Bot Functionality Tests › Intent Analysis › should detect date intent
+
+    TypeError: Cannot read properties of undefined (reading 'hasDateIntent')
+
+      357 |       const intent = conversationManager.analyzeIntent(dateMessage);
+      358 |
+    > 359 |       expect(intent.hasDateIntent).toBe(true);
+          |                     ^
+      360 |       expect(intent.isQuestion).toBe(true);
+      361 |     });
+      362 |
+
+      at Object.hasDateIntent (tests/__tests__/bot.test.js:359:21)
+
+  ● Bot Functionality Tests › Intent Analysis › should handle empty or invalid messages
+
+    expect(received).toBeDefined()
+
+    Received: undefined
+
+      365 |       const intent = conversationManager.analyzeIntent(emptyMessage);
+      366 |
+    > 367 |       expect(intent).toBeDefined();
+          |                      ^
+      368 |       expect(intent.destination).toBeNull();
+      369 |       expect(intent.hasBudgetIntent).toBe(false);
+      370 |       expect(intent.hasDateIntent).toBe(false);
+
+      at Object.toBeDefined (tests/__tests__/bot.test.js:367:22)
+
+  ● Bot Functionality Tests › Intent Analysis › should detect greeting messages
+
+    TypeError: Cannot read properties of undefined (reading 'isGreeting')
+
+      375 |       const intent = conversationManager.analyzeIntent(greetingMessage);
+      376 |
+    > 377 |       expect(intent.isGreeting).toBe(true);
+          |                     ^
+      378 |     });
+      379 |
+      380 |     test('should detect activity preferences', () => {
+
+      at Object.isGreeting (tests/__tests__/bot.test.js:377:21)
+
+  ● Bot Functionality Tests › Intent Analysis › should detect activity preferences
+
+    TypeError: Cannot read properties of undefined (reading 'activity')
+
+      382 |       const intent = conversationManager.analyzeIntent(activityMessage);
+      383 |
+    > 384 |       expect(intent.activity).toBe('شاطئ');
+          |                     ^
+      385 |     });
+      386 |   });
+      387 |
+
+      at Object.activity (tests/__tests__/bot.test.js:384:21)
+
+  console.log
+    ⚠️ Skipping schema tests - no database connection
+
+      at Object.log (tests/__tests__/database-schema.test.js:25:15)
+
+  console.log
+    ⚠️ Skipping real database connection - using mock mode
+
+      at log (tests/utils/database-test-helpers.js:29:15)
+
+  console.log
+    ⚠️ Using memory storage for database tests
+
+      at Object.log (tests/__tests__/database.test.js:38:15)
+
+  console.log
+    ⚠️ Test database not initialized, skipping cleanup
+
+      at log (tests/utils/database-test-helpers.js:71:13)
+
+PASS tests/__tests__/zai.test.js (10.99 s)
+  Z.ai API Connection Tests
+    API Endpoint Testing
+      ✓ should test Original configuration successfully (220 ms)
+      ✓ should handle Original configuration API errors (255 ms)
+      ✓ should handle Original configuration network errors (362 ms)
+      ✓ should test GLM-4 model successfully (2 ms)
+      ✓ should handle GLM-4 model API errors (13 ms)
+      ✓ should handle GLM-4 model network errors (4 ms)
+      ✓ should test V1 endpoint successfully (3 ms)
+      ✓ should handle V1 endpoint API errors (192 ms)
+      ✓ should handle V1 endpoint network errors (13 ms)
+      ✓ should test OpenAI compatible endpoint successfully (7 ms)
+      ✓ should handle OpenAI compatible endpoint API errors (4 ms)
+      ✓ should handle OpenAI compatible endpoint network errors (270 ms)
+    Request Configuration
+      ✓ should include correct headers (18 ms)
+      ✓ should include correct request body (2 ms)
+    Response Handling
+      ✓ should parse successful JSON response (5 ms)
+      ✓ should handle rate limit response (6 ms)
+      ✓ should handle server error response (3 ms)
+    Environment Configuration
+      ✓ should use API key from environment (2 ms)
+      ✓ should handle missing API key (1 ms)
+    Error Scenarios
+      ✓ should handle malformed JSON response (5 ms)
+      ✓ should handle empty response (2 ms)
+      ✓ should handle fetch timeout (16 ms)
+    Integration Tests
+      ✓ should find working configuration (2 ms)
+
+  console.log
+    ⚠️ Test database not initialized, skipping cleanup
+
+      at log (tests/utils/database-test-helpers.js:71:13)
+
+  console.log
+    ⚠️ Skipping real database connection - using mock mode
+
+      at log (tests/utils/database-test-helpers.js:29:15)
+
+  console.log
+    ⚠️ Skipping auth tests - no database connection
+
+      at Object.log (tests/__tests__/database-auth.test.js:21:15)
+
+  console.log
+    ⚠️ Test database not initialized, skipping cleanup
+
+      at log (tests/utils/database-test-helpers.js:71:13)
+
+  console.log
+    ⚠️ Test database not initialized, skipping cleanup
+
+      at log (tests/utils/database-test-helpers.js:71:13)
+
+  console.log
+    ⚠️ Test database not initialized, skipping cleanup
+
+      at log (tests/utils/database-test-helpers.js:71:13)
+
+  console.log
+    ⚠️ Test database not initialized, skipping cleanup
+
+      at log (tests/utils/database-test-helpers.js:71:13)
+
+  console.log
+    ⚠️ Test database not initialized, skipping cleanup
+
+      at log (tests/utils/database-test-helpers.js:71:13)
+
+  console.log
+    ⚠️ Test database not initialized, skipping cleanup
+
+      at log (tests/utils/database-test-helpers.js:71:13)
+
+  console.log
+    ⚠️ Test database not initialized, skipping cleanup
+
+      at log (tests/utils/database-test-helpers.js:71:13)
+
+  console.log
+    ⚠️ Test database not initialized, skipping cleanup
+
+      at log (tests/utils/database-test-helpers.js:71:13)
+
+  console.log
+    ⚠️ Test database not initialized, skipping cleanup
+
+      at log (tests/utils/database-test-helpers.js:71:13)
+
+  console.log
+    ⚠️ Test database not initialized, skipping cleanup
+
+      at log (tests/utils/database-test-helpers.js:71:13)
+
+  console.log
+    ⚠️ Test database not initialized, skipping cleanup
+
+      at log (tests/utils/database-test-helpers.js:71:13)
+
+  console.log
+    ⚠️ Test database not initialized, skipping cleanup
+
+      at log (tests/utils/database-test-helpers.js:71:13)
+
+  console.log
+    ⚠️ Test database not initialized, skipping cleanup
+
+      at log (tests/utils/database-test-helpers.js:71:13)
+
+  console.log
+    ⚠️ Test database not initialized, skipping cleanup
+
+      at log (tests/utils/database-test-helpers.js:71:13)
+
+  console.log
+    ⚠️ Test database not initialized, skipping cleanup
+
+      at log (tests/utils/database-test-helpers.js:71:13)
+
+  console.log
+    ⚠️ Test database not initialized, skipping cleanup
+
+      at log (tests/utils/database-test-helpers.js:71:13)
+
+  console.log
+    ⚠️ Test database not initialized, skipping cleanup
+
+      at log (tests/utils/database-test-helpers.js:71:13)
+
+PASS tests/__tests__/mocks/ai-services.js
+  AI Services Mocks
+    ✓ should export mock functions (10 ms)
+
+  console.log
+    ⚠️ Test database not initialized, skipping cleanup
+
+      at log (tests/utils/database-test-helpers.js:71:13)
+
+  console.log
+    ⚠️ Test database not initialized, skipping cleanup
+
+      at log (tests/utils/database-test-helpers.js:71:13)
+
+  console.log
+    ⚠️ Test database not initialized, skipping cleanup
+
+      at log (tests/utils/database-test-helpers.js:71:13)
+
+  console.log
+    ⚠️ Test database not initialized, skipping cleanup
+
+      at log (tests/utils/database-test-helpers.js:71:13)
+
+  console.log
+    ⚠️ Test database not initialized, skipping cleanup
+
+      at log (tests/utils/database-test-helpers.js:71:13)
+
+  console.log
+    ⚠️ Test database not initialized, skipping cleanup
+
+      at log (tests/utils/database-test-helpers.js:71:13)
+
+  console.log
+    ⚠️ Test database not initialized, skipping cleanup
+
+      at log (tests/utils/database-test-helpers.js:71:13)
+
+  console.log
+    ⚠️ Test database not initialized, skipping cleanup
+
+      at log (tests/utils/database-test-helpers.js:71:13)
+
+  console.log
+    ⚠️ Test database not initialized, skipping cleanup
+
+      at log (tests/utils/database-test-helpers.js:71:13)
+
+  console.log
+    ⚠️ Test database not initialized, skipping cleanup
+
+      at log (tests/utils/database-test-helpers.js:71:13)
+
+  console.log
+    ⚠️ Test database not initialized, skipping cleanup
+
+      at log (tests/utils/database-test-helpers.js:71:13)
+
+  console.log
+    ⚠️ Test database not initialized, skipping cleanup
+
+      at log (tests/utils/database-test-helpers.js:71:13)
+
+  console.log
+    ⚠️ Test database not initialized, skipping cleanup
+
+      at log (tests/utils/database-test-helpers.js:71:13)
+
+  console.log
+    ⚠️ Test database not initialized, skipping cleanup
+
+      at log (tests/utils/database-test-helpers.js:71:13)
+
+  console.log
+    ⚠️ Test database not initialized, skipping cleanup
+
+      at log (tests/utils/database-test-helpers.js:71:13)
+
+  console.log
+    ⚠️ Test database not initialized, skipping cleanup
+
+      at log (tests/utils/database-test-helpers.js:71:13)
+
+  console.log
+    ⚠️ Test database not initialized, skipping cleanup
+
+      at log (tests/utils/database-test-helpers.js:71:13)
+
+  console.log
+    ⚠️ Test database not initialized, skipping cleanup
+
+      at log (tests/utils/database-test-helpers.js:71:13)
+
+  console.log
+    ⚠️ Test database not initialized, skipping cleanup
+
+      at log (tests/utils/database-test-helpers.js:71:13)
+
+  console.log
+    ⚠️ Test database not initialized, skipping cleanup
+
+      at log (tests/utils/database-test-helpers.js:71:13)
+
+  console.log
+    ⚠️ Test database not initialized, skipping cleanup
+
+      at log (tests/utils/database-test-helpers.js:71:13)
+
+  console.log
+    ⚠️ Test database not initialized, skipping cleanup
+
+      at log (tests/utils/database-test-helpers.js:71:13)
+
+  console.log
+    ⚠️ Test database not initialized, skipping cleanup
+
+      at log (tests/utils/database-test-helpers.js:71:13)
+
+  console.log
+    ⚠️ Test database not initialized, skipping cleanup
+
+      at log (tests/utils/database-test-helpers.js:71:13)
+
+  console.log
+    ⚠️ Test database not initialized, skipping cleanup
+
+      at log (tests/utils/database-test-helpers.js:71:13)
+
+  console.log
+    ⚠️ Test database not initialized, skipping cleanup
+
+      at log (tests/utils/database-test-helpers.js:71:13)
+
+  console.log
+    ⚠️ Test database not initialized, skipping cleanup
+
+      at log (tests/utils/database-test-helpers.js:71:13)
+
+  console.log
+    ⚠️ Test database not initialized, skipping cleanup
+
+      at log (tests/utils/database-test-helpers.js:71:13)
+
+  console.log
+    ⚠️ Test database not initialized, skipping cleanup
+
+      at log (tests/utils/database-test-helpers.js:71:13)
+
+  console.log
+    ⚠️ Test database not initialized, skipping cleanup
+
+      at log (tests/utils/database-test-helpers.js:71:13)
+
+  console.log
+    ⚠️ Test database not initialized, skipping cleanup
+
+      at log (tests/utils/database-test-helpers.js:71:13)
+
+  console.log
+    ⚠️ Test database not initialized, skipping cleanup
+
+      at log (tests/utils/database-test-helpers.js:71:13)
+
+  console.log
+    ⚠️ Test database not initialized, skipping cleanup
+
+      at log (tests/utils/database-test-helpers.js:71:13)
+
+  console.log
+    ⚠️ Test database not initialized, skipping cleanup
+
+      at log (tests/utils/database-test-helpers.js:71:13)
+
+  console.log
+    ⚠️ Test database not initialized, skipping cleanup
+
+      at log (tests/utils/database-test-helpers.js:71:13)
+
+  console.log
+    ⚠️ Test database not initialized, skipping cleanup
+
+      at log (tests/utils/database-test-helpers.js:71:13)
+
+  console.log
+    ⚠️ Test database not initialized, skipping cleanup
+
+      at log (tests/utils/database-test-helpers.js:71:13)
+
+  console.log
+    ⚠️ Test database not initialized, skipping cleanup
+
+      at log (tests/utils/database-test-helpers.js:71:13)
+
+  console.log
+    ⚠️ Test database not initialized, skipping cleanup
+
+      at log (tests/utils/database-test-helpers.js:71:13)
+
+  console.log
+    ⚠️ Test database not initialized, skipping cleanup
+
+      at log (tests/utils/database-test-helpers.js:71:13)
+
+  console.log
+    ⚠️ Test database not initialized, skipping cleanup
+
+      at log (tests/utils/database-test-helpers.js:71:13)
+
+  console.log
+    ⚠️ Test database not initialized, skipping cleanup
+
+      at log (tests/utils/database-test-helpers.js:71:13)
+
+  console.log
+    ⚠️ Test database not initialized, skipping cleanup
+
+      at log (tests/utils/database-test-helpers.js:71:13)
+
+  console.log
+    ⚠️ Test database not initialized, skipping cleanup
+
+      at log (tests/utils/database-test-helpers.js:71:13)
+
+  console.log
+    ⚠️ Test database not initialized, skipping cleanup
+
+      at log (tests/utils/database-test-helpers.js:71:13)
+
+  console.log
+    ⚠️ Test database not initialized, skipping cleanup
+
+      at log (tests/utils/database-test-helpers.js:71:13)
+
+  console.log
+    ⚠️ Test database not initialized, skipping cleanup
+
+      at log (tests/utils/database-test-helpers.js:71:13)
+
+  console.log
+    ⚠️ Test database not initialized, skipping cleanup
+
+      at log (tests/utils/database-test-helpers.js:71:13)
+
+  console.log
+    ⚠️ Test database not initialized, skipping cleanup
+
+      at log (tests/utils/database-test-helpers.js:71:13)
+
+  console.log
+    ⚠️ Test database not initialized, skipping cleanup
+
+      at log (tests/utils/database-test-helpers.js:71:13)
+
+  console.log
+    ⚠️ Test database not initialized, skipping cleanup
+
+      at log (tests/utils/database-test-helpers.js:71:13)
+
+  console.log
+    ⚠️ Test database not initialized, skipping cleanup
+
+      at log (tests/utils/database-test-helpers.js:71:13)
+
+  console.log
+    ⚠️ Test database not initialized, skipping cleanup
+
+      at log (tests/utils/database-test-helpers.js:71:13)
+
+  console.log
+    ⚠️ Test database not initialized, skipping cleanup
+
+      at log (tests/utils/database-test-helpers.js:71:13)
+
+FAIL tests/__tests__/database-schema.test.js (14.067 s)
+  Database Schema Operations
+    Table Creation and Structure
+      ✕ should verify all required tables exist (218 ms)
+      ✕ should verify table structures and columns (7 ms)
+    Primary Key Constraints
+      ✕ should enforce unique constraints on profiles.telegram_id (406 ms)
+      ✕ should enforce unique constraints on users.email (25 ms)
+    Foreign Key Relationships
+      ✕ should maintain referential integrity for trips.user_id (22 ms)
+      ✕ should handle cascade deletes properly (317 ms)
+      ✕ should prevent orphaned records (21 ms)
+    Check Constraints
+      ✕ should enforce trip status check constraint (8 ms)
+      ✕ should enforce payment status check constraint (198 ms)
+      ✕ should enforce message role check constraint (13 ms)
+    Index Performance
+      ✕ should efficiently query trips by user_id using index (7 ms)
+      ✕ should efficiently query trips by status using index (7 ms)
+      ✕ should efficiently query expenses by trip_id using index (6 ms)
+    Data Types and Validation
+      ✕ should handle UUID data types correctly (14 ms)
+      ✕ should handle decimal/numeric data types correctly (7 ms)
+      ✕ should handle timestamp data types correctly (5 ms)
+      ✕ should handle array data types correctly (18 ms)
+    Row Level Security (RLS)
+      ✕ should enforce RLS policies for profiles table (188 ms)
+      ✕ should enforce RLS policies for trips table (19 ms)
+    Database Functions and Triggers
+      ✕ should execute handle_new_user function correctly (4 ms)
+    Storage Bucket Operations
+      ✕ should verify avatars storage bucket exists (347 ms)
+    Concurrent Operations and Race Conditions
+      ✕ should handle concurrent trip creation (3 ms)
+      ✕ should handle concurrent expense creation (6 ms)
+
+  ● Database Schema Operations › Table Creation and Structure › should verify all required tables exist
+
+    TypeError: Cannot read properties of null (reading 'from')
+
+      52 |       for (const tableName of tables) {
+      53 |         const { data, error } = await testSupabaseClient
+    > 54 |           .from(tableName)
+         |            ^
+      55 |           .select('count')
+      56 |           .limit(1);
+      57 |
+
+      at Object.from (tests/__tests__/database-schema.test.js:54:12)
+
+  ● Database Schema Operations › Table Creation and Structure › should verify table structures and columns
+
+    TypeError: Cannot read properties of null (reading 'rpc')
+
+      64 |       // Test profiles table structure
+      65 |       const { data: profileColumns } = await testSupabaseClient
+    > 66 |         .rpc('get_table_columns', { table_name: 'profiles' });
+         |          ^
+      67 |
+      68 |       // If the RPC function doesn't exist, we'll skip this detailed check
+      69 |       // and rely on the basic table existence check above
+
+      at Object.rpc (tests/__tests__/database-schema.test.js:66:10)
+
+  ● Database Schema Operations › Primary Key Constraints › should enforce unique constraints on profiles.telegram_id
+
+    Test database not initialized
+
+       98 | const createTestUser = async (overrides = {}) => {
+       99 |   if (!testSupabaseClient) {
+    > 100 |     throw new Error('Test database not initialized');
+          |           ^
+      101 |   }
+      102 |
+      103 |   const testUserData = {
+
+      at createTestUser (tests/utils/database-test-helpers.js:100:11)
+      at Object.createTestUser (tests/__tests__/database-schema.test.js:88:13)
+
+  ● Database Schema Operations › Primary Key Constraints › should enforce unique constraints on users.email
+
+    TypeError: Cannot read properties of null (reading 'auth')
+
+      94 |
+      95 |     it('should enforce unique constraints on users.email', async () => {
+    > 96 |       const { data: user1 } = await testSupabaseClient.auth.signUp({
+         |                                                        ^
+      97 |         email: 'test@example.com',
+      98 |         password: 'testpassword123'
+      99 |       });
+
+      at Object.auth (tests/__tests__/database-schema.test.js:96:56)
+
+  ● Database Schema Operations › Foreign Key Relationships › should maintain referential integrity for trips.user_id
+
+    Test database not initialized
+
+       98 | const createTestUser = async (overrides = {}) => {
+       99 |   if (!testSupabaseClient) {
+    > 100 |     throw new Error('Test database not initialized');
+          |           ^
+      101 |   }
+      102 |
+      103 |   const testUserData = {
+
+      at createTestUser (tests/utils/database-test-helpers.js:100:11)
+      at Object.createTestUser (tests/__tests__/database-schema.test.js:117:24)
+
+  ● Database Schema Operations › Foreign Key Relationships › should handle cascade deletes properly
+
+    Test database not initialized
+
+       98 | const createTestUser = async (overrides = {}) => {
+       99 |   if (!testSupabaseClient) {
+    > 100 |     throw new Error('Test database not initialized');
+          |           ^
+      101 |   }
+      102 |
+      103 |   const testUserData = {
+
+      at createTestUser (tests/utils/database-test-helpers.js:100:11)
+      at Object.createTestUser (tests/__tests__/database-schema.test.js:117:24)
+
+  ● Database Schema Operations › Foreign Key Relationships › should prevent orphaned records
+
+    Test database not initialized
+
+       98 | const createTestUser = async (overrides = {}) => {
+       99 |   if (!testSupabaseClient) {
+    > 100 |     throw new Error('Test database not initialized');
+          |           ^
+      101 |   }
+      102 |
+      103 |   const testUserData = {
+
+      at createTestUser (tests/utils/database-test-helpers.js:100:11)
+      at Object.createTestUser (tests/__tests__/database-schema.test.js:117:24)
+
+  ● Database Schema Operations › Check Constraints › should enforce trip status check constraint
+
+    Test database not initialized
+
+       98 | const createTestUser = async (overrides = {}) => {
+       99 |   if (!testSupabaseClient) {
+    > 100 |     throw new Error('Test database not initialized');
+          |           ^
+      101 |   }
+      102 |
+      103 |   const testUserData = {
+
+      at createTestUser (tests/utils/database-test-helpers.js:100:11)
+      at Object.createTestUser (tests/__tests__/database-schema.test.js:185:30)
+
+  ● Database Schema Operations › Check Constraints › should enforce payment status check constraint
+
+    Test database not initialized
+
+       98 | const createTestUser = async (overrides = {}) => {
+       99 |   if (!testSupabaseClient) {
+    > 100 |     throw new Error('Test database not initialized');
+          |           ^
+      101 |   }
+      102 |
+      103 |   const testUserData = {
+
+      at createTestUser (tests/utils/database-test-helpers.js:100:11)
+      at Object.createTestUser (tests/__tests__/database-schema.test.js:208:30)
+
+  ● Database Schema Operations › Check Constraints › should enforce message role check constraint
+
+    Test database not initialized
+
+       98 | const createTestUser = async (overrides = {}) => {
+       99 |   if (!testSupabaseClient) {
+    > 100 |     throw new Error('Test database not initialized');
+          |           ^
+      101 |   }
+      102 |
+      103 |   const testUserData = {
+
+      at createTestUser (tests/utils/database-test-helpers.js:100:11)
+      at Object.createTestUser (tests/__tests__/database-schema.test.js:229:30)
+
+  ● Database Schema Operations › Index Performance › should efficiently query trips by user_id using index
+
+    Test database not initialized
+
+       98 | const createTestUser = async (overrides = {}) => {
+       99 |   if (!testSupabaseClient) {
+    > 100 |     throw new Error('Test database not initialized');
+          |           ^
+      101 |   }
+      102 |
+      103 |   const testUserData = {
+
+      at createTestUser (tests/utils/database-test-helpers.js:100:11)
+      at Object.createTestUser (tests/__tests__/database-schema.test.js:250:30)
+
+  ● Database Schema Operations › Index Performance › should efficiently query trips by status using index
+
+    Test database not initialized
+
+       98 | const createTestUser = async (overrides = {}) => {
+       99 |   if (!testSupabaseClient) {
+    > 100 |     throw new Error('Test database not initialized');
+          |           ^
+      101 |   }
+      102 |
+      103 |   const testUserData = {
+
+      at createTestUser (tests/utils/database-test-helpers.js:100:11)
+      at Object.createTestUser (tests/__tests__/database-schema.test.js:250:30)
+
+  ● Database Schema Operations › Index Performance › should efficiently query expenses by trip_id using index
+
+    Test database not initialized
+
+       98 | const createTestUser = async (overrides = {}) => {
+       99 |   if (!testSupabaseClient) {
+    > 100 |     throw new Error('Test database not initialized');
+          |           ^
+      101 |   }
+      102 |
+      103 |   const testUserData = {
+
+      at createTestUser (tests/utils/database-test-helpers.js:100:11)
+      at Object.createTestUser (tests/__tests__/database-schema.test.js:250:30)
+
+  ● Database Schema Operations › Data Types and Validation › should handle UUID data types correctly
+
+    Test database not initialized
+
+       98 | const createTestUser = async (overrides = {}) => {
+       99 |   if (!testSupabaseClient) {
+    > 100 |     throw new Error('Test database not initialized');
+          |           ^
+      101 |   }
+      102 |
+      103 |   const testUserData = {
+
+      at createTestUser (tests/utils/database-test-helpers.js:100:11)
+      at Object.createTestUser (tests/__tests__/database-schema.test.js:359:30)
+
+  ● Database Schema Operations › Data Types and Validation › should handle decimal/numeric data types correctly
+
+    Test database not initialized
+
+       98 | const createTestUser = async (overrides = {}) => {
+       99 |   if (!testSupabaseClient) {
+    > 100 |     throw new Error('Test database not initialized');
+          |           ^
+      101 |   }
+      102 |
+      103 |   const testUserData = {
+
+      at createTestUser (tests/utils/database-test-helpers.js:100:11)
+      at Object.createTestUser (tests/__tests__/database-schema.test.js:373:30)
+
+  ● Database Schema Operations › Data Types and Validation › should handle timestamp data types correctly
+
+    Test database not initialized
+
+       98 | const createTestUser = async (overrides = {}) => {
+       99 |   if (!testSupabaseClient) {
+    > 100 |     throw new Error('Test database not initialized');
+          |           ^
+      101 |   }
+      102 |
+      103 |   const testUserData = {
+
+      at createTestUser (tests/utils/database-test-helpers.js:100:11)
+      at Object.createTestUser (tests/__tests__/database-schema.test.js:397:30)
+
+  ● Database Schema Operations › Data Types and Validation › should handle array data types correctly
+
+    Test database not initialized
+
+      173 | const createTestTravelOffer = async (overrides = {}) => {
+      174 |   if (!testSupabaseClient) {
+    > 175 |     throw new Error('Test database not initialized');
+          |           ^
+      176 |   }
+      177 |
+      178 |   const testOfferData = {
+
+      at createTestTravelOffer (tests/utils/database-test-helpers.js:175:11)
+      at Object.createTestTravelOffer (tests/__tests__/database-schema.test.js:410:31)
+
+  ● Database Schema Operations › Row Level Security (RLS) › should enforce RLS policies for profiles table
+
+    TypeError: Cannot read properties of null (reading 'rpc')
+
+      428 |       // For now, we'll verify that RLS is enabled
+      429 |       const { data: rlsStatus } = await testSupabaseClient
+    > 430 |         .rpc('get_rls_status', { table_name: 'profiles' });
+          |          ^
+      431 |
+      432 |       // If RPC function doesn't exist, we'll skip this test
+      433 |       if (rlsStatus === null) {
+
+      at Object.rpc (tests/__tests__/database-schema.test.js:430:10)
+
+  ● Database Schema Operations › Row Level Security (RLS) › should enforce RLS policies for trips table
+
+    Test database not initialized
+
+       98 | const createTestUser = async (overrides = {}) => {
+       99 |   if (!testSupabaseClient) {
+    > 100 |     throw new Error('Test database not initialized');
+          |           ^
+      101 |   }
+      102 |
+      103 |   const testUserData = {
+
+      at createTestUser (tests/utils/database-test-helpers.js:100:11)
+      at Object.createTestUser (tests/__tests__/database-schema.test.js:442:30)
+
+  ● Database Schema Operations › Database Functions and Triggers › should execute handle_new_user function correctly
+
+    TypeError: Cannot read properties of null (reading 'rpc')
+
+      470 |
+      471 |       const { data: functions } = await testSupabaseClient
+    > 472 |         .rpc('get_functions');
+          |          ^
+      473 |
+      474 |       // If RPC function doesn't exist, we'll skip this test
+      475 |       if (!functions) {
+
+      at Object.rpc (tests/__tests__/database-schema.test.js:472:10)
+
+  ● Database Schema Operations › Storage Bucket Operations › should verify avatars storage bucket exists
+
+    TypeError: Cannot read properties of null (reading 'storage')
+
+      487 |       // For now, we'll verify that the bucket policy exists
+      488 |
+    > 489 |       const { data: buckets } = await testSupabaseClient.storage.listBuckets();
+          |                                                          ^
+      490 |
+      491 |       if (buckets) {
+      492 |         const avatarBucket = buckets.find(bucket => bucket.id === 'avatars');
+
+      at Object.storage (tests/__tests__/database-schema.test.js:489:58)
+
+  ● Database Schema Operations › Concurrent Operations and Race Conditions › should handle concurrent trip creation
+
+    Test database not initialized
+
+       98 | const createTestUser = async (overrides = {}) => {
+       99 |   if (!testSupabaseClient) {
+    > 100 |     throw new Error('Test database not initialized');
+          |           ^
+      101 |   }
+      102 |
+      103 |   const testUserData = {
+
+      at createTestUser (tests/utils/database-test-helpers.js:100:11)
+      at Object.createTestUser (tests/__tests__/database-schema.test.js:503:30)
+
+  ● Database Schema Operations › Concurrent Operations and Race Conditions › should handle concurrent expense creation
+
+    Test database not initialized
+
+       98 | const createTestUser = async (overrides = {}) => {
+       99 |   if (!testSupabaseClient) {
+    > 100 |     throw new Error('Test database not initialized');
+          |           ^
+      101 |   }
+      102 |
+      103 |   const testUserData = {
+
+      at createTestUser (tests/utils/database-test-helpers.js:100:11)
+      at Object.createTestUser (tests/__tests__/database-schema.test.js:529:30)
+
+  console.log
+    ⚠️ Test database not initialized, skipping cleanup
+
+      at log (tests/utils/database-test-helpers.js:71:13)
+
+  console.log
+    ⚠️ Test database not initialized, skipping cleanup
+
+      at log (tests/utils/database-test-helpers.js:71:13)
+
+  console.log
+    ⚠️ Test database not initialized, skipping cleanup
+
+      at log (tests/utils/database-test-helpers.js:71:13)
+
+  console.log
+    ⚠️ Test database not initialized, skipping cleanup
+
+      at log (tests/utils/database-test-helpers.js:71:13)
+
+  console.log
+    ⚠️ Test database not initialized, skipping cleanup
+
+      at log (tests/utils/database-test-helpers.js:71:13)
+
+  console.log
+    ⚠️ Test database not initialized, skipping cleanup
+
+      at log (tests/utils/database-test-helpers.js:71:13)
+
+  console.log
+    ⚠️ Test database not initialized, skipping cleanup
+
+      at log (tests/utils/database-test-helpers.js:71:13)
+
+  console.log
+    ⚠️ Test database not initialized, skipping cleanup
+
+      at log (tests/utils/database-test-helpers.js:71:13)
+
+  console.log
+    ⚠️ Test database not initialized, skipping cleanup
+
+      at log (tests/utils/database-test-helpers.js:71:13)
+
+  console.log
+    ⚠️ Test database not initialized, skipping cleanup
+
+      at log (tests/utils/database-test-helpers.js:71:13)
+
+PASS tests/__tests__/rate-limits.test.js
+  Rate Limits Tests
+    General API Rate Limiter
+      ✓ should handle successful requests within limit (5 ms)
+      ✓ should handle rate limit exceeded (13 ms)
+      ✓ should track rate limit headers correctly (2 ms)
+    AI Rate Limiter
+      ✓ should handle AI requests within limit (2 ms)
+      ✓ should handle AI rate limit exceeded (217 ms)
+      ✓ should handle AI service unavailable (2 ms)
+    Payment Rate Limiter
+      ✓ should handle payment requests within limit (1 ms)
+      ✓ should handle payment rate limit exceeded (4 ms)
+      ✓ should handle payment validation errors (35 ms)
+    Analytics Rate Limiter
+      ✓ should handle analytics requests within limit (3 ms)
+      ✓ should handle analytics rate limit exceeded (22 ms)
+    Rate Limit Headers
+      ✓ should include all required rate limit headers (8 ms)
+      ✓ should handle missing rate limit headers (18 ms)
+    Rate Limit Reset Functionality
+      ✓ should decrement remaining counter correctly (167 ms)
+      ✓ should handle non-numeric remaining values (15 ms)
+    Environment Configuration
+      ✓ should use default API URL when not set (1 ms)
+      ✓ should use custom API URL when provided (6 ms)
+    Error Handling
+      ✓ should handle network errors (161 ms)
+      ✓ should handle timeout errors (4 ms)
+    Concurrent Requests
+      ✓ should handle multiple concurrent requests (14 ms)
+
+FAIL tests/__tests__/database-auth.test.js (14.619 s)
+  Authentication Flows
+    User Registration
+      ✕ should register new user successfully (308 ms)
+      ✕ should create user profile via trigger on registration (191 ms)
+      ✕ should handle duplicate email registration (191 ms)
+      ✕ should validate email format (24 ms)
+      ✕ should validate password strength (25 ms)
+    User Login and Authentication
+      ✕ should login user successfully (16 ms)
+      ✕ should reject login with wrong password (44 ms)
+      ✕ should reject login with non-existent email (7 ms)
+      ✕ should get current user session (154 ms)
+      ✕ should get current user information (4 ms)
+    Session Management
+      ✕ should refresh session token (40 ms)
+      ✕ should logout user successfully (183 ms)
+      ✕ should handle logout when not logged in (4 ms)
+    Password Reset
+      ✕ should initiate password reset successfully (267 ms)
+      ✕ should handle password reset for non-existent email (33 ms)
+      ✕ should update password successfully (54 ms)
+    Row Level Security (RLS) and Access Control
+      ✕ should enforce RLS on users table (21 ms)
+      ✕ should enforce RLS on trips table (160 ms)
+      ✕ should enforce RLS on expenses table (62 ms)
+    JWT Token Validation
+      ✕ should include correct claims in JWT token (7 ms)
+      ✕ should handle expired tokens appropriately (24 ms)
+    Telegram Authentication Integration
+      ✕ should handle Telegram user profile creation (6 ms)
+      ✕ should handle Telegram user profile updates (270 ms)
+    Error Scenarios and Edge Cases
+      ✕ should handle malformed auth requests (62 ms)
+      ✕ should handle malformed login requests (11 ms)
+      ✕ should handle concurrent login attempts (7 ms)
+      ✕ should handle rapid session changes (143 ms)
+
+  ● Authentication Flows › User Registration › should register new user successfully
+
+    TypeError: Cannot read properties of null (reading 'auth')
+
+      33 |   describe('User Registration', () => {
+      34 |     it('should register new user successfully', async () => {
+    > 35 |       const { data, error } = await testSupabaseClient.auth.signUp({
+         |                                                        ^
+      36 |         email: `test${testTelegramId}@example.com`,
+      37 |         password: 'testpassword123',
+      38 |         options: {
+
+      at Object.auth (tests/__tests__/database-auth.test.js:35:56)
+
+  ● Authentication Flows › User Registration › should create user profile via trigger on registration
+
+    TypeError: Cannot read properties of null (reading 'auth')
+
+      50 |
+      51 |     it('should create user profile via trigger on registration', async () => {
+    > 52 |       const { data, error } = await testSupabaseClient.auth.signUp({
+         |                                                        ^
+      53 |         email: `trigger${testTelegramId}@example.com`,
+      54 |         password: 'testpassword123',
+      55 |         options: {
+
+      at Object.auth (tests/__tests__/database-auth.test.js:52:56)
+
+  ● Authentication Flows › User Registration › should handle duplicate email registration
+
+    TypeError: Cannot read properties of null (reading 'auth')
+
+      83 |
+      84 |       // First registration
+    > 85 |       const { data: firstUser, error: firstError } = await testSupabaseClient.auth.signUp({
+         |                                                                               ^
+      86 |         email,
+      87 |         password: 'testpassword123'
+      88 |       });
+
+      at Object.auth (tests/__tests__/database-auth.test.js:85:79)
+
+  ● Authentication Flows › User Registration › should validate email format
+
+    TypeError: Cannot read properties of null (reading 'auth')
+
+      102 |
+      103 |     it('should validate email format', async () => {
+    > 104 |       const { data, error } = await testSupabaseClient.auth.signUp({
+          |                                                        ^
+      105 |         email: 'invalid-email-format',
+      106 |         password: 'testpassword123'
+      107 |       });
+
+      at Object.auth (tests/__tests__/database-auth.test.js:104:56)
+
+  ● Authentication Flows › User Registration › should validate password strength
+
+    TypeError: Cannot read properties of null (reading 'auth')
+
+      112 |
+      113 |     it('should validate password strength', async () => {
+    > 114 |       const { data, error } = await testSupabaseClient.auth.signUp({
+          |                                                        ^
+      115 |         email: `weakpass${testTelegramId}@example.com`,
+      116 |         password: '123' // Too weak
+      117 |       });
+
+      at Object.auth (tests/__tests__/database-auth.test.js:114:56)
+
+  ● Authentication Flows › User Login and Authentication › should login user successfully
+
+    TypeError: Cannot read properties of null (reading 'auth')
+
+      127 |     beforeEach(async () => {
+      128 |       // Create a test user for login tests
+    > 129 |       const { data, error } = await testSupabaseClient.auth.signUp({
+          |                                                        ^
+      130 |         email: `login${testTelegramId}@example.com`,
+      131 |         password: 'testpassword123',
+      132 |         options: {
+
+      at Object.auth (tests/__tests__/database-auth.test.js:129:56)
+
+  ● Authentication Flows › User Login and Authentication › should reject login with wrong password
+
+    TypeError: Cannot read properties of null (reading 'auth')
+
+      127 |     beforeEach(async () => {
+      128 |       // Create a test user for login tests
+    > 129 |       const { data, error } = await testSupabaseClient.auth.signUp({
+          |                                                        ^
+      130 |         email: `login${testTelegramId}@example.com`,
+      131 |         password: 'testpassword123',
+      132 |         options: {
+
+      at Object.auth (tests/__tests__/database-auth.test.js:129:56)
+
+  ● Authentication Flows › User Login and Authentication › should reject login with non-existent email
+
+    TypeError: Cannot read properties of null (reading 'auth')
+
+      127 |     beforeEach(async () => {
+      128 |       // Create a test user for login tests
+    > 129 |       const { data, error } = await testSupabaseClient.auth.signUp({
+          |                                                        ^
+      130 |         email: `login${testTelegramId}@example.com`,
+      131 |         password: 'testpassword123',
+      132 |         options: {
+
+      at Object.auth (tests/__tests__/database-auth.test.js:129:56)
+
+  ● Authentication Flows › User Login and Authentication › should get current user session
+
+    TypeError: Cannot read properties of null (reading 'auth')
+
+      127 |     beforeEach(async () => {
+      128 |       // Create a test user for login tests
+    > 129 |       const { data, error } = await testSupabaseClient.auth.signUp({
+          |                                                        ^
+      130 |         email: `login${testTelegramId}@example.com`,
+      131 |         password: 'testpassword123',
+      132 |         options: {
+
+      at Object.auth (tests/__tests__/database-auth.test.js:129:56)
+
+  ● Authentication Flows › User Login and Authentication › should get current user information
+
+    TypeError: Cannot read properties of null (reading 'auth')
+
+      127 |     beforeEach(async () => {
+      128 |       // Create a test user for login tests
+    > 129 |       const { data, error } = await testSupabaseClient.auth.signUp({
+          |                                                        ^
+      130 |         email: `login${testTelegramId}@example.com`,
+      131 |         password: 'testpassword123',
+      132 |         options: {
+
+      at Object.auth (tests/__tests__/database-auth.test.js:129:56)
+
+  ● Authentication Flows › Session Management › should refresh session token
+
+    TypeError: Cannot read properties of null (reading 'auth')
+
+      212 |     beforeEach(async () => {
+      213 |       // Create and login a test user
+    > 214 |       const { data, error } = await testSupabaseClient.auth.signUp({
+          |                                                        ^
+      215 |         email: `session${testTelegramId}@example.com`,
+      216 |         password: 'testpassword123'
+      217 |       });
+
+      at Object.auth (tests/__tests__/database-auth.test.js:214:56)
+
+  ● Authentication Flows › Session Management › should logout user successfully
+
+    TypeError: Cannot read properties of null (reading 'auth')
+
+      212 |     beforeEach(async () => {
+      213 |       // Create and login a test user
+    > 214 |       const { data, error } = await testSupabaseClient.auth.signUp({
+          |                                                        ^
+      215 |         email: `session${testTelegramId}@example.com`,
+      216 |         password: 'testpassword123'
+      217 |       });
+
+      at Object.auth (tests/__tests__/database-auth.test.js:214:56)
+
+  ● Authentication Flows › Session Management › should handle logout when not logged in
+
+    TypeError: Cannot read properties of null (reading 'auth')
+
+      212 |     beforeEach(async () => {
+      213 |       // Create and login a test user
+    > 214 |       const { data, error } = await testSupabaseClient.auth.signUp({
+          |                                                        ^
+      215 |         email: `session${testTelegramId}@example.com`,
+      216 |         password: 'testpassword123'
+      217 |       });
+
+      at Object.auth (tests/__tests__/database-auth.test.js:214:56)
+
+  ● Authentication Flows › Password Reset › should initiate password reset successfully
+
+    TypeError: Cannot read properties of null (reading 'auth')
+
+      269 |     beforeEach(async () => {
+      270 |       // Create a test user for password reset tests
+    > 271 |       const { data, error } = await testSupabaseClient.auth.signUp({
+          |                                                        ^
+      272 |         email: `reset${testTelegramId}@example.com`,
+      273 |         password: 'originalpassword123'
+      274 |       });
+
+      at Object.auth (tests/__tests__/database-auth.test.js:271:56)
+
+  ● Authentication Flows › Password Reset › should handle password reset for non-existent email
+
+    TypeError: Cannot read properties of null (reading 'auth')
+
+      269 |     beforeEach(async () => {
+      270 |       // Create a test user for password reset tests
+    > 271 |       const { data, error } = await testSupabaseClient.auth.signUp({
+          |                                                        ^
+      272 |         email: `reset${testTelegramId}@example.com`,
+      273 |         password: 'originalpassword123'
+      274 |       });
+
+      at Object.auth (tests/__tests__/database-auth.test.js:271:56)
+
+  ● Authentication Flows › Password Reset › should update password successfully
+
+    TypeError: Cannot read properties of null (reading 'auth')
+
+      269 |     beforeEach(async () => {
+      270 |       // Create a test user for password reset tests
+    > 271 |       const { data, error } = await testSupabaseClient.auth.signUp({
+          |                                                        ^
+      272 |         email: `reset${testTelegramId}@example.com`,
+      273 |         password: 'originalpassword123'
+      274 |       });
+
+      at Object.auth (tests/__tests__/database-auth.test.js:271:56)
+
+  ● Authentication Flows › Row Level Security (RLS) and Access Control › should enforce RLS on users table
+
+    TypeError: Cannot read properties of null (reading 'auth')
+
+      331 |     beforeEach(async () => {
+      332 |       // Create two test users for RLS testing
+    > 333 |       const { data: data1, error: error1 } = await testSupabaseClient.auth.signUp({
+          |                                                                       ^
+      334 |         email: `rls1${testTelegramId}@example.com`,
+      335 |         password: 'testpassword123'
+      336 |       });
+
+      at Object.auth (tests/__tests__/database-auth.test.js:333:71)
+
+  ● Authentication Flows › Row Level Security (RLS) and Access Control › should enforce RLS on trips table
+
+    TypeError: Cannot read properties of null (reading 'auth')
+
+      331 |     beforeEach(async () => {
+      332 |       // Create two test users for RLS testing
+    > 333 |       const { data: data1, error: error1 } = await testSupabaseClient.auth.signUp({
+          |                                                                       ^
+      334 |         email: `rls1${testTelegramId}@example.com`,
+      335 |         password: 'testpassword123'
+      336 |       });
+
+      at Object.auth (tests/__tests__/database-auth.test.js:333:71)
+
+  ● Authentication Flows › Row Level Security (RLS) and Access Control › should enforce RLS on expenses table
+
+    TypeError: Cannot read properties of null (reading 'auth')
+
+      331 |     beforeEach(async () => {
+      332 |       // Create two test users for RLS testing
+    > 333 |       const { data: data1, error: error1 } = await testSupabaseClient.auth.signUp({
+          |                                                                       ^
+      334 |         email: `rls1${testTelegramId}@example.com`,
+      335 |         password: 'testpassword123'
+      336 |       });
+
+      at Object.auth (tests/__tests__/database-auth.test.js:333:71)
+
+  ● Authentication Flows › JWT Token Validation › should include correct claims in JWT token
+
+    TypeError: Cannot read properties of null (reading 'auth')
+
+      477 |     beforeEach(async () => {
+      478 |       // Create and login a test user
+    > 479 |       const { data, error } = await testSupabaseClient.auth.signUp({
+          |                                                        ^
+      480 |         email: `jwt${testTelegramId}@example.com`,
+      481 |         password: 'testpassword123'
+      482 |       });
+
+      at Object.auth (tests/__tests__/database-auth.test.js:479:56)
+
+  ● Authentication Flows › JWT Token Validation › should handle expired tokens appropriately
+
+    TypeError: Cannot read properties of null (reading 'auth')
+
+      477 |     beforeEach(async () => {
+      478 |       // Create and login a test user
+    > 479 |       const { data, error } = await testSupabaseClient.auth.signUp({
+          |                                                        ^
+      480 |         email: `jwt${testTelegramId}@example.com`,
+      481 |         password: 'testpassword123'
+      482 |       });
+
+      at Object.auth (tests/__tests__/database-auth.test.js:479:56)
+
+  ● Authentication Flows › Telegram Authentication Integration › should handle Telegram user profile creation
+
+    Test database not initialized
+
+       98 | const createTestUser = async (overrides = {}) => {
+       99 |   if (!testSupabaseClient) {
+    > 100 |     throw new Error('Test database not initialized');
+          |           ^
+      101 |   }
+      102 |
+      103 |   const testUserData = {
+
+      at createTestUser (tests/utils/database-test-helpers.js:100:11)
+      at Object.createTestUser (tests/__tests__/database-auth.test.js:533:29)
+
+  ● Authentication Flows › Telegram Authentication Integration › should handle Telegram user profile updates
+
+    Test database not initialized
+
+       98 | const createTestUser = async (overrides = {}) => {
+       99 |   if (!testSupabaseClient) {
+    > 100 |     throw new Error('Test database not initialized');
+          |           ^
+      101 |   }
+      102 |
+      103 |   const testUserData = {
+
+      at createTestUser (tests/utils/database-test-helpers.js:100:11)
+      at Object.createTestUser (tests/__tests__/database-auth.test.js:543:36)
+
+  ● Authentication Flows › Error Scenarios and Edge Cases › should handle malformed auth requests
+
+    TypeError: Cannot read properties of null (reading 'auth')
+
+      574 |     it('should handle malformed auth requests', async () => {
+      575 |       // Test with missing email
+    > 576 |       const { data, error } = await testSupabaseClient.auth.signUp({
+          |                                                        ^
+      577 |         password: 'testpassword123'
+      578 |       });
+      579 |
+
+      at Object.auth (tests/__tests__/database-auth.test.js:576:56)
+
+  ● Authentication Flows › Error Scenarios and Edge Cases › should handle malformed login requests
+
+    TypeError: Cannot read properties of null (reading 'auth')
+
+      584 |     it('should handle malformed login requests', async () => {
+      585 |       // Test with missing password
+    > 586 |       const { data, error } = await testSupabaseClient.auth.signInWithPassword({
+          |                                                        ^
+      587 |         email: `malformed${testTelegramId}@example.com`
+      588 |       });
+      589 |
+
+      at Object.auth (tests/__tests__/database-auth.test.js:586:56)
+
+  ● Authentication Flows › Error Scenarios and Edge Cases › should handle concurrent login attempts
+
+    TypeError: Cannot read properties of null (reading 'auth')
+
+      597 |
+      598 |       // Create user first
+    > 599 |       await testSupabaseClient.auth.signUp({
+          |                                ^
+      600 |         email,
+      601 |         password
+      602 |       });
+
+      at Object.auth (tests/__tests__/database-auth.test.js:599:32)
+
+  ● Authentication Flows › Error Scenarios and Edge Cases › should handle rapid session changes
+
+    TypeError: Cannot read properties of null (reading 'auth')
+
+      627 |
+      628 |       // Create user first
+    > 629 |       await testSupabaseClient.auth.signUp({
+          |                                ^
+      630 |         email,
+      631 |         password
+      632 |       });
+
+      at Object.auth (tests/__tests__/database-auth.test.js:629:32)
+
+FAIL tests/__tests__/database.test.js (15.262 s)
+  Supabase Database Operations
+    Database Connection
+      ✕ should initialize with test database configuration (451 ms)
+      ✕ should handle missing configuration gracefully (19 ms)
+    User Profile Management
+      ✕ should create user profile successfully (15 ms)
+      ✕ should get user profile successfully (10 ms)
+      ✕ should return null for non-existent user (288 ms)
+      ✕ should update user profile successfully (53 ms)
+      ✕ should handle duplicate telegram_id on profile creation (10 ms)
+    Conversation Management
+      ✕ should save conversation message successfully (295 ms)
+      ✕ should save assistant message successfully (168 ms)
+      ✕ should get conversation history successfully (19 ms)
+      ✕ should limit conversation history results (200 ms)
+      ✕ should return empty array for user with no messages (141 ms)
+    Travel Offers Management
+      ✕ should get all travel offers successfully (8 ms)
+      ✕ should filter offers by destination (5 ms)
+      ✕ should filter offers by maximum price (6 ms)
+      ✕ should filter offers by category (15 ms)
+      ✕ should create new travel offer successfully (3 ms)
+      ✕ should search offers by query (301 ms)
+    User Preferences and Travel History
+      ✕ should save user preference successfully (26 ms)
+      ✕ should add to travel history successfully (5 ms)
+      ✕ should get personalized offers based on user history (8 ms)
+    Offer Interactions
+      ✕ should track offer interaction successfully (4 ms)
+      ✕ should handle different interaction types (7 ms)
+    User Analytics
+      ✕ should get user analytics successfully (28 ms)
+      ✕ should return null for non-existent user analytics (3 ms)
+    Error Handling
+      ✕ should handle database connection errors gracefully (4 ms)
+      ✕ should handle invalid data types (3 ms)
+      ✕ should handle concurrent operations (166 ms)
+    Data Validation and Constraints
+      ✕ should enforce unique telegram_id constraint (90 ms)
+      ✕ should handle null values appropriately (40 ms)
+      ✕ should validate required fields for offers (16 ms)
+    Performance and Load Testing
+      ✕ should handle bulk operations efficiently (12 ms)
+      ✕ should handle large conversation history (6 ms)
+
+  ● Supabase Database Operations › Database Connection › should initialize with test database configuration
+
+    expect(received).toBeInstanceOf(expected)
+
+    Expected constructor: mockConstructor
+    Received constructor: Object
+
+      51 |   describe('Database Connection', () => {
+      52 |     it('should initialize with test database configuration', () => {
+    > 53 |       expect(db).toBeInstanceOf(SupabaseDB);
+         |                  ^
+      54 |       expect(db.supabase).toBeDefined();
+      55 |       expect(db.memoryStorage).toBeNull();
+      56 |     });
+
+      at Object.toBeInstanceOf (tests/__tests__/database.test.js:53:18)
+
+  ● Supabase Database Operations › Database Connection › should handle missing configuration gracefully
+
+    expect(received).toBeNull()
+
+    Received: undefined
+
+      61 |
+      62 |       const fallbackDb = new SupabaseDB();
+    > 63 |       expect(fallbackDb.supabase).toBeNull();
+         |                                   ^
+      64 |       expect(fallbackDb.memoryStorage).toBeDefined();
+      65 |
+      66 |       process.env.SUPABASE_URL = originalEnv;
+
+      at Object.toBeNull (tests/__tests__/database.test.js:63:35)
+
+  ● Supabase Database Operations › User Profile Management › should create user profile successfully
+
+    TypeError: db.createUserProfile is not a function
+
+      76 |       };
+      77 |
+    > 78 |       const profile = await db.createUserProfile(testTelegramId, userData);
+         |                                ^
+      79 |
+      80 |       expect(profile).toBeDefined();
+      81 |       expect(profile.telegram_id).toBe(testTelegramId);
+
+      at Object.createUserProfile (tests/__tests__/database.test.js:78:32)
+
+  ● Supabase Database Operations › User Profile Management › should get user profile successfully
+
+    TypeError: db.createUserProfile is not a function
+
+      92 |       };
+      93 |
+    > 94 |       await db.createUserProfile(testTelegramId, userData);
+         |                ^
+      95 |
+      96 |       // Retrieve the profile
+      97 |       const profile = await db.getUserProfile(testTelegramId);
+
+      at Object.createUserProfile (tests/__tests__/database.test.js:94:16)
+
+  ● Supabase Database Operations › User Profile Management › should return null for non-existent user
+
+    expect(received).toBeNull()
+
+    Received: undefined
+
+      104 |     it('should return null for non-existent user', async () => {
+      105 |       const profile = await db.getUserProfile(999999);
+    > 106 |       expect(profile).toBeNull();
+          |                       ^
+      107 |     });
+      108 |
+      109 |     it('should update user profile successfully', async () => {
+
+      at Object.toBeNull (tests/__tests__/database.test.js:106:23)
+
+  ● Supabase Database Operations › User Profile Management › should update user profile successfully
+
+    TypeError: db.createUserProfile is not a function
+
+      114 |       };
+      115 |
+    > 116 |       await db.createUserProfile(testTelegramId, userData);
+          |                ^
+      117 |
+      118 |       // Update the profile
+      119 |       const updates = {
+
+      at Object.createUserProfile (tests/__tests__/database.test.js:116:16)
+
+  ● Supabase Database Operations › User Profile Management › should handle duplicate telegram_id on profile creation
+
+    TypeError: db.createUserProfile is not a function
+
+      136 |
+      137 |       // Create first profile
+    > 138 |       await db.createUserProfile(testTelegramId, userData);
+          |                ^
+      139 |
+      140 |       // Try to create duplicate
+      141 |       await expect(db.createUserProfile(testTelegramId, userData))
+
+      at Object.createUserProfile (tests/__tests__/database.test.js:138:16)
+
+  ● Supabase Database Operations › Conversation Management › should save conversation message successfully
+
+    Test database not initialized
+
+       98 | const createTestUser = async (overrides = {}) => {
+       99 |   if (!testSupabaseClient) {
+    > 100 |     throw new Error('Test database not initialized');
+          |           ^
+      101 |   }
+      102 |
+      103 |   const testUserData = {
+
+      at createTestUser (tests/utils/database-test-helpers.js:100:11)
+      at Object.createTestUser (tests/__tests__/database.test.js:149:13)
+
+  ● Supabase Database Operations › Conversation Management › should save assistant message successfully
+
+    Test database not initialized
+
+       98 | const createTestUser = async (overrides = {}) => {
+       99 |   if (!testSupabaseClient) {
+    > 100 |     throw new Error('Test database not initialized');
+          |           ^
+      101 |   }
+      102 |
+      103 |   const testUserData = {
+
+      at createTestUser (tests/utils/database-test-helpers.js:100:11)
+      at Object.createTestUser (tests/__tests__/database.test.js:149:13)
+
+  ● Supabase Database Operations › Conversation Management › should get conversation history successfully
+
+    Test database not initialized
+
+       98 | const createTestUser = async (overrides = {}) => {
+       99 |   if (!testSupabaseClient) {
+    > 100 |     throw new Error('Test database not initialized');
+          |           ^
+      101 |   }
+      102 |
+      103 |   const testUserData = {
+
+      at createTestUser (tests/utils/database-test-helpers.js:100:11)
+      at Object.createTestUser (tests/__tests__/database.test.js:149:13)
+
+  ● Supabase Database Operations › Conversation Management › should limit conversation history results
+
+    Test database not initialized
+
+       98 | const createTestUser = async (overrides = {}) => {
+       99 |   if (!testSupabaseClient) {
+    > 100 |     throw new Error('Test database not initialized');
+          |           ^
+      101 |   }
+      102 |
+      103 |   const testUserData = {
+
+      at createTestUser (tests/utils/database-test-helpers.js:100:11)
+      at Object.createTestUser (tests/__tests__/database.test.js:149:13)
+
+  ● Supabase Database Operations › Conversation Management › should return empty array for user with no messages
+
+    Test database not initialized
+
+       98 | const createTestUser = async (overrides = {}) => {
+       99 |   if (!testSupabaseClient) {
+    > 100 |     throw new Error('Test database not initialized');
+          |           ^
+      101 |   }
+      102 |
+      103 |   const testUserData = {
+
+      at createTestUser (tests/utils/database-test-helpers.js:100:11)
+      at Object.createTestUser (tests/__tests__/database.test.js:149:13)
+
+  ● Supabase Database Operations › Travel Offers Management › should get all travel offers successfully
+
+    Test database not initialized
+
+      173 | const createTestTravelOffer = async (overrides = {}) => {
+      174 |   if (!testSupabaseClient) {
+    > 175 |     throw new Error('Test database not initialized');
+          |           ^
+      176 |   }
+      177 |
+      178 |   const testOfferData = {
+
+      at createTestTravelOffer (tests/utils/database-test-helpers.js:175:11)
+      at Object.createTestTravelOffer (tests/__tests__/database.test.js:214:13)
+
+  ● Supabase Database Operations › Travel Offers Management › should filter offers by destination
+
+    Test database not initialized
+
+      173 | const createTestTravelOffer = async (overrides = {}) => {
+      174 |   if (!testSupabaseClient) {
+    > 175 |     throw new Error('Test database not initialized');
+          |           ^
+      176 |   }
+      177 |
+      178 |   const testOfferData = {
+
+      at createTestTravelOffer (tests/utils/database-test-helpers.js:175:11)
+      at Object.createTestTravelOffer (tests/__tests__/database.test.js:236:13)
+
+  ● Supabase Database Operations › Travel Offers Management › should filter offers by maximum price
+
+    Test database not initialized
+
+      173 | const createTestTravelOffer = async (overrides = {}) => {
+      174 |   if (!testSupabaseClient) {
+    > 175 |     throw new Error('Test database not initialized');
+          |           ^
+      176 |   }
+      177 |
+      178 |   const testOfferData = {
+
+      at createTestTravelOffer (tests/utils/database-test-helpers.js:175:11)
+      at Object.createTestTravelOffer (tests/__tests__/database.test.js:257:13)
+
+  ● Supabase Database Operations › Travel Offers Management › should filter offers by category
+
+    Test database not initialized
+
+      173 | const createTestTravelOffer = async (overrides = {}) => {
+      174 |   if (!testSupabaseClient) {
+    > 175 |     throw new Error('Test database not initialized');
+          |           ^
+      176 |   }
+      177 |
+      178 |   const testOfferData = {
+
+      at createTestTravelOffer (tests/utils/database-test-helpers.js:175:11)
+      at Object.createTestTravelOffer (tests/__tests__/database.test.js:276:13)
+
+  ● Supabase Database Operations › Travel Offers Management › should create new travel offer successfully
+
+    TypeError: db.createTravelOffer is not a function
+
+      309 |       };
+      310 |
+    > 311 |       const createdOffer = await db.createTravelOffer(offerData);
+          |                                     ^
+      312 |
+      313 |       expect(createdOffer).toBeDefined();
+      314 |       expect(createdOffer.title).toBe(offerData.title);
+
+      at Object.createTravelOffer (tests/__tests__/database.test.js:311:37)
+
+  ● Supabase Database Operations › Travel Offers Management › should search offers by query
+
+    Test database not initialized
+
+      173 | const createTestTravelOffer = async (overrides = {}) => {
+      174 |   if (!testSupabaseClient) {
+    > 175 |     throw new Error('Test database not initialized');
+          |           ^
+      176 |   }
+      177 |
+      178 |   const testOfferData = {
+
+      at createTestTravelOffer (tests/utils/database-test-helpers.js:175:11)
+      at Object.createTestTravelOffer (tests/__tests__/database.test.js:321:13)
+
+  ● Supabase Database Operations › User Preferences and Travel History › should save user preference successfully
+
+    Test database not initialized
+
+       98 | const createTestUser = async (overrides = {}) => {
+       99 |   if (!testSupabaseClient) {
+    > 100 |     throw new Error('Test database not initialized');
+          |           ^
+      101 |   }
+      102 |
+      103 |   const testUserData = {
+
+      at createTestUser (tests/utils/database-test-helpers.js:100:11)
+      at Object.createTestUser (tests/__tests__/database.test.js:345:13)
+
+  ● Supabase Database Operations › User Preferences and Travel History › should add to travel history successfully
+
+    Test database not initialized
+
+       98 | const createTestUser = async (overrides = {}) => {
+       99 |   if (!testSupabaseClient) {
+    > 100 |     throw new Error('Test database not initialized');
+          |           ^
+      101 |   }
+      102 |
+      103 |   const testUserData = {
+
+      at createTestUser (tests/utils/database-test-helpers.js:100:11)
+      at Object.createTestUser (tests/__tests__/database.test.js:345:13)
+
+  ● Supabase Database Operations › User Preferences and Travel History › should get personalized offers based on user history
+
+    Test database not initialized
+
+       98 | const createTestUser = async (overrides = {}) => {
+       99 |   if (!testSupabaseClient) {
+    > 100 |     throw new Error('Test database not initialized');
+          |           ^
+      101 |   }
+      102 |
+      103 |   const testUserData = {
+
+      at createTestUser (tests/utils/database-test-helpers.js:100:11)
+      at Object.createTestUser (tests/__tests__/database.test.js:345:13)
+
+  ● Supabase Database Operations › Offer Interactions › should track offer interaction successfully
+
+    Test database not initialized
+
+      173 | const createTestTravelOffer = async (overrides = {}) => {
+      174 |   if (!testSupabaseClient) {
+    > 175 |     throw new Error('Test database not initialized');
+          |           ^
+      176 |   }
+      177 |
+      178 |   const testOfferData = {
+
+      at createTestTravelOffer (tests/utils/database-test-helpers.js:175:11)
+      at Object.createTestTravelOffer (tests/__tests__/database.test.js:422:25)
+
+  ● Supabase Database Operations › Offer Interactions › should handle different interaction types
+
+    Test database not initialized
+
+      173 | const createTestTravelOffer = async (overrides = {}) => {
+      174 |   if (!testSupabaseClient) {
+    > 175 |     throw new Error('Test database not initialized');
+          |           ^
+      176 |   }
+      177 |
+      178 |   const testOfferData = {
+
+      at createTestTravelOffer (tests/utils/database-test-helpers.js:175:11)
+      at Object.createTestTravelOffer (tests/__tests__/database.test.js:422:25)
+
+  ● Supabase Database Operations › User Analytics › should get user analytics successfully
+
+    Test database not initialized
+
+       98 | const createTestUser = async (overrides = {}) => {
+       99 |   if (!testSupabaseClient) {
+    > 100 |     throw new Error('Test database not initialized');
+          |           ^
+      101 |   }
+      102 |
+      103 |   const testUserData = {
+
+      at createTestUser (tests/utils/database-test-helpers.js:100:11)
+      at Object.createTestUser (tests/__tests__/database.test.js:461:13)
+
+  ● Supabase Database Operations › User Analytics › should return null for non-existent user analytics
+
+    Test database not initialized
+
+       98 | const createTestUser = async (overrides = {}) => {
+       99 |   if (!testSupabaseClient) {
+    > 100 |     throw new Error('Test database not initialized');
+          |           ^
+      101 |   }
+      102 |
+      103 |   const testUserData = {
+
+      at createTestUser (tests/utils/database-test-helpers.js:100:11)
+      at Object.createTestUser (tests/__tests__/database.test.js:461:13)
+
+  ● Supabase Database Operations › Error Handling › should handle database connection errors gracefully
+
+    expect(received).toBeNull()
+
+    Received: undefined
+
+      505 |
+      506 |       const profile = await db.getUserProfile(testTelegramId);
+    > 507 |       expect(profile).toBeNull();
+          |                       ^
+      508 |
+      509 |       // Restore connection
+      510 |       db.supabase = originalSupabase;
+
+      at Object.toBeNull (tests/__tests__/database.test.js:507:23)
+
+  ● Supabase Database Operations › Error Handling › should handle invalid data types
+
+    TypeError: db.createUserProfile is not a function
+
+      519 |
+      520 |       // This should not throw but handle gracefully
+    > 521 |       const profile = await db.createUserProfile(testTelegramId, invalidUserData);
+          |                                ^
+      522 |       expect(profile).toBeDefined(); // Should still create profile with defaults
+      523 |     });
+      524 |
+
+      at Object.createUserProfile (tests/__tests__/database.test.js:521:32)
+
+  ● Supabase Database Operations › Error Handling › should handle concurrent operations
+
+    TypeError: db.createUserProfile is not a function
+
+      528 |       for (let i = 0; i < 5; i++) {
+      529 |         promises.push(
+    > 530 |           db.createUserProfile(testTelegramId + i, {
+          |              ^
+      531 |             username: `concurrent_user_${i}`,
+      532 |             preferences: { language: 'ar' }
+      533 |           })
+
+      at Object.createUserProfile (tests/__tests__/database.test.js:530:14)
+
+  ● Supabase Database Operations › Data Validation and Constraints › should enforce unique telegram_id constraint
+
+    TypeError: db.createUserProfile is not a function
+
+      553 |
+      554 |       // Create first user
+    > 555 |       await db.createUserProfile(testTelegramId, userData);
+          |                ^
+      556 |
+      557 |       // Try to create duplicate - should fail
+      558 |       await expect(db.createUserProfile(testTelegramId, userData))
+
+      at Object.createUserProfile (tests/__tests__/database.test.js:555:16)
+
+  ● Supabase Database Operations › Data Validation and Constraints › should handle null values appropriately
+
+    TypeError: db.createUserProfile is not a function
+
+      567 |       };
+      568 |
+    > 569 |       const profile = await db.createUserProfile(testTelegramId, userData);
+          |                                ^
+      570 |
+      571 |       expect(profile).toBeDefined();
+      572 |       expect(profile.username).toBeNull();
+
+      at Object.createUserProfile (tests/__tests__/database.test.js:569:32)
+
+  ● Supabase Database Operations › Data Validation and Constraints › should validate required fields for offers
+
+    TypeError: db.createTravelOffer is not a function
+
+      582 |
+      583 |       // Should handle missing required fields gracefully
+    > 584 |       const offer = await db.createTravelOffer(invalidOfferData);
+          |                              ^
+      585 |       // Depending on database constraints, this might return null or throw
+      586 |       // The test verifies the function handles the error appropriately
+      587 |       expect(offer === null || offer === undefined || typeof offer === 'object').toBe(true);
+
+      at Object.createTravelOffer (tests/__tests__/database.test.js:584:30)
+
+  ● Supabase Database Operations › Performance and Load Testing › should handle bulk operations efficiently
+
+    TypeError: db.createUserProfile is not a function
+
+      597 |       for (let i = 0; i < 10; i++) {
+      598 |         bulkPromises.push(
+    > 599 |           db.createUserProfile(testTelegramId + i, {
+          |              ^
+      600 |             username: `bulk_user_${i}`,
+      601 |             preferences: { language: 'ar' }
+      602 |           })
+
+      at Object.createUserProfile (tests/__tests__/database.test.js:599:14)
+
+  ● Supabase Database Operations › Performance and Load Testing › should handle large conversation history
+
+    Test database not initialized
+
+       98 | const createTestUser = async (overrides = {}) => {
+       99 |   if (!testSupabaseClient) {
+    > 100 |     throw new Error('Test database not initialized');
+          |           ^
+      101 |   }
+      102 |
+      103 |   const testUserData = {
+
+      at createTestUser (tests/utils/database-test-helpers.js:100:11)
+      at Object.createTestUser (tests/__tests__/database.test.js:615:13)
+
+PASS tests/__tests__/mocks/database.js
+  Database Mocks
+    ✓ should export mock functions (2 ms)
+
+FAIL tests/__tests__/security.test.js
+  ● Test suite failed to run
+
+    Cannot find module 'supertest' from 'tests/__tests__/security.test.js'
+
+      4 |  */
+      5 |
+    > 6 | const request = require('supertest');
+        |                 ^
+      7 |
+      8 | // Mock external dependencies
+      9 | jest.mock('../../utils/logger');
+
+      at Resolver._throwModNotFoundError (node_modules/jest-resolve/build/index.js:863:11)
+      at Object.require (tests/__tests__/security.test.js:6:17)
+
+PASS utils/__tests__/logger.test.js (16.552 s)
+  Logger
+    ✓ should be an instance of Logger (154 ms)
+    ✓ should create log directory if it does not exist (21 ms)
+    ✓ should call console.log and fs.appendFileSync for each log level (17 ms)
+    ✓ should format message correctly (114 ms)
+    ✓ should not log if level is lower than currentLevel (4 ms)
+    ✓ should handle specialized logs (23 ms)
+
+FAIL tests/__tests__/auth-enhanced.test.js
+  ● Test suite failed to run
+
+    Cannot find module 'supertest' from 'tests/__tests__/auth-enhanced.test.js'
+
+      4 |  */
+      5 |
+    > 6 | const request = require('supertest');
+        |                 ^
+      7 | const jwt = require('jsonwebtoken');
+      8 | const crypto = require('crypto');
+      9 |
+
+      at Resolver._throwModNotFoundError (node_modules/jest-resolve/build/index.js:863:11)
+      at Object.require (tests/__tests__/auth-enhanced.test.js:6:17)
+
+FAIL tests/__tests__/performance.test.js
+  ● Test suite failed to run
+
+    Cannot find module 'supertest' from 'tests/__tests__/performance.test.js'
+
+      4 |  */
+      5 |
+    > 6 | const request = require('supertest');
+        |                 ^
+      7 | const { performance } = require('perf_hooks');
+      8 | const { EventEmitter } = require('events');
+      9 | const v8 = require('v8');
+
+      at Resolver._throwModNotFoundError (node_modules/jest-resolve/build/index.js:863:11)
+      at Object.require (tests/__tests__/performance.test.js:6:17)
+
+FAIL tests/__tests__/error-scenarios.test.js
+  ● Test suite failed to run
+
+    Cannot find module 'supertest' from 'tests/__tests__/error-scenarios.test.js'
+
+      4 |  */
+      5 |
+    > 6 | const request = require('supertest');
+        |                 ^
+      7 | const { EventEmitter } = require('events');
+      8 |
+      9 | // Mock external dependencies
+
+      at Resolver._throwModNotFoundError (node_modules/jest-resolve/build/index.js:863:11)
+      at Object.require (tests/__tests__/error-scenarios.test.js:6:17)
+
+A worker process has failed to exit gracefully and has been force exited. This is likely caused by tests leaking due to improper teardown. Try running with --detectOpenHandles to find leaks. Active timers can also cause this, ensure that .unref() was called on them.
+Test Suites: 8 failed, 5 passed, 13 total
+Tests:       91 failed, 66 passed, 157 total
+Snapshots:   0 total
+Time:        28.03 s, estimated 29 s
+Ran all test suites.
+npm error Lifecycle script `test` failed with error:
+npm error code 1
+npm error path /Users/Shared/maya-travel-agent/backend
+npm error workspace maya-trips-backend@1.0.0
+npm error location /Users/Shared/maya-travel-agent/backend
+npm error command failed
+npm error command sh -c jest
