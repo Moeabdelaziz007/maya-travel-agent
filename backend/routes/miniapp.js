@@ -4,8 +4,13 @@ const jwt = require('jsonwebtoken');
 const { createClient } = require('@supabase/supabase-js');
 const router = express.Router();
 
-// Supabase service client (service role)
-const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_ROLE_KEY);
+// Supabase service client (service role) - only initialize if credentials are available
+let supabase = null;
+
+if (process.env.SUPABASE_URL && process.env.SUPABASE_URL !== 'your_supabase_url_here' &&
+    process.env.SUPABASE_SERVICE_ROLE_KEY && process.env.SUPABASE_SERVICE_ROLE_KEY !== 'your_supabase_service_role_key_here') {
+  supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_ROLE_KEY);
+}
 
 // Verify Telegram initData per Telegram WebApp docs
 function verifyTelegramInitData(initData, botToken) {
@@ -182,6 +187,10 @@ class MiniAppService {
 // Telegram WebApp auth via initData
 router.post('/auth/telegram', async (req, res) => {
   try {
+    if (!supabase) {
+      return res.status(503).json({ error: 'Database not configured' });
+    }
+
     const { initData } = req.body;
     const user = verifyTelegramInitData(initData, process.env.TELEGRAM_BOT_TOKEN);
     if (!user) {
