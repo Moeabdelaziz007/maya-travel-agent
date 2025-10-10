@@ -23,16 +23,37 @@ export interface TelegramChat {
   photo_url?: string;
 }
 
+export interface Trip {
+  // Define the structure of a Trip object
+  id: string | number;
+  destination: string;
+  startDate: string;
+  endDate: string;
+  // ... other properties
+}
+
+export interface BotCommand {
+  command: string;
+  description: string;
+}
+
+type ApiResponse<T> = { success: boolean; error?: string } & T;
+
 export class TelegramService {
   private static baseURL = '/api/telegram';
+  private static currentUser: TelegramUser | null | undefined = undefined;
 
   // Get current Telegram user
   static getCurrentUser(): TelegramUser | null {
     if (!isTelegramWebApp()) {
       return null;
     }
+    // Cache the user object to avoid repeated calls
+    if (this.currentUser === undefined) {
+      this.currentUser = getTelegramUser();
+    }
 
-    return getTelegramUser();
+    return this.currentUser;
   }
 
   // Get chat information
@@ -41,9 +62,12 @@ export class TelegramService {
       return null;
     }
 
-    // Parse init data to get chat info
-    // This would need to be implemented based on your backend parsing
-    return null;
+    const initData = getInitData();
+    if (initData?.chat) {
+      return initData.chat;
+    }
+
+    return null; // Or handle as needed if chat info is not present
   }
 
   // Send message to user
@@ -51,26 +75,7 @@ export class TelegramService {
     message: string,
     chatId?: number
   ): Promise<{ success: boolean; error?: string }> {
-    try {
-      const response = await fetch(`${this.baseURL}/send-message`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          message,
-          chat_id: chatId,
-        }),
-      });
-
-      const data = await response.json();
-      return data;
-    } catch (error) {
-      return {
-        success: false,
-        error: 'Network error. Please check your connection.',
-      };
-    }
+    return this.post('/send-message', { message, chat_id: chatId });
   }
 
   // Send payment link to user
@@ -78,114 +83,39 @@ export class TelegramService {
     amount: number,
     description: string,
     chatId?: number
-  ): Promise<{ success: boolean; paymentLink?: string; error?: string }> {
-    try {
-      const response = await fetch(`${this.baseURL}/send-payment-link`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          amount,
-          description,
-          chat_id: chatId,
-        }),
-      });
-
-      const data = await response.json();
-      return data;
-    } catch (error) {
-      return {
-        success: false,
-        error: 'Network error. Please check your connection.',
-      };
-    }
+  ): Promise<ApiResponse<{ paymentLink?: string }>> {
+    return this.post('/send-payment-link', {
+      amount,
+      description,
+      chat_id: chatId,
+    });
   }
 
   // Share trip with user
   static async shareTrip(
-    tripData: any,
+    tripData: Trip,
     chatId?: number
   ): Promise<{ success: boolean; error?: string }> {
-    try {
-      const response = await fetch(`${this.baseURL}/share-trip`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          trip: tripData,
-          chat_id: chatId,
-        }),
-      });
-
-      const data = await response.json();
-      return data;
-    } catch (error) {
-      return {
-        success: false,
-        error: 'Network error. Please check your connection.',
-      };
-    }
+    return this.post('/share-trip', { trip: tripData, chat_id: chatId });
   }
 
   // Get user's trips from Telegram
-  static async getUserTrips(): Promise<{
-    success: boolean;
-    trips?: any[];
-    error?: string;
-  }> {
-    try {
-      const response = await fetch(`${this.baseURL}/user-trips`);
-      const data = await response.json();
-      return data;
-    } catch (error) {
-      return {
-        success: false,
-        error: 'Network error. Please check your connection.',
-      };
-    }
+  static async getUserTrips(): Promise<ApiResponse<{ trips?: Trip[] }>> {
+    return this.get('/user-trips');
   }
 
   // Sync user data with Telegram
   static async syncUserData(
-    userData: any
+    userData: Partial<TelegramUser>
   ): Promise<{ success: boolean; error?: string }> {
-    try {
-      const response = await fetch(`${this.baseURL}/sync-user`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(userData),
-      });
-
-      const data = await response.json();
-      return data;
-    } catch (error) {
-      return {
-        success: false,
-        error: 'Network error. Please check your connection.',
-      };
-    }
+    return this.post('/sync-user', userData);
   }
 
   // Get bot commands
-  static async getBotCommands(): Promise<{
-    success: boolean;
-    commands?: any[];
-    error?: string;
-  }> {
-    try {
-      const response = await fetch(`${this.baseURL}/bot-commands`);
-      const data = await response.json();
-      return data;
-    } catch (error) {
-      return {
-        success: false,
-        error: 'Network error. Please check your connection.',
-      };
-    }
+  static async getBotCommands(): Promise<
+    ApiResponse<{ commands?: BotCommand[] }>
+  > {
+    return this.get('/bot-commands');
   }
 
   // Send notification to user
@@ -193,25 +123,56 @@ export class TelegramService {
     message: string,
     type: 'info' | 'success' | 'warning' | 'error' = 'info'
   ): Promise<{ success: boolean; error?: string }> {
+    return this.post('/send-notification', { message, type });
+  }
+
+  private static async get<T>(endpoint: string): Promise<ApiResponse<T>> {
+    return this.request(endpoint, { method: 'GET' });
+  }
+
+  private static async post<T>(
+    endpoint: string,
+    body: Record<string, unknown>
+  ): Promise<ApiResponse<T>> {
+    return this.request(endpoint, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body),
+    });
+  }
+
+  private static async request<T>(
+    endpoint: string,
+    options: RequestInit
+  ): Promise<ApiResponse<T>> {
     try {
-      const response = await fetch(`${this.baseURL}/send-notification`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          message,
-          type,
-        }),
-      });
+      const response = await fetch(`${this.baseURL}${endpoint}`, options);
+
+      if (!response.ok) {
+        // Attempt to parse error from body, otherwise use status text
+        let errorBody;
+        try {
+          errorBody = await response.json();
+        } catch {
+          // Ignore if body is not json
+        }
+        const errorMessage =
+          errorBody?.error || response.statusText || 'Server error';
+        return { success: false, error: errorMessage } as ApiResponse<T>;
+      }
 
       const data = await response.json();
-      return data;
+      return {
+        success: data.success ?? false,
+        ...data,
+        error: data.error,
+      };
     } catch (error) {
+      console.error('API Request Error:', error);
       return {
         success: false,
         error: 'Network error. Please check your connection.',
-      };
+      } as ApiResponse<T>;
     }
   }
 
@@ -250,7 +211,7 @@ export class TelegramService {
     if (user.username) {
       info += ` (@${user.username})`;
     }
-    if (user.is_premium) {
+    if (user.is_premium === true) {
       info += ' ⭐';
     }
 

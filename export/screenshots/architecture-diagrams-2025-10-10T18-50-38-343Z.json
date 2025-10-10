@@ -1,0 +1,29 @@
+{
+  "metadata": {
+    "exportDate": "2025-10-10T18:50:38.454Z",
+    "format": "Mermaid/PUML",
+    "diagrams": [
+      {
+        "name": "System Architecture",
+        "type": "High-level system architecture",
+        "format": "mermaid",
+        "content": "\ngraph TB\n    subgraph \"Frontend Layer\"\n        A[React Web App]\n        B[Telegram Mini App]\n        C[Progressive Web App]\n    end\n\n    subgraph \"API Gateway\"\n        D[Nginx Reverse Proxy]\n        E[Rate Limiting]\n        F[SSL Termination]\n    end\n\n    subgraph \"Backend Services\"\n        G[Authentication Service]\n        H[Trip Planning Service]\n        I[AI Orchestration Service]\n        J[Payment Service]\n        K[Data Integration Service]\n    end\n\n    subgraph \"Data Platform\"\n        L[Supabase PostgreSQL]\n        M[Fivetran Ingestion]\n        N[dbt Transformations]\n        O[Dataiku ML Platform]\n    end\n\n    subgraph \"External Services\"\n        P[Flight APIs]\n        Q[Hotel APIs]\n        R[Payment Providers]\n        S[Z.ai GLM-4.6]\n    end\n\n    subgraph \"Monitoring & Governance\"\n        T[Prometheus]\n        U[Grafana]\n        V[Collibra]\n        W[Alert Manager]\n    end\n\n    A --> D\n    B --> D\n    C --> D\n    D --> G\n    D --> H\n    D --> I\n    D --> J\n    D --> K\n    G --> L\n    H --> L\n    I --> L\n    J --> L\n    K --> L\n    M --> L\n    L --> N\n    N --> O\n    O --> I\n    P --> M\n    Q --> M\n    R --> J\n    S --> I\n    T --> U\n    T --> W\n    V --> L\n              ",
+        "file": "system-architecture.mmd"
+      },
+      {
+        "name": "Data Flow Architecture",
+        "type": "Data pipeline and flow architecture",
+        "format": "mermaid",
+        "content": "\ngraph TD\n    A[External APIs] --> B{Fivetran Ingestion}\n    B --> C[Raw Data Lake]\n    C --> D{dbt Staging Models}\n    D --> E[Cleaned & Transformed Data]\n    E --> F{dbt Mart Models}\n    F --> G[Business Intelligence]\n    F --> H[Dataiku DSS]\n    H --> I[ML Model Training]\n    I --> J[Model Validation]\n    J --> K[Model Deployment]\n    K --> L[Prediction API]\n    G --> M[Grafana Dashboards]\n    C --> N[Collibra Governance]\n    N --> O[Data Quality Rules]\n    N --> P[Data Lineage Tracking]\n    N --> Q[Compliance Monitoring]\n              ",
+        "file": "data-flow-architecture.mmd"
+      },
+      {
+        "name": "Deployment Architecture",
+        "type": "Infrastructure and deployment architecture",
+        "format": "mermaid",
+        "content": "\ngraph TB\n    subgraph \"Development Environment\"\n        A[Local Docker Compose]\n        B[Hot Reload]\n        C[Development Database]\n    end\n\n    subgraph \"Staging Environment\"\n        D[Kubernetes Cluster]\n        E[CI/CD Pipeline]\n        F[Staging Database]\n        G[Load Testing]\n    end\n\n    subgraph \"Production Environment\"\n        H[Multi-region Kubernetes]\n        I[Auto-scaling]\n        J[Production Database]\n        K[CDN]\n        L[Load Balancer]\n        M[Redis Cache]\n        N[Monitoring Stack]\n    end\n\n    subgraph \"External Services\"\n        O[Supabase]\n        P[Stripe]\n        Q[Dataiku Cloud]\n        R[Collibra Cloud]\n        S[Grafana Cloud]\n    end\n\n    A --> D\n    D --> H\n    C --> F\n    F --> J\n    O --> J\n    P --> H\n    Q --> H\n    R --> H\n    S --> N\n              ",
+        "file": "deployment-architecture.mmd"
+      }
+    ]
+  }
+}

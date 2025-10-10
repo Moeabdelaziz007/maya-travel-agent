@@ -1,0 +1,203 @@
+{
+  "metadata": {
+    "exportDate": "2025-10-10T18:44:06.403Z",
+    "version": "1.0.0",
+    "description": "Maya Travel Agent Collibra Data Governance Configuration"
+  },
+  "domains": [
+    {
+      "name": "Maya Travel Agent",
+      "description": "Data governance domain for Maya Travel Agent platform",
+      "subDomains": [
+        {
+          "name": "Users",
+          "description": "User profiles, authentication, and engagement data"
+        },
+        {
+          "name": "Trips",
+          "description": "Trip planning, bookings, and travel history data"
+        },
+        {
+          "name": "Payments",
+          "description": "Payment processing, transactions, and financial data"
+        },
+        {
+          "name": "Analytics",
+          "description": "Business intelligence, reporting, and analytics data"
+        }
+      ]
+    },
+    {
+      "name": "Configuration Management",
+      "description": "Centralized configuration governance and version control"
+    }
+  ],
+  "dataAssets": {
+    "users": [
+      {
+        "name": "User Profiles",
+        "type": "Table",
+        "classification": "Internal",
+        "source": "Supabase",
+        "owner": "Customer Success Team"
+      },
+      {
+        "name": "User Sessions",
+        "type": "Table",
+        "classification": "Internal",
+        "source": "Application Logs",
+        "owner": "Engineering Team"
+      }
+    ],
+    "trips": [
+      {
+        "name": "Trip Bookings",
+        "type": "Table",
+        "classification": "Confidential",
+        "source": "External APIs",
+        "owner": "Operations Team"
+      },
+      {
+        "name": "Trip History",
+        "type": "Table",
+        "classification": "Internal",
+        "source": "Supabase",
+        "owner": "Data Science Team"
+      }
+    ],
+    "payments": [
+      {
+        "name": "Payment Transactions",
+        "type": "Table",
+        "classification": "Restricted",
+        "source": "Stripe API",
+        "owner": "Finance Team"
+      },
+      {
+        "name": "Payment Methods",
+        "type": "Table",
+        "classification": "Restricted",
+        "source": "Stripe API",
+        "owner": "Finance Team"
+      }
+    ],
+    "analytics": [
+      {
+        "name": "Business KPIs",
+        "type": "Report",
+        "classification": "Internal",
+        "source": "dbt Models",
+        "owner": "Analytics Team"
+      },
+      {
+        "name": "ML Models",
+        "type": "Model",
+        "classification": "Internal",
+        "source": "Dataiku",
+        "owner": "Data Science Team"
+      }
+    ]
+  },
+  "dataLineage": [
+    {
+      "source": "External APIs",
+      "target": "Trip Bookings",
+      "transformation": "Fivetran Ingestion"
+    },
+    {
+      "source": "Trip Bookings",
+      "target": "Supabase Raw Tables",
+      "transformation": "Fivetran → Supabase"
+    },
+    {
+      "source": "Supabase Raw Tables",
+      "target": "dbt Staging Models",
+      "transformation": "dbt Transformation"
+    },
+    {
+      "source": "dbt Staging Models",
+      "target": "dbt Marts",
+      "transformation": "dbt Modeling"
+    },
+    {
+      "source": "dbt Marts",
+      "target": "Business KPIs",
+      "transformation": "dbt Reporting"
+    },
+    {
+      "source": "dbt Marts",
+      "target": "Dataiku Projects",
+      "transformation": "Dataiku ML Pipeline"
+    },
+    {
+      "source": "Dataiku Projects",
+      "target": "ML Models",
+      "transformation": "Model Training"
+    }
+  ],
+  "dataQualityRules": [
+    {
+      "asset": "User Profiles",
+      "rules": [
+        {
+          "name": "Email Format Validation",
+          "rule": "REGEXP_LIKE(email, '^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$')",
+          "severity": "High"
+        },
+        {
+          "name": "Required Fields Check",
+          "rule": "user_id IS NOT NULL AND email IS NOT NULL",
+          "severity": "Critical"
+        }
+      ]
+    },
+    {
+      "asset": "Payment Transactions",
+      "rules": [
+        {
+          "name": "Amount Validation",
+          "rule": "amount > 0",
+          "severity": "Critical"
+        },
+        {
+          "name": "Currency Code Check",
+          "rule": "currency IN ('USD', 'EUR', 'GBP')",
+          "severity": "High"
+        }
+      ]
+    }
+  ],
+  "aiGovernance": {
+    "modelRiskAssessment": {
+      "name": "Price Prediction Model Risk Assessment",
+      "riskLevel": "Medium",
+      "complianceStatus": "Compliant",
+      "assessmentFrequency": "Quarterly"
+    },
+    "biasMonitoring": {
+      "name": "Model Bias Monitoring",
+      "detectionEnabled": true,
+      "fairnessMetrics": [
+        "PSI",
+        "Demographic Parity"
+      ],
+      "monitoringFrequency": "Daily",
+      "alertThreshold": 0.05
+    },
+    "modelInventory": {
+      "name": "ML Model Inventory",
+      "totalModels": 3,
+      "activeModels": 3,
+      "deprecatedModels": 0
+    }
+  },
+  "configurationManagement": {
+    "environments": [
+      "development",
+      "staging",
+      "production"
+    ],
+    "status": "Active",
+    "versionControl": "Enabled"
+  }
+}

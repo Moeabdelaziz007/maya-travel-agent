@@ -1,0 +1,23 @@
+{
+  "title": "Maya Travel Agent - Deployment Guide",
+  "version": "1.0.0",
+  "exportDate": "2025-10-10T18:49:28.809Z",
+  "sections": [
+    {
+      "title": "Prerequisites",
+      "content": "\n# Prerequisites\n\n## System Requirements\n- **Operating System**: Ubuntu 20.04+ or macOS 12+\n- **Memory**: Minimum 8GB RAM, Recommended 16GB+\n- **Storage**: Minimum 50GB free space\n- **Network**: Stable internet connection for external API calls\n\n## Required Software\n- **Node.js**: Version 18.0 or higher\n- **Docker**: Version 20.10 or higher\n- **Docker Compose**: Version 2.0 or higher\n- **Git**: Version 2.30 or higher\n- **npm**: Version 8.0 or higher (comes with Node.js)\n\n## External Services\n- **Supabase Account**: For database and authentication\n- **Stripe Account**: For payment processing\n- **Telegram Bot Token**: For bot functionality\n- **Dataiku DSS**: For ML model management (optional)\n- **Collibra**: For data governance (optional)\n- **Grafana Cloud**: For monitoring dashboards (optional)\n            "
+    },
+    {
+      "title": "Environment Setup",
+      "content": "\n# Environment Setup\n\n## 1. Clone Repository\n```bash\ngit clone https://github.com/your-org/maya-travel-agent.git\ncd maya-travel-agent\n```\n\n## 2. Install Dependencies\n```bash\n# Backend dependencies\ncd backend\nnpm install\n\n# Frontend dependencies\ncd ../frontend\nnpm install\n\n# Return to root\ncd ..\n```\n\n## 3. Environment Configuration\nCopy environment templates and configure:\n\n```bash\n# Backend environment\ncp backend/env.example backend/.env\n# Edit backend/.env with your configuration\n\n# Frontend environment\ncp frontend/env.example frontend/.env\n# Edit frontend/.env with your configuration\n```\n\n## 4. Database Setup\n```bash\n# Initialize Supabase project\nsupabase init\nsupabase start\n\n# Run database migrations\nsupabase db push\n```\n            "
+    },
+    {
+      "title": "Deployment Options",
+      "content": "\n# Deployment Options\n\n## Option 1: Docker Compose (Recommended for Development)\n```bash\n# Start all services\ndocker-compose up -d\n\n# View logs\ndocker-compose logs -f\n\n# Stop services\ndocker-compose down\n```\n\n## Option 2: Manual Deployment\n```bash\n# Start backend\ncd backend\nnpm run dev\n\n# Start frontend (in new terminal)\ncd frontend\nnpm run dev\n```\n\n## Option 3: Production Deployment\n```bash\n# Build production images\ndocker-compose -f docker-compose.prod.yml build\n\n# Deploy to production\ndocker-compose -f docker-compose.prod.yml up -d\n```\n            "
+    },
+    {
+      "title": "Configuration Validation",
+      "content": "\n# Configuration Validation\n\n## Health Checks\n```bash\n# Backend health check\ncurl http://localhost:5000/health\n\n# Database connection test\ncurl http://localhost:5000/api/test-db\n\n# External API connectivity\ncurl http://localhost:5000/api/test-apis\n```\n\n## Service Validation\n- [ ] Backend service starts without errors\n- [ ] Database connections established\n- [ ] External API keys validated\n- [ ] Frontend builds successfully\n- [ ] Authentication flow works\n- [ ] Payment processing functional\n- [ ] ML model endpoints responding\n            "
+    }
+  ]
+}

@@ -1,0 +1,23 @@
+{
+  "title": "Maya Travel Agent - User Guide",
+  "version": "1.0.0",
+  "exportDate": "2025-10-10T18:49:28.810Z",
+  "sections": [
+    {
+      "title": "Getting Started",
+      "content": "\n# Getting Started with Maya Travel Agent\n\n## Welcome\nMaya Travel Agent is your AI-powered travel companion that helps you plan perfect trips, find the best deals, and book seamlessly.\n\n## Key Features\n- **Smart Trip Planning**: AI analyzes your preferences to suggest personalized itineraries\n- **Price Predictions**: ML models predict optimal booking times for flights and hotels\n- **Real-time Deals**: Get notified about flash sales and special offers\n- **Multi-platform Access**: Use via web app, Telegram bot, or mobile app\n- **Secure Payments**: Integrated payment processing with multiple options\n            "
+    },
+    {
+      "title": "Planning Your Trip",
+      "content": "\n# Planning Your Trip\n\n## Basic Trip Planning\n1. **Set Your Destination**: Tell Maya where you want to go\n2. **Choose Dates**: Specify your travel dates\n3. **Set Budget**: Define your spending limits\n4. **Add Preferences**: Specify accommodation type, activities, dietary requirements\n\n## Advanced Features\n- **Price Optimization**: Get recommendations for the best booking times\n- **Personalization**: Maya learns from your past trips and preferences\n- **Group Planning**: Coordinate trips with friends and family\n- **Real-time Adjustments**: Modify plans as circumstances change\n\n## AI Chat Interface\nMaya's conversational AI helps you:\n- Answer questions about destinations\n- Provide local insights and tips\n- Suggest activities and attractions\n- Handle booking modifications\n- Provide travel advice and recommendations\n            "
+    },
+    {
+      "title": "Booking and Payments",
+      "content": "\n# Booking and Payments\n\n## Secure Booking Process\n1. **Review Recommendations**: Maya presents personalized options\n2. **Compare Options**: View detailed comparisons of flights, hotels, and activities\n3. **Select and Customize**: Choose your preferred options and make modifications\n4. **Secure Payment**: Complete booking with integrated payment processing\n\n## Payment Options\n- **Credit/Debit Cards**: Visa, Mastercard, American Express\n- **Digital Wallets**: PayPal, Apple Pay, Google Pay\n- **Bank Transfers**: Direct bank transfers for large bookings\n- **Installments**: Flexible payment plans for expensive trips\n\n## Booking Management\n- **View All Bookings**: Access your complete travel history\n- **Modify Bookings**: Change dates, upgrade options, add services\n- **Cancellation Support**: Easy cancellation and refund processing\n- **Travel Insurance**: Optional insurance coverage for peace of mind\n            "
+    },
+    {
+      "title": "Using the Telegram Bot",
+      "content": "\n# Telegram Bot Features\n\n## Getting Started\n1. **Find the Bot**: Search for @MayaTravelAgentBot on Telegram\n2. **Start Conversation**: Send /start to begin\n3. **Link Account**: Connect your Maya account for personalized service\n\n## Available Commands\n- **/start**: Initialize your Maya experience\n- **/plan**: Start planning a new trip\n- **/bookings**: View your current bookings\n- **/help**: Get assistance and command list\n- **/settings**: Manage your preferences and notifications\n\n## Conversational Features\n- **Natural Language**: Chat naturally about your travel needs\n- **Voice Messages**: Send voice notes for complex queries\n- **Photo Sharing**: Share destination photos for recommendations\n- **Real-time Updates**: Get instant notifications about your trips\n            "
+    }
+  ]
+}

@@ -1,0 +1,101 @@
+{
+  "metadata": {
+    "name": "User Churn Prediction Model",
+    "version": "1.0.0",
+    "type": "Binary Classification",
+    "framework": "LightGBM",
+    "exportDate": "2025-10-10T18:45:47.276Z",
+    "description": "Machine learning model for predicting user churn probability based on behavior patterns and engagement metrics"
+  },
+  "architecture": {
+    "algorithm": "LightGBM Classifier",
+    "features": [
+      "days_since_last_trip",
+      "total_trips",
+      "avg_trip_value",
+      "app_session_frequency",
+      "feature_usage_count",
+      "customer_support_interactions",
+      "payment_failures",
+      "subscription_tenure",
+      "engagement_score",
+      "satisfaction_rating",
+      "competitor_comparison",
+      "market_segment"
+    ],
+    "hyperparameters": {
+      "n_estimators": 150,
+      "max_depth": 12,
+      "learning_rate": 0.05,
+      "num_leaves": 31,
+      "subsample": 0.8,
+      "colsample_bytree": 0.8,
+      "random_state": 42,
+      "n_jobs": -1
+    },
+    "preprocessing": {
+      "categorical_encoders": [
+        "LabelEncoder",
+        "FrequencyEncoder"
+      ],
+      "numerical_transformers": [
+        "LogTransformer",
+        "PowerTransformer"
+      ],
+      "feature_selection": "Recursive Feature Elimination",
+      "class_imbalance_handling": "SMOTE"
+    }
+  },
+  "performance": {
+    "training": {
+      "dataset_size": 100000,
+      "accuracy": 0.94,
+      "precision": 0.89,
+      "recall": 0.87,
+      "f1_score": 0.88,
+      "auc_roc": 0.96,
+      "log_loss": 0.18
+    },
+    "validation": {
+      "dataset_size": 25000,
+      "accuracy": 0.91,
+      "precision": 0.85,
+      "recall": 0.83,
+      "f1_score": 0.84,
+      "auc_roc": 0.93,
+      "log_loss": 0.22
+    },
+    "test": {
+      "dataset_size": 20000,
+      "accuracy": 0.9,
+      "precision": 0.83,
+      "recall": 0.81,
+      "f1_score": 0.82,
+      "auc_roc": 0.92,
+      "log_loss": 0.24
+    }
+  },
+  "deployment": {
+    "endpoint": "/api/models/churn/predict",
+    "status": "Active",
+    "last_updated": "2025-10-10T18:45:47.276Z",
+    "scaling": {
+      "min_instances": 1,
+      "max_instances": 3,
+      "target_cpu_utilization": 60
+    },
+    "monitoring": {
+      "latency_p95": 100,
+      "latency_p99": 200,
+      "error_rate_threshold": 0.005,
+      "drift_detection_enabled": true
+    }
+  },
+  "dataiku": {
+    "project_key": "MAYA_TRAVEL_AGENT",
+    "model_name": "user_churn_prediction",
+    "dataset_name": "churn_training_data",
+    "managed_folder": "churn_model_artifacts",
+    "api_service": "churn_prediction_service"
+  }
+}

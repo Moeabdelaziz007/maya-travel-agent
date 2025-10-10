@@ -1,0 +1,58 @@
+{
+  "metadata": {
+    "exportDate": "2025-10-10T18:50:38.442Z",
+    "dashboard": "Maya Travel Agent Production Dashboard",
+    "url": "http://localhost:3000/d/maya-travel-agent",
+    "panels": [
+      {
+        "id": 1,
+        "title": "HTTP Request Rate",
+        "type": "timeseries",
+        "screenshot": "http-request-rate.png",
+        "description": "Real-time HTTP request rate by endpoint and status code"
+      },
+      {
+        "id": 2,
+        "title": "HTTP Response Time (Percentiles)",
+        "type": "timeseries",
+        "screenshot": "http-response-time.png",
+        "description": "95th, 50th, and 99th percentile response times"
+      },
+      {
+        "id": 3,
+        "title": "Boss Agent Orchestration Time (p95)",
+        "type": "gauge",
+        "screenshot": "boss-agent-time.png",
+        "description": "95th percentile orchestration duration"
+      },
+      {
+        "id": 4,
+        "title": "Cache Hit Rate",
+        "type": "gauge",
+        "screenshot": "cache-hit-rate.png",
+        "description": "Percentage of cache hits vs misses"
+      },
+      {
+        "id": 5,
+        "title": "Active Users",
+        "type": "stat",
+        "screenshot": "active-users.png",
+        "description": "Current number of active users"
+      },
+      {
+        "id": 6,
+        "title": "Error Rate by Type",
+        "type": "timeseries",
+        "screenshot": "error-rate.png",
+        "description": "Error rates categorized by error type"
+      },
+      {
+        "id": 7,
+        "title": "Friendship Level Distribution",
+        "type": "piechart",
+        "screenshot": "friendship-levels.png",
+        "description": "Distribution of user friendship levels"
+      }
+    ]
+  }
+}

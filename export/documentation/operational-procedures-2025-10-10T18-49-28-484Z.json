@@ -1,0 +1,120 @@
+{
+  "title": "Maya Travel Agent - Operational Procedures",
+  "version": "1.0.0",
+  "exportDate": "2025-10-10T18:49:28.821Z",
+  "procedures": [
+    {
+      "title": "Daily Operations",
+      "checklist": [
+        "Monitor system health dashboards",
+        "Review error logs and alerts",
+        "Check payment processing status",
+        "Verify external API connectivity",
+        "Monitor ML model performance",
+        "Review user feedback and support tickets"
+      ]
+    },
+    {
+      "title": "Weekly Maintenance",
+      "checklist": [
+        "Update system dependencies",
+        "Review and rotate API keys",
+        "Backup database and configurations",
+        "Analyze system performance metrics",
+        "Update ML models with new data",
+        "Review security logs and access patterns"
+      ]
+    },
+    {
+      "title": "Monthly Procedures",
+      "checklist": [
+        "Generate monthly performance reports",
+        "Review and optimize system costs",
+        "Update compliance documentation",
+        "Conduct security vulnerability assessment",
+        "Review and update disaster recovery plans",
+        "Analyze user behavior patterns and trends"
+      ]
+    },
+    {
+      "title": "Incident Response",
+      "procedures": [
+        {
+          "scenario": "Service Outage",
+          "steps": [
+            "Assess impact and notify stakeholders",
+            "Check monitoring dashboards for root cause",
+            "Implement temporary workaround if available",
+            "Deploy fix to staging environment",
+            "Conduct thorough testing",
+            "Deploy to production with rollback plan",
+            "Monitor system recovery",
+            "Document incident and lessons learned"
+          ]
+        },
+        {
+          "scenario": "Payment Processing Failure",
+          "steps": [
+            "Verify Stripe/PayPal service status",
+            "Check API key validity and permissions",
+            "Review payment logs for error patterns",
+            "Implement payment queue if applicable",
+            "Contact payment provider support if needed",
+            "Process failed payments manually if critical",
+            "Update payment processing logic",
+            "Test payment flow thoroughly"
+          ]
+        },
+        {
+          "scenario": "ML Model Performance Degradation",
+          "steps": [
+            "Monitor model accuracy and latency metrics",
+            "Check for data drift or concept drift",
+            "Review recent data quality issues",
+            "Retrain model with recent data if needed",
+            "Validate model performance on test set",
+            "Deploy updated model with A/B testing",
+            "Monitor performance after deployment",
+            "Update model documentation and version"
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Backup and Recovery",
+      "procedures": [
+        {
+          "type": "Database Backup",
+          "frequency": "Daily",
+          "procedure": [
+            "Automated backup via Supabase scheduled backups",
+            "Verify backup integrity and completeness",
+            "Test restore procedure monthly",
+            "Store backups in multiple geographic regions",
+            "Retention policy: 30 days for daily, 1 year for monthly"
+          ]
+        },
+        {
+          "type": "Configuration Backup",
+          "frequency": "On Change",
+          "procedure": [
+            "Version control all configuration files",
+            "Automated export of environment configurations",
+            "Secure storage of sensitive configuration data",
+            "Regular validation of configuration integrity"
+          ]
+        },
+        {
+          "type": "ML Model Backup",
+          "frequency": "Weekly",
+          "procedure": [
+            "Export model artifacts and metadata",
+            "Version control model configurations",
+            "Backup training data and evaluation metrics",
+            "Document model lineage and dependencies"
+          ]
+        }
+      ]
+    }
+  ]
+}

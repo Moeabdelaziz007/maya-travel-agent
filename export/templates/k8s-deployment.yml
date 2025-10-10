@@ -1,0 +1,325 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: maya-backend
+  namespace: maya-travel
+  labels:
+    app: maya-backend
+    component: api
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: maya-backend
+  template:
+    metadata:
+      labels:
+        app: maya-backend
+        component: api
+    spec:
+      containers:
+      - name: backend
+        image: maya-travel/backend:latest
+        ports:
+        - containerPort: 5000
+          name: http
+        env:
+        - name: NODE_ENV
+          value: "production"
+        - name: PORT
+          value: "5000"
+        - name: SUPABASE_URL
+          valueFrom:
+            secretKeyRef:
+              name: maya-secrets
+              key: supabase-url
+        - name: SUPABASE_ANON_KEY
+          valueFrom:
+            secretKeyRef:
+              name: maya-secrets
+              key: supabase-anon-key
+        - name: SUPABASE_SERVICE_ROLE_KEY
+          valueFrom:
+            secretKeyRef:
+              name: maya-secrets
+              key: supabase-service-role-key
+        - name: TELEGRAM_BOT_TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: maya-secrets
+              key: telegram-bot-token
+        - name: STRIPE_SECRET_KEY
+          valueFrom:
+            secretKeyRef:
+              name: maya-secrets
+              key: stripe-secret-key
+        - name: ZAI_API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: maya-secrets
+              key: zai-api-key
+        resources:
+          requests:
+            memory: "512Mi"
+            cpu: "250m"
+          limits:
+            memory: "1Gi"
+            cpu: "500m"
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 5000
+          initialDelaySeconds: 30
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 5000
+          initialDelaySeconds: 5
+          periodSeconds: 5
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 100
+            podAffinityTerm:
+              labelSelector:
+                matchExpressions:
+                - key: app
+                  operator: In
+                  values:
+                  - maya-backend
+              topologyKey: kubernetes.io/hostname
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: maya-backend-service
+  namespace: maya-travel
+  labels:
+    app: maya-backend
+spec:
+  selector:
+    app: maya-backend
+  ports:
+  - name: http
+    port: 80
+    targetPort: 5000
+    protocol: TCP
+  type: ClusterIP
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: maya-frontend
+  namespace: maya-travel
+  labels:
+    app: maya-frontend
+    component: web
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: maya-frontend
+  template:
+    metadata:
+      labels:
+        app: maya-frontend
+        component: web
+    spec:
+      containers:
+      - name: frontend
+        image: maya-travel/frontend:latest
+        ports:
+        - containerPort: 80
+          name: http
+        env:
+        - name: VITE_SUPABASE_URL
+          valueFrom:
+            secretKeyRef:
+              name: maya-secrets
+              key: supabase-url
+        - name: VITE_SUPABASE_ANON_KEY
+          valueFrom:
+            secretKeyRef:
+              name: maya-secrets
+              key: supabase-anon-key
+        - name: VITE_STRIPE_PUBLISHABLE_KEY
+          valueFrom:
+            secretKeyRef:
+              name: maya-secrets
+              key: stripe-publishable-key
+        resources:
+          requests:
+            memory: "128Mi"
+            cpu: "100m"
+          limits:
+            memory: "256Mi"
+            cpu: "200m"
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 80
+          initialDelaySeconds: 30
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 80
+          initialDelaySeconds: 5
+          periodSeconds: 5
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: maya-frontend-service
+  namespace: maya-travel
+  labels:
+    app: maya-frontend
+spec:
+  selector:
+    app: maya-frontend
+  ports:
+  - name: http
+    port: 80
+    targetPort: 80
+    protocol: TCP
+  type: ClusterIP
+
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: maya-ingress
+  namespace: maya-travel
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+spec:
+  ingressClassName: nginx
+  tls:
+  - hosts:
+    - api.maya-travel-agent.com
+    - app.maya-travel-agent.com
+    secretName: maya-tls
+  rules:
+  - host: api.maya-travel-agent.com
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: maya-backend-service
+            port:
+              number: 80
+  - host: app.maya-travel-agent.com
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: maya-frontend-service
+            port:
+              number: 80
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: maya-config
+  namespace: maya-travel
+data:
+  prometheus.yml: |
+    global:
+      scrape_interval: 15s
+      evaluation_interval: 15s
+
+    rule_files:
+      # - "first_rules.yml"
+      # - "second_rules.yml"
+
+    scrape_configs:
+      - job_name: 'maya-backend'
+        static_configs:
+          - targets: ['maya-backend-service:80']
+        metrics_path: '/metrics'
+        scrape_interval: 5s
+
+      - job_name: 'maya-frontend'
+        static_configs:
+          - targets: ['maya-frontend-service:80']
+        scrape_interval: 15s
+
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: maya-secrets
+  namespace: maya-travel
+type: Opaque
+data:
+  # Base64 encoded secrets - replace with actual values
+  supabase-url: <base64-encoded-url>
+  supabase-anon-key: <base64-encoded-key>
+  supabase-service-role-key: <base64-encoded-key>
+  telegram-bot-token: <base64-encoded-token>
+  stripe-secret-key: <base64-encoded-key>
+  stripe-publishable-key: <base64-encoded-key>
+  zai-api-key: <base64-encoded-key>
+
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: maya-storage
+  namespace: maya-travel
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 50Gi
+  storageClassName: standard
+
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: maya-backend-pdb
+  namespace: maya-travel
+spec:
+  minAvailable: 2
+  selector:
+    matchLabels:
+      app: maya-backend
+
+---
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: maya-backend-hpa
+  namespace: maya-travel
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: maya-backend
+  minReplicas: 3
+  maxReplicas: 10
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: 70
+  - type: Resource
+    resource:
+      name: memory
+      target:
+        type: Utilization
+        averageUtilization: 80

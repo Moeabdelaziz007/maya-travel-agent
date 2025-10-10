@@ -4,6 +4,7 @@
  */
 
 const JSONbinService = require('../cache/jsonbin-service');
+const ServiceBus = require('../services/service-bus');
 const logger = require('../utils/logger');
 
 class SkillSystem {
@@ -15,6 +16,14 @@ class SkillSystem {
     this.storage = config.storage; // Supabase instance
     this.enablePersistence = config.enablePersistence !== false;
 
+    // Initialize Service Bus for event-driven skills
+    this.serviceBus = config.serviceBus || new ServiceBus({
+      bootstrapServers: config.confluentBootstrapServers || process.env.CONFLUENT_BOOTSTRAP_SERVERS,
+      saslUsername: config.confluentSaslUsername || process.env.CONFLUENT_SASL_USERNAME,
+      saslPassword: config.confluentSaslPassword || process.env.CONFLUENT_SASL_PASSWORD,
+      groupId: config.confluentGroupId || process.env.CONFLUENT_GROUP_ID || 'maya-skill-system'
+    });
+
     // Skill execution metrics
     this.metrics = {
       totalExecutions: 0,
@@ -25,8 +34,144 @@ class SkillSystem {
 
     logger.info('🧠 Skill System initialized', {
       enablePersistence: this.enablePersistence,
-      cacheEnabled: !!this.cache.apiKey
+      cacheEnabled: !!this.cache.apiKey,
+      eventStreamingEnabled: !!this.serviceBus
     });
+  }
+
+  /**
+   * Initialize event subscriptions
+   */
+  async initialize() {
+    if (this.serviceBus && !this.serviceBus.isConnected) {
+      // Connect to Service Bus if credentials are available
+      if (process.env.CONFLUENT_BOOTSTRAP_SERVERS &&
+          process.env.CONFLUENT_SASL_USERNAME &&
+          process.env.CONFLUENT_SASL_PASSWORD) {
+        try {
+          await this.serviceBus.connect();
+          await this.serviceBus.createTopics();
+          logger.info('✅ Skill System Service Bus connected');
+
+          // Subscribe to user-emotions topic for real-time emotion processing
+          await this.serviceBus.subscribe(['user-emotions'], this.handleUserEmotionEvent.bind(this));
+          logger.info('📥 Skill System subscribed to user-emotions topic');
+
+        } catch (error) {
+          logger.warn('⚠️ Skill System Service Bus connection failed:', error.message);
+        }
+      } else {
+        logger.info('ℹ️ Service Bus credentials not configured for Skill System');
+      }
+    }
+  }
+
+  /**
+   * Handle user emotion events
+   */
+  async handleUserEmotionEvent(event, metadata) {
+    try {
+      logger.debug('🎭 Processing user emotion event:', {
+        eventType: event.type,
+        userId: event.userId,
+        emotion: event.data?.primary_emotion
+      });
+
+      // Trigger emotion-based skill responses
+      if (event.type === 'user:emotion' && event.data) {
+        await this.processEmotionBasedSkills(event.data, {
+          userId: event.userId,
+          userName: event.userName,
+          sessionId: event.context?.sessionId,
+          message: event.context?.message
+        });
+      }
+
+    } catch (error) {
+      logger.error('❌ Error handling user emotion event:', error.message);
+    }
+  }
+
+  /**
+   * Process emotion-based skills
+   */
+  async processEmotionBasedSkills(emotionData, context) {
+    const emotion = emotionData.primary_emotion;
+    const intensity = emotionData.intensity;
+
+    logger.debug('🧠 Processing emotion-based skills:', { emotion, intensity, userId: context.userId });
+
+    try {
+      // Execute Dynamic Voice Adaptation based on emotion
+      if (emotion && ['anxiety', 'excitement', 'confusion', 'sadness'].includes(emotion)) {
+        const voiceResult = await this.executeSkill('DynamicVoiceAdaptation', {
+          emotional_context: emotionData,
+          situation: this.determineEmotionSituation(emotion, intensity),
+          user_culture: 'mixed',
+          time_of_day: this.getCurrentTimeOfDay(),
+          startTime: Date.now()
+        });
+
+        if (voiceResult.success) {
+          logger.info('🎭 Dynamic Voice Adaptation triggered by emotion:', {
+            emotion,
+            adaptation: voiceResult.data.selected_voice_style
+          });
+
+          // Publish skill execution event
+          if (this.serviceBus.isConnected) {
+            await this.serviceBus.publishSkillExecution('DynamicVoiceAdaptation', {
+              success: true,
+              trigger: 'emotion_event',
+              input: { emotionData, context },
+              output: voiceResult.data,
+              executionTime: Date.now() - Date.now() // Would need proper timing
+            }, context);
+          }
+        }
+      }
+
+      // Execute Empathy Detection skill for enhanced understanding
+      const empathyResult = await this.executeSkill('EmpathyDetection', {
+        message: context.message || '',
+        emotional_context: emotionData,
+        startTime: Date.now()
+      });
+
+      if (empathyResult.success) {
+        logger.info('💝 Empathy Detection enhanced by emotion event:', {
+          emotion,
+          empathy_insights: empathyResult.data.empathy_insights?.length
+        });
+      }
+
+    } catch (error) {
+      logger.error('❌ Error processing emotion-based skills:', error.message);
+    }
+  }
+
+  /**
+   * Determine situation based on emotion
+   */
+  determineEmotionSituation(emotion, intensity) {
+    if (emotion === 'anxiety' && intensity === 'high') return 'anxiety';
+    if (emotion === 'excitement' && intensity === 'high') return 'celebration';
+    if (emotion === 'confusion' && intensity === 'high') return 'confusion';
+    if (emotion === 'sadness') return 'support';
+
+    return 'general';
+  }
+
+  /**
+   * Get current time of day
+   */
+  getCurrentTimeOfDay() {
+    const hour = new Date().getHours();
+
+    if (hour >= 5 && hour < 12) return 'morning';
+    if (hour >= 12 && hour < 17) return 'afternoon';
+    if (hour >= 17 && hour < 22) return 'evening';
+    return 'night';
   }
 
   /**

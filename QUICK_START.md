@@ -1,11 +1,12 @@
-# 🚀 Maya Trips - Quick Start Guide
+# 🚀 Amrikyy - Quick Start Guide
 
 ## ✅ Project Status: READY TO USE!
 
 ### 🎯 What's Included:
+
 - ✅ **Frontend**: React 18 + TypeScript + Tailwind CSS + Framer Motion
 - ✅ **Backend**: Node.js + Express + MongoDB ready
-- ✅ **AI Assistant**: Maya AI integration ready
+- ✅ **AI Assistant**: Amrikyy AI integration ready
 - ✅ **API**: Full frontend-backend communication
 - ✅ **Development**: Hot reload and concurrent servers
 
@@ -25,31 +26,36 @@ npm run dev
 
 ### 🌟 Features Available:
 
-#### 🧠 Maya AI Assistant
+#### 🧠 Amrikyy AI Assistant
+
 - Intelligent travel recommendations
 - Natural language chat interface
 - Voice input support
 - Smart suggestions
 
 #### 🗺️ Trip Planner
+
 - Create and manage trips
 - Visual trip cards
 - Status tracking
 - Budget integration
 
 #### 🌍 Destinations
+
 - Global destination database
 - Search and filter
 - Price range filtering
 - Rating system
 
 #### 💰 Budget Tracker
+
 - Real-time budget monitoring
 - Expense categorization
 - Visual analytics
 - Budget alerts
 
 #### 📊 Trip History
+
 - Complete travel history
 - Statistics dashboard
 - Export capabilities
@@ -75,8 +81,9 @@ curl http://localhost:5000/api/health
 ```
 
 ### 📁 Project Structure:
+
 ```
-Maya-Trips/
+Amrikyy-Platform/
 ├── frontend/          # React app (port 3000)
 │   ├── src/
 │   │   ├── components/    # UI components
@@ -89,6 +96,7 @@ Maya-Trips/
 ```
 
 ### 🎨 UI Features:
+
 - **Modern Design**: Glass morphism effects
 - **Responsive**: Mobile-first design
 - **Animations**: Smooth Framer Motion animations
@@ -96,6 +104,7 @@ Maya-Trips/
 - **Dark/Light**: Theme support ready
 
 ### 🔗 API Endpoints:
+
 - `GET /api/health` - Health check
 - `GET /api/trips` - Get all trips
 - `POST /api/trips` - Create trip
@@ -103,6 +112,7 @@ Maya-Trips/
 - `POST /api/ai/chat` - AI chat
 
 ### 🚀 Next Steps:
+
 1. Create GitHub repository
 2. Push code to GitHub
 3. Deploy to production
@@ -110,4 +120,5 @@ Maya-Trips/
 5. Integrate real AI services
 
 ---
-**🎉 Your Maya Trips AI Travel Assistant is ready to use!**
+
+**🎉 Your Amrikyy AI Automation Platform is ready to use!**

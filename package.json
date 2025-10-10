@@ -1,7 +1,7 @@
 {
-  "name": "maya-trips",
+  "name": "amrikyy-platform",
   "version": "1.0.0",
-  "description": "AI Travel Assistant (Frontend + Backend) powered by Maya Trips Persona",
+  "description": "AI Automation Platform (Frontend + Backend) powered by Amrikyy - Currently featuring Travel Services",
   "private": true,
   "workspaces": [
     "frontend",
@@ -23,14 +23,15 @@
     "concurrently": "^8.2.0"
   },
   "keywords": [
-    "travel",
     "ai",
-    "assistant",
-    "maya",
-    "trips",
+    "automation",
+    "platform",
+    "amrikyy",
+    "travel",
+    "quantum",
     "react",
     "nodejs"
   ],
-  "author": "Maya Trips Team",
+  "author": "Amrikyy Team",
   "license": "MIT"
 }

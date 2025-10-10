@@ -1,6 +1,6 @@
-# Maya Trips – AI Travel Assistant
+# Amrikyy – AI Automation Platform
 
-AI Travel Assistant (Frontend + Backend) powered by Maya Trips Persona.
+AI Automation Platform (Frontend + Backend) powered by Amrikyy - Currently featuring Travel Services.
 
 ## Features
 
@@ -37,8 +37,8 @@ AI Travel Assistant (Frontend + Backend) powered by Maya Trips Persona.
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/USERNAME/Maya-Trips.git
-   cd Maya-Trips
+   git clone https://github.com/USERNAME/Amrikyy-Platform.git
+   cd Amrikyy-Platform
    ```
 
 2. **Install dependencies**
@@ -223,7 +223,7 @@ cd backend && npm update
 
 ## Contributing
 
-This project is part of the Maya Trips ecosystem - your intelligent travel companion.
+This project is part of the Amrikyy ecosystem - your intelligent AI automation platform.
 
 ### Development Workflow
 1. Create a feature branch: `git checkout -b feature/your-feature`

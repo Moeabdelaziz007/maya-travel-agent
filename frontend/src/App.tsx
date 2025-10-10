@@ -1,15 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { 
-  Plane, 
-  MapPin, 
-  Calendar, 
-  DollarSign, 
-  Compass, 
+import {
+  Plane,
+  MapPin,
+  Calendar,
+  DollarSign,
+  Compass,
   Bot,
   Settings,
   User,
-  Search
+  Search,
 } from 'lucide-react';
 import { AuthProvider, useAuth } from './components/Auth/AuthProvider';
 import LoginForm from './components/Auth/LoginForm';
@@ -42,10 +42,14 @@ const AppContent: React.FC = () => {
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
     const hashParams = new URLSearchParams(window.location.hash.substring(1));
-    
+
     // Check for auth callback parameters
-    if (urlParams.get('access_token') || urlParams.get('error') || 
-        hashParams.get('access_token') || hashParams.get('error')) {
+    if (
+      urlParams.get('access_token') ||
+      urlParams.get('error') ||
+      hashParams.get('access_token') ||
+      hashParams.get('error')
+    ) {
       // We're on an auth callback page, let AuthCallback component handle it
       return;
     }
@@ -65,7 +69,8 @@ const AppContent: React.FC = () => {
       endDate: '2024-03-22',
       budget: 2500,
       status: 'planned',
-      image: 'https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?w=400'
+      image:
+        'https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?w=400',
     },
     {
       id: '2',
@@ -74,8 +79,9 @@ const AppContent: React.FC = () => {
       endDate: '2024-04-17',
       budget: 1800,
       status: 'planned',
-      image: 'https://images.unsplash.com/photo-1502602898536-47ad22581b52?w=400'
-    }
+      image:
+        'https://images.unsplash.com/photo-1502602898536-47ad22581b52?w=400',
+    },
   ]);
 
   const tabs = [
@@ -83,7 +89,7 @@ const AppContent: React.FC = () => {
     { id: 'destinations', label: 'Destinations', icon: MapPin },
     { id: 'budget', label: 'Budget', icon: DollarSign },
     { id: 'history', label: 'History', icon: Calendar },
-    { id: 'ai', label: 'Maya AI', icon: Bot }
+    { id: 'ai', label: 'Amrikyy AI', icon: Bot },
   ];
 
   const renderContent = () => {
@@ -106,9 +112,13 @@ const AppContent: React.FC = () => {
   // Check if we're on an auth callback page and show the callback component
   const urlParams = new URLSearchParams(window.location.search);
   const hashParams = new URLSearchParams(window.location.hash.substring(1));
-  
-  if (urlParams.get('access_token') || urlParams.get('error') || 
-      hashParams.get('access_token') || hashParams.get('error')) {
+
+  if (
+    urlParams.get('access_token') ||
+    urlParams.get('error') ||
+    hashParams.get('access_token') ||
+    hashParams.get('error')
+  ) {
     return <AuthCallback />;
   }
 
@@ -118,8 +128,8 @@ const AppContent: React.FC = () => {
       <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto mb-4"></div>
-          <h1 className="text-2xl font-bold maya-text">Maya Trips</h1>
-          <p className="text-gray-600 mt-2">Loading your travel assistant...</p>
+          <h1 className="text-2xl font-bold maya-text">Amrikyy</h1>
+          <p className="text-gray-600 mt-2">Loading your AI platform...</p>
         </div>
       </div>
     );
@@ -131,14 +141,18 @@ const AppContent: React.FC = () => {
       <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 flex items-center justify-center p-4">
         <div className="w-full max-w-md">
           {authMode === 'login' ? (
-            <LoginForm 
-              onSuccess={() => {/* Handle login success */}} 
-              onSwitchToSignup={() => setAuthMode('signup')} 
+            <LoginForm
+              onSuccess={() => {
+                /* Handle login success */
+              }}
+              onSwitchToSignup={() => setAuthMode('signup')}
             />
           ) : (
-            <SignupForm 
-              onSuccess={() => {/* Handle signup success */}} 
-              onSwitchToLogin={() => setAuthMode('login')} 
+            <SignupForm
+              onSuccess={() => {
+                /* Handle signup success */
+              }}
+              onSwitchToLogin={() => setAuthMode('login')}
             />
           )}
         </div>
@@ -149,13 +163,13 @@ const AppContent: React.FC = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50">
       {/* Header */}
-      <motion.header 
+      <motion.header
         initial={{ y: -50, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         className="glass-effect p-6 shadow-lg"
       >
         <div className="max-w-7xl mx-auto flex items-center justify-between">
-          <motion.div 
+          <motion.div
             className="flex items-center space-x-3"
             whileHover={{ scale: 1.05 }}
           >
@@ -163,11 +177,13 @@ const AppContent: React.FC = () => {
               <Plane className="w-8 h-8 text-white" />
             </div>
             <div>
-              <h1 className="text-2xl font-bold maya-text">Maya Trips</h1>
-              <p className="text-gray-600 text-sm">Your AI Travel Assistant</p>
+              <h1 className="text-2xl font-bold maya-text">Amrikyy</h1>
+              <p className="text-gray-600 text-sm">
+                Your AI Automation Platform
+              </p>
             </div>
           </motion.div>
-          
+
           <div className="flex items-center space-x-4">
             <motion.button
               whileHover={{ scale: 1.1 }}
@@ -195,14 +211,14 @@ const AppContent: React.FC = () => {
       </motion.header>
 
       {/* Navigation Tabs */}
-      <motion.nav 
+      <motion.nav
         initial={{ y: 50, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ delay: 0.1 }}
         className="max-w-7xl mx-auto px-6 py-4"
       >
         <div className="flex space-x-1 bg-white/20 backdrop-blur-sm rounded-2xl p-2">
-          {tabs.map((tab) => {
+          {tabs.map(tab => {
             const Icon = tab.icon;
             return (
               <motion.button

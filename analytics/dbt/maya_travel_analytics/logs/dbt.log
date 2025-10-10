@@ -1,0 +1,8 @@
+Installing dbt project and profile setup
+Info Created .vscode/extensions.json with dbt extension recommendation
+Success Project created successfully!
+Info Project name: jaffle_shop
+Info Project directory: jaffle_shop
+
+==================== Execution Summary =====================
+Finished 'init' successfully [601ms]

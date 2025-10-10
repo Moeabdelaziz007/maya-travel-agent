@@ -1,0 +1,97 @@
+{
+  "metadata": {
+    "name": "Hotel Price Prediction Model",
+    "version": "1.0.0",
+    "type": "Regression",
+    "framework": "XGBoost",
+    "exportDate": "2025-10-10T18:45:47.243Z",
+    "description": "Machine learning model for predicting hotel prices based on location, amenities, and market conditions"
+  },
+  "architecture": {
+    "algorithm": "XGBoost Regressor",
+    "features": [
+      "checkin_date",
+      "checkout_date",
+      "city",
+      "hotel_rating",
+      "distance_from_center",
+      "amenities_score",
+      "room_type",
+      "season",
+      "day_of_week",
+      "holiday_period",
+      "local_events",
+      "competitor_pricing",
+      "demand_forecast"
+    ],
+    "hyperparameters": {
+      "n_estimators": 200,
+      "max_depth": 15,
+      "learning_rate": 0.1,
+      "subsample": 0.8,
+      "colsample_bytree": 0.8,
+      "random_state": 42,
+      "n_jobs": -1
+    },
+    "preprocessing": {
+      "categorical_encoders": [
+        "TargetEncoder",
+        "OneHotEncoder"
+      ],
+      "numerical_scalers": [
+        "RobustScaler"
+      ],
+      "feature_engineering": [
+        "PolynomialFeatures",
+        "InteractionTerms"
+      ],
+      "outlier_handling": "Winsorization"
+    }
+  },
+  "performance": {
+    "training": {
+      "dataset_size": 75000,
+      "r2_score": 0.91,
+      "mean_absolute_error": 28.5,
+      "mean_squared_error": 1250.75,
+      "root_mean_squared_error": 35.37
+    },
+    "validation": {
+      "dataset_size": 20000,
+      "r2_score": 0.88,
+      "mean_absolute_error": 32.15,
+      "mean_squared_error": 1420.3,
+      "root_mean_squared_error": 37.69
+    },
+    "test": {
+      "dataset_size": 15000,
+      "r2_score": 0.86,
+      "mean_absolute_error": 35.8,
+      "mean_squared_error": 1580.45,
+      "root_mean_squared_error": 39.75
+    }
+  },
+  "deployment": {
+    "endpoint": "/api/models/hotel-price/predict",
+    "status": "Active",
+    "last_updated": "2025-10-10T18:45:47.243Z",
+    "scaling": {
+      "min_instances": 1,
+      "max_instances": 4,
+      "target_cpu_utilization": 65
+    },
+    "monitoring": {
+      "latency_p95": 120,
+      "latency_p99": 250,
+      "error_rate_threshold": 0.01,
+      "drift_detection_enabled": true
+    }
+  },
+  "dataiku": {
+    "project_key": "MAYA_TRAVEL_AGENT",
+    "model_name": "hotel_price_prediction",
+    "dataset_name": "hotel_training_data",
+    "managed_folder": "hotel_model_artifacts",
+    "api_service": "hotel_price_prediction_service"
+  }
+}

@@ -2,6 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const path = require('path');
+const rateLimit = require('express-rate-limit');
 require('dotenv').config();
 
 // Import monitoring modules
@@ -13,6 +14,36 @@ const PORT = process.env.PORT || 5000;
 
 // Initialize health checker
 const healthChecker = new HealthChecker();
+
+// Rate limiting configuration
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 100, // limit each IP to 100 requests per windowMs
+  message: {
+    error: 'Too many requests from this IP, please try again later.',
+    retryAfter: '15 minutes',
+  },
+  standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
+  legacyHeaders: false, // Disable the `X-RateLimit-*` headers
+});
+
+// Apply rate limiting to all routes
+app.use(limiter);
+
+// More strict rate limiting for API routes
+const apiLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 50, // limit each IP to 50 API requests per windowMs
+  message: {
+    error: 'Too many API requests from this IP, please try again later.',
+    retryAfter: '15 minutes',
+  },
+  standardHeaders: true,
+  legacyHeaders: false,
+});
+
+// Apply stricter rate limiting to API routes
+app.use('/api/', apiLimiter);
 
 // Middleware
 app.use(cors());
@@ -33,7 +64,8 @@ console.log('🌐 Serving static auth pages from frontend directory');
 // Routes
 app.get('/', (req, res) => {
   res.json({
-    message: 'Maya Travel Agent API Server - Enhanced with Boss Agent & Dataiku ML',
+    message:
+      'Amrikyy AI Automation Platform API Server - Enhanced with Boss Agent & Dataiku ML',
     version: '2.0.0',
     status: 'running',
     features: [
@@ -44,9 +76,10 @@ app.get('/', (req, res) => {
       'Dataiku ML Integration',
       'Flight & Hotel Price Prediction',
       'User Churn Prediction',
-      'Arabic/English Support'
+      'Arabic/English Support',
+      'Travel Services Module',
     ],
-    timestamp: new Date().toISOString()
+    timestamp: new Date().toISOString(),
   });
 });
 
@@ -72,7 +105,7 @@ app.get('/api/health', (req, res) => {
     timestamp: new Date().toISOString(),
     uptime: process.uptime(),
     memory: process.memoryUsage(),
-    version: '2.0.0'
+    version: '2.0.0',
   });
 });
 
@@ -89,8 +122,12 @@ app.get('/api/health/detailed', async (req, res) => {
       metrics.updateDependencyHealth(dependency, check.status);
     });
 
-    const statusCode = healthReport.overall_status === 'healthy' ? 200 :
-      healthReport.overall_status === 'degraded' ? 200 : 503;
+    const statusCode =
+      healthReport.overall_status === 'healthy'
+        ? 200
+        : healthReport.overall_status === 'degraded'
+        ? 200
+        : 503;
 
     res.status(statusCode).json(healthReport);
   } catch (error) {
@@ -99,7 +136,7 @@ app.get('/api/health/detailed', async (req, res) => {
     res.status(503).json({
       overall_status: 'unhealthy',
       error: error.message,
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
     });
   }
 });
@@ -120,8 +157,9 @@ app.get('/metrics', async (req, res) => {
 app.get('/api/trips', (req, res) => {
   res.json({
     trips: [],
-    message: 'Trips endpoint ready - Use /api/orchestration/plan-trip for enhanced planning',
-    legacy: true
+    message:
+      'Trips endpoint ready - Use /api/orchestration/plan-trip for enhanced planning',
+    legacy: true,
   });
 });
 
@@ -133,30 +171,33 @@ app.get('/api/destinations', (req, res) => {
         id: 1,
         name: 'Tokyo',
         country: 'Japan',
-        image: 'https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?w=400',
+        image:
+          'https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?w=400',
         rating: 4.8,
         priceRange: '$$$',
-        bestTime: 'Mar-May, Sep-Nov'
+        bestTime: 'Mar-May, Sep-Nov',
       },
       {
         id: 2,
         name: 'Paris',
         country: 'France',
-        image: 'https://images.unsplash.com/photo-1502602898536-47ad22581b52?w=400',
+        image:
+          'https://images.unsplash.com/photo-1502602898536-47ad22581b52?w=400',
         rating: 4.9,
         priceRange: '$$$$',
-        bestTime: 'Apr-Jun, Sep-Oct'
+        bestTime: 'Apr-Jun, Sep-Oct',
       },
       {
         id: 3,
         name: 'Dubai',
         country: 'UAE',
-        image: 'https://images.unsplash.com/photo-1512453979798-5ea266f8880c?w=400',
+        image:
+          'https://images.unsplash.com/photo-1512453979798-5ea266f8880c?w=400',
         rating: 4.7,
         priceRange: '$$$',
-        bestTime: 'Nov-Mar'
-      }
-    ]
+        bestTime: 'Nov-Mar',
+      },
+    ],
   });
 });
 
@@ -169,7 +210,7 @@ app.post('/api/analytics/events', (req, res) => {
     userId: userId || null,
     payload: payload || {},
     ts: Date.now(),
-    ua: req.headers['user-agent'] || ''
+    ua: req.headers['user-agent'] || '',
   });
   res.json({ success: true });
 });
@@ -216,18 +257,28 @@ if (process.env.TELEGRAM_BOT_TOKEN && process.env.NODE_ENV !== 'test') {
   try {
     const advancedTelegramBot = require('./advanced-telegram-bot');
     console.log('🤖 Advanced Maya Telegram Bot integration enabled');
-    console.log('🧠 AI Persona: Maya - Professional Travel Agent with Emotional Intelligence');
+    console.log(
+      '🧠 AI Persona: Maya - Professional Travel Agent with Emotional Intelligence'
+    );
     console.log('🎯 Boss Agent: Enhanced orchestration with skill plugins');
     console.log('💰 Price Monitoring: Real-time alerts and optimization');
-    console.log('🔮 Dataiku ML: Flight & Hotel Price Prediction, User Churn Analysis');
-    console.log('🛠️ MCP Tools: Weather, Flights, Hotels, Halal Restaurants, Prayer Times');
-    console.log('👤 User Profiling: Advanced personalization and data collection');
+    console.log(
+      '🔮 Dataiku ML: Flight & Hotel Price Prediction, User Churn Analysis'
+    );
+    console.log(
+      '🛠️ MCP Tools: Weather, Flights, Hotels, Halal Restaurants, Prayer Times'
+    );
+    console.log(
+      '👤 User Profiling: Advanced personalization and data collection'
+    );
   } catch (error) {
     console.log('⚠️ Failed to initialize Telegram Bot:', error.message);
     console.log('📊 Monitoring setup will continue without Telegram Bot');
   }
 } else {
-  console.log('⚠️ Telegram Bot token not provided or in test mode - Advanced Bot integration disabled');
+  console.log(
+    '⚠️ Telegram Bot token not provided or in test mode - Advanced Bot integration disabled'
+  );
 }
 
 // Error handling middleware
@@ -236,7 +287,7 @@ app.use((err, req, res, next) => {
   res.status(500).json({
     error: 'Something went wrong!',
     message: err.message,
-    timestamp: new Date().toISOString()
+    timestamp: new Date().toISOString(),
   });
 });
 
@@ -286,8 +337,8 @@ app.use('*', (req, res) => {
       'POST /api/dataiku/high-risk-users',
       'POST /api/dataiku/retention-insights',
       'GET /api/dataiku/model-metrics/:modelName',
-      'GET /api/dataiku/health'
-    ]
+      'GET /api/dataiku/health',
+    ],
   });
 });
 
@@ -303,7 +354,9 @@ app.listen(PORT, () => {
   console.log('💰 Price Monitoring: Ready');
   console.log('📊 Enhanced Analytics: Active');
   console.log('🤖 AI Integration: Z.ai GLM-4.6 + Boss Agent');
-  console.log('🔮 ML Models: Flight & Hotel Price Prediction, User Churn Analysis');
+  console.log(
+    '🔮 ML Models: Flight & Hotel Price Prediction, User Churn Analysis'
+  );
 });
 
 module.exports = app;

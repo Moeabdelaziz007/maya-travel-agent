@@ -1,0 +1,178 @@
+{
+  "metadata": {
+    "exportDate": "2025-10-10T18:45:47.277Z",
+    "version": "1.0.0",
+    "description": "Central registry of all ML models with version tracking and metadata"
+  },
+  "models": [
+    {
+      "id": "flight_price_v1_0",
+      "name": "Flight Price Prediction",
+      "version": "1.0.0",
+      "status": "Production",
+      "created_date": "2024-01-15T10:00:00Z",
+      "last_updated": "2025-10-10T18:45:47.278Z",
+      "owner": "Data Science Team",
+      "framework": "Scikit-learn",
+      "algorithm": "Random Forest",
+      "performance_metrics": {
+        "accuracy": 0.82,
+        "latency_ms": 145,
+        "throughput_rps": 200
+      },
+      "dataiku_project": "MAYA_TRAVEL_AGENT",
+      "api_endpoint": "/api/models/flight-price/predict",
+      "tags": [
+        "pricing",
+        "travel",
+        "regression",
+        "production"
+      ]
+    },
+    {
+      "id": "hotel_price_v1_0",
+      "name": "Hotel Price Prediction",
+      "version": "1.0.0",
+      "status": "Production",
+      "created_date": "2024-01-20T14:30:00Z",
+      "last_updated": "2025-10-10T18:45:47.278Z",
+      "owner": "Data Science Team",
+      "framework": "XGBoost",
+      "algorithm": "Gradient Boosting",
+      "performance_metrics": {
+        "accuracy": 0.86,
+        "latency_ms": 115,
+        "throughput_rps": 250
+      },
+      "dataiku_project": "MAYA_TRAVEL_AGENT",
+      "api_endpoint": "/api/models/hotel-price/predict",
+      "tags": [
+        "pricing",
+        "hospitality",
+        "regression",
+        "production"
+      ]
+    },
+    {
+      "id": "churn_prediction_v1_0",
+      "name": "User Churn Prediction",
+      "version": "1.0.0",
+      "status": "Production",
+      "created_date": "2024-02-01T09:15:00Z",
+      "last_updated": "2025-10-10T18:45:47.278Z",
+      "owner": "Data Science Team",
+      "framework": "LightGBM",
+      "algorithm": "Gradient Boosting",
+      "performance_metrics": {
+        "accuracy": 0.9,
+        "latency_ms": 95,
+        "throughput_rps": 300
+      },
+      "dataiku_project": "MAYA_TRAVEL_AGENT",
+      "api_endpoint": "/api/models/churn/predict",
+      "tags": [
+        "churn",
+        "classification",
+        "retention",
+        "production"
+      ]
+    }
+  ],
+  "version_history": [
+    {
+      "model_id": "flight_price_v1_0",
+      "versions": [
+        {
+          "version": "0.1.0",
+          "status": "Development",
+          "created_date": "2023-12-01T10:00:00Z",
+          "changes": "Initial model development"
+        },
+        {
+          "version": "0.5.0",
+          "status": "Testing",
+          "created_date": "2024-01-01T10:00:00Z",
+          "changes": "Performance improvements and feature additions"
+        },
+        {
+          "version": "1.0.0",
+          "status": "Production",
+          "created_date": "2024-01-15T10:00:00Z",
+          "changes": "Production deployment with monitoring"
+        }
+      ]
+    },
+    {
+      "model_id": "hotel_price_v1_0",
+      "versions": [
+        {
+          "version": "0.1.0",
+          "status": "Development",
+          "created_date": "2023-12-05T14:30:00Z",
+          "changes": "Initial model development"
+        },
+        {
+          "version": "0.8.0",
+          "status": "Staging",
+          "created_date": "2024-01-10T14:30:00Z",
+          "changes": "Enhanced feature engineering"
+        },
+        {
+          "version": "1.0.0",
+          "status": "Production",
+          "created_date": "2024-01-20T14:30:00Z",
+          "changes": "Production deployment"
+        }
+      ]
+    },
+    {
+      "model_id": "churn_prediction_v1_0",
+      "versions": [
+        {
+          "version": "0.1.0",
+          "status": "Development",
+          "created_date": "2023-12-15T09:15:00Z",
+          "changes": "Initial model development"
+        },
+        {
+          "version": "0.9.0",
+          "status": "Staging",
+          "created_date": "2024-01-25T09:15:00Z",
+          "changes": "Improved class balancing and features"
+        },
+        {
+          "version": "1.0.0",
+          "status": "Production",
+          "created_date": "2024-02-01T09:15:00Z",
+          "changes": "Production deployment with business rules"
+        }
+      ]
+    }
+  ],
+  "deployment_environments": {
+    "development": {
+      "models": [
+        "flight_price_v1_0",
+        "hotel_price_v1_0",
+        "churn_prediction_v1_0"
+      ],
+      "configuration": "Local development setup"
+    },
+    "staging": {
+      "models": [
+        "flight_price_v1_0",
+        "hotel_price_v1_0",
+        "churn_prediction_v1_0"
+      ],
+      "configuration": "Pre-production testing environment"
+    },
+    "production": {
+      "models": [
+        "flight_price_v1_0",
+        "hotel_price_v1_0",
+        "churn_prediction_v1_0"
+      ],
+      "configuration": "Live production environment"
+    }
+  }
+}

@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { aiService, analyticsService } from '../api/services';
 import { motion } from 'framer-motion';
-import { 
-  Bot, 
-  Send, 
-  Mic, 
+import {
+  Bot,
+  Send,
+  Mic,
   MicOff,
   Sparkles,
   MapPin,
@@ -15,7 +15,7 @@ import {
   MessageCircle,
   Lightbulb,
   Shield,
-  Zap
+  Zap,
 } from 'lucide-react';
 
 interface Message {
@@ -30,18 +30,18 @@ const AIAssistant: React.FC = () => {
   const [messages, setMessages] = useState<Message[]>([
     {
       id: '1',
-      text: 'مرحباً! أنا Maya، مساعد السفر الذكي الخاص بك. كيف يمكنني مساعدتك في تخطيط رحلتك القادمة؟',
+      text: 'مرحباً! أنا Amrikyy، مساعد الذكاء الاصطناعي الخاص بك. كيف يمكنني مساعدتك في تخطيط رحلتك القادمة؟',
       isUser: false,
       timestamp: new Date(),
       suggestions: [
         'أريد تخطيط رحلة إلى اليابان',
         'ما هي أفضل الأوقات للسفر إلى أوروبا؟',
         'ساعدني في إدارة ميزانيتي للسفر',
-        'اقترح علي وجهات مثيرة للاهتمام'
-      ]
-    }
+        'اقترح علي وجهات مثيرة للاهتمام',
+      ],
+    },
   ]);
-  
+
   const [inputMessage, setInputMessage] = useState('');
   const [isListening, setIsListening] = useState(false);
   const [isTyping, setIsTyping] = useState(false);
@@ -58,54 +58,67 @@ const AIAssistant: React.FC = () => {
       id: Date.now().toString(),
       text: inputMessage,
       isUser: true,
-      timestamp: new Date()
+      timestamp: new Date(),
     };
 
     setMessages(prev => [...prev, userMessage]);
-    try { await analyticsService.track({ type: 'chat_message', payload: { length: inputMessage.length } }); } catch {}
+    try {
+      await analyticsService.track({
+        type: 'chat_message',
+        payload: { length: inputMessage.length },
+      });
+    } catch {}
     setInputMessage('');
     setIsTyping(true);
 
     try {
-      const history = messages.slice(-5).map(msg => ({ role: msg.isUser ? 'user' : 'assistant', content: msg.text }));
-      const { data } = await aiService.sendMessage(inputMessage, { useTools, conversationHistory: history });
-      try { await analyticsService.track({ type: 'chat_reply', payload: { success: !!data?.success } }); } catch {}
+      const history = messages
+        .slice(-5)
+        .map(msg => ({
+          role: msg.isUser ? 'user' : 'assistant',
+          content: msg.text,
+        }));
+      const { data } = await aiService.sendMessage(inputMessage, {
+        useTools,
+        conversationHistory: history,
+      });
+      try {
+        await analyticsService.track({
+          type: 'chat_reply',
+          payload: { success: !!data?.success },
+        });
+      } catch {}
 
       const aiResponse: Message = {
         id: (Date.now() + 1).toString(),
-        text: data?.success ? data.reply : 'عذراً، حدث خطأ في الاتصال. يرجى المحاولة مرة أخرى.',
+        text: data?.success
+          ? data.reply
+          : 'عذراً، حدث خطأ في الاتصال. يرجى المحاولة مرة أخرى.',
         isUser: false,
         timestamp: new Date(),
-        suggestions: data.success ? [
-          'أخبرني المزيد عن هذا الاقتراح',
-          'ما هي التكلفة المتوقعة؟',
-          'متى أفضل وقت للزيارة؟',
-          'أريد خيارات أخرى'
-        ] : [
-          'حاول مرة أخرى',
-          'اتصل بالدعم الفني',
-          'استخدم خيارات أخرى'
-        ]
+        suggestions: data.success
+          ? [
+              'أخبرني المزيد عن هذا الاقتراح',
+              'ما هي التكلفة المتوقعة؟',
+              'متى أفضل وقت للزيارة؟',
+              'أريد خيارات أخرى',
+            ]
+          : ['حاول مرة أخرى', 'اتصل بالدعم الفني', 'استخدم خيارات أخرى'],
       };
-      
+
       setMessages(prev => [...prev, aiResponse]);
       setIsTyping(false);
-
     } catch (error) {
       console.error('AI Chat Error:', error);
-      
+
       const errorResponse: Message = {
         id: (Date.now() + 1).toString(),
         text: 'عذراً، حدث خطأ في الاتصال. يرجى المحاولة مرة أخرى.',
         isUser: false,
         timestamp: new Date(),
-        suggestions: [
-          'حاول مرة أخرى',
-          'تحقق من الاتصال',
-          'اتصل بالدعم الفني'
-        ]
+        suggestions: ['حاول مرة أخرى', 'تحقق من الاتصال', 'اتصل بالدعم الفني'],
       };
-      
+
       setMessages(prev => [...prev, errorResponse]);
       setIsTyping(false);
     }
@@ -129,7 +142,7 @@ const AIAssistant: React.FC = () => {
         prompt: inputMessage || 'Analyze this media for trip planning.',
         imageUrls: mediaUrl ? [mediaUrl] : [],
         videoUrl: videoUrl || null,
-        options: { enableKvCacheOffload: true, attentionImpl: 'flash-attn-3' }
+        options: { enableKvCacheOffload: true, attentionImpl: 'flash-attn-3' },
       });
       setMediaReply(data?.analysis || 'No analysis available');
     } catch (e) {
@@ -150,7 +163,9 @@ const AIAssistant: React.FC = () => {
         </div>
         <div>
           <h2 className="text-3xl font-bold maya-text">Maya AI Assistant</h2>
-          <p className="text-gray-600 mt-1">Your intelligent travel companion</p>
+          <p className="text-gray-600 mt-1">
+            Your intelligent travel companion
+          </p>
         </div>
       </div>
 
@@ -165,9 +180,14 @@ const AIAssistant: React.FC = () => {
             <div className="p-2 bg-blue-100 rounded-lg">
               <Lightbulb className="w-6 h-6 text-blue-600" />
             </div>
-            <h3 className="text-lg font-semibold text-gray-800">Smart Recommendations</h3>
+            <h3 className="text-lg font-semibold text-gray-800">
+              Smart Recommendations
+            </h3>
           </div>
-          <p className="text-gray-600 text-sm">Get personalized travel suggestions based on your preferences and budget.</p>
+          <p className="text-gray-600 text-sm">
+            Get personalized travel suggestions based on your preferences and
+            budget.
+          </p>
         </motion.div>
 
         <motion.div
@@ -180,9 +200,14 @@ const AIAssistant: React.FC = () => {
             <div className="p-2 bg-green-100 rounded-lg">
               <Shield className="w-6 h-6 text-green-600" />
             </div>
-            <h3 className="text-lg font-semibold text-gray-800">Safety Insights</h3>
+            <h3 className="text-lg font-semibold text-gray-800">
+              Safety Insights
+            </h3>
           </div>
-          <p className="text-gray-600 text-sm">Real-time safety information and travel advisories for your destinations.</p>
+          <p className="text-gray-600 text-sm">
+            Real-time safety information and travel advisories for your
+            destinations.
+          </p>
         </motion.div>
 
         <motion.div
@@ -195,9 +220,13 @@ const AIAssistant: React.FC = () => {
             <div className="p-2 bg-purple-100 rounded-lg">
               <Zap className="w-6 h-6 text-purple-600" />
             </div>
-            <h3 className="text-lg font-semibold text-gray-800">Instant Planning</h3>
+            <h3 className="text-lg font-semibold text-gray-800">
+              Instant Planning
+            </h3>
           </div>
-          <p className="text-gray-600 text-sm">Quick itinerary creation and real-time travel assistance.</p>
+          <p className="text-gray-600 text-sm">
+            Quick itinerary creation and real-time travel assistance.
+          </p>
         </motion.div>
       </div>
 
@@ -211,18 +240,22 @@ const AIAssistant: React.FC = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: index * 0.1 }}
-              className={`flex ${message.isUser ? 'justify-end' : 'justify-start'}`}
+              className={`flex ${
+                message.isUser ? 'justify-end' : 'justify-start'
+              }`}
             >
-              <div className={`max-w-xs lg:max-w-md px-4 py-3 rounded-2xl ${
-                message.isUser 
-                  ? 'bg-blue-500 text-white' 
-                  : 'bg-gray-100 text-gray-800'
-              }`}>
+              <div
+                className={`max-w-xs lg:max-w-md px-4 py-3 rounded-2xl ${
+                  message.isUser
+                    ? 'bg-blue-500 text-white'
+                    : 'bg-gray-100 text-gray-800'
+                }`}
+              >
                 <p className="text-sm">{message.text}</p>
                 <p className="text-xs opacity-70 mt-1">
                   {message.timestamp.toLocaleTimeString()}
                 </p>
-                
+
                 {/* Suggestions */}
                 {message.suggestions && (
                   <div className="mt-3 space-y-2">
@@ -242,7 +275,7 @@ const AIAssistant: React.FC = () => {
               </div>
             </motion.div>
           ))}
-          
+
           {/* Typing Indicator */}
           {isTyping && (
             <motion.div
@@ -254,8 +287,14 @@ const AIAssistant: React.FC = () => {
                 <div className="flex items-center space-x-2">
                   <div className="flex space-x-1">
                     <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></div>
-                    <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
-                    <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
+                    <div
+                      className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"
+                      style={{ animationDelay: '0.1s' }}
+                    ></div>
+                    <div
+                      className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"
+                      style={{ animationDelay: '0.2s' }}
+                    ></div>
                   </div>
                   <span className="text-sm">Maya is typing...</span>
                 </div>
@@ -266,29 +305,33 @@ const AIAssistant: React.FC = () => {
 
         {/* Input */}
         <div className="border-t p-4">
-        <div className="flex items-center space-x-3">
+          <div className="flex items-center space-x-3">
             <motion.button
               onClick={toggleListening}
               className={`p-2 rounded-lg transition-colors ${
-                isListening 
-                  ? 'bg-red-100 text-red-600' 
+                isListening
+                  ? 'bg-red-100 text-red-600'
                   : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
               }`}
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.9 }}
             >
-              {isListening ? <MicOff className="w-5 h-5" /> : <Mic className="w-5 h-5" />}
+              {isListening ? (
+                <MicOff className="w-5 h-5" />
+              ) : (
+                <Mic className="w-5 h-5" />
+              )}
             </motion.button>
-            
+
             <input
               type="text"
               value={inputMessage}
-              onChange={(e) => setInputMessage(e.target.value)}
-              onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
+              onChange={e => setInputMessage(e.target.value)}
+              onKeyPress={e => e.key === 'Enter' && handleSendMessage()}
               placeholder="Ask Maya anything about your travel..."
               className="flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             />
-            
+
             <motion.button
               onClick={handleSendMessage}
               disabled={!inputMessage.trim()}
@@ -299,36 +342,36 @@ const AIAssistant: React.FC = () => {
               <Send className="w-5 h-5" />
             </motion.button>
           </div>
-        <div className="mt-3 grid grid-cols-1 md:grid-cols-3 gap-3">
-          <input
-            type="url"
-            value={mediaUrl}
-            onChange={(e) => setMediaUrl(e.target.value)}
-            placeholder="Image URL (optional)"
-            className="px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
-          />
-          <input
-            type="url"
-            value={videoUrl}
-            onChange={(e) => setVideoUrl(e.target.value)}
-            placeholder="Video URL (optional)"
-            className="px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
-          />
-          <motion.button
-            onClick={handleAnalyzeMedia}
-            disabled={analyzing || (!mediaUrl && !videoUrl)}
-            className="px-4 py-3 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors disabled:opacity-60"
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
-          >
-            {analyzing ? 'Analyzing…' : 'Analyze Media'}
-          </motion.button>
-        </div>
-        {mediaReply && (
-          <div className="mt-3 p-3 bg-purple-50 border border-purple-100 rounded-lg text-sm text-purple-900 whitespace-pre-wrap">
-            {mediaReply}
+          <div className="mt-3 grid grid-cols-1 md:grid-cols-3 gap-3">
+            <input
+              type="url"
+              value={mediaUrl}
+              onChange={e => setMediaUrl(e.target.value)}
+              placeholder="Image URL (optional)"
+              className="px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+            />
+            <input
+              type="url"
+              value={videoUrl}
+              onChange={e => setVideoUrl(e.target.value)}
+              placeholder="Video URL (optional)"
+              className="px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+            />
+            <motion.button
+              onClick={handleAnalyzeMedia}
+              disabled={analyzing || (!mediaUrl && !videoUrl)}
+              className="px-4 py-3 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors disabled:opacity-60"
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+            >
+              {analyzing ? 'Analyzing…' : 'Analyze Media'}
+            </motion.button>
           </div>
-        )}
+          {mediaReply && (
+            <div className="mt-3 p-3 bg-purple-50 border border-purple-100 rounded-lg text-sm text-purple-900 whitespace-pre-wrap">
+              {mediaReply}
+            </div>
+          )}
         </div>
       </div>
     </div>

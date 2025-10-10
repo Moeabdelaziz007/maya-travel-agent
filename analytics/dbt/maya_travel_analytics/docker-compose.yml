@@ -1,0 +1,57 @@
+version: '3.8'
+
+services:
+  dbt:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+    container_name: maya_travel_dbt
+    volumes:
+      - ./:/opt/dbt/maya_travel_analytics
+      - dbt_logs:/opt/dbt/logs
+    environment:
+      - DB_HOST=${DB_HOST}
+      - DB_PORT=${DB_PORT}
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_NAME=${DB_NAME}
+      - DBT_TARGET=${DBT_TARGET:-dev}
+    networks:
+      - maya_analytics_network
+    command: tail -f /dev/null  # Keep container running
+
+  dbt_scheduler:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+    container_name: maya_travel_dbt_scheduler
+    volumes:
+      - ./:/opt/dbt/maya_travel_analytics
+      - dbt_logs:/opt/dbt/logs
+    environment:
+      - DB_HOST=${DB_HOST}
+      - DB_PORT=${DB_PORT}
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_NAME=${DB_NAME}
+      - DBT_TARGET=${DBT_TARGET:-prod}
+    networks:
+      - maya_analytics_network
+    command: |
+      bash -c "
+        while true; do
+          echo 'Running scheduled dbt models refresh...'
+          dbt run --target prod
+          dbt test --target prod
+          echo 'Scheduled refresh completed. Sleeping for 24 hours...'
+          sleep 86400
+        done
+      "
+
+volumes:
+  dbt_logs:
+    driver: local
+
+networks:
+  maya_analytics_network:
+    driver: bridge

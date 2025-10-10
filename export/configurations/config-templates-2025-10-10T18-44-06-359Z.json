@@ -1,0 +1,101 @@
+{
+  "metadata": {
+    "exportDate": "2025-10-10T18:44:06.411Z",
+    "version": "1.0.0",
+    "description": "Configuration templates for different deployment scenarios"
+  },
+  "templates": {
+    "microservice": {
+      "name": "Microservice Configuration Template",
+      "description": "Template for microservice deployment",
+      "config": {
+        "server": {
+          "port": "${PORT}",
+          "host": "${HOST}",
+          "environment": "${NODE_ENV}"
+        },
+        "database": {
+          "url": "${DATABASE_URL}",
+          "pool": {
+            "min": 2,
+            "max": 10,
+            "acquireTimeout": 30000
+          }
+        },
+        "cache": {
+          "redis": {
+            "host": "${REDIS_HOST}",
+            "port": "${REDIS_PORT}",
+            "ttl": "${CACHE_TTL}"
+          }
+        },
+        "monitoring": {
+          "metrics": {
+            "enabled": true,
+            "endpoint": "/metrics"
+          },
+          "healthCheck": {
+            "enabled": true,
+            "endpoint": "/health"
+          }
+        }
+      }
+    },
+    "dataPipeline": {
+      "name": "Data Pipeline Configuration Template",
+      "description": "Template for ETL/data pipeline deployment",
+      "config": {
+        "source": {
+          "type": "${SOURCE_TYPE}",
+          "connection": "${SOURCE_CONNECTION}",
+          "credentials": "${SOURCE_CREDENTIALS}"
+        },
+        "destination": {
+          "type": "${DESTINATION_TYPE}",
+          "connection": "${DESTINATION_CONNECTION}",
+          "credentials": "${DESTINATION_CREDENTIALS}"
+        },
+        "transformation": {
+          "engine": "${TRANSFORMATION_ENGINE}",
+          "parallelism": "${PARALLELISM}",
+          "errorHandling": "${ERROR_HANDLING}"
+        },
+        "schedule": {
+          "cron": "${SCHEDULE_CRON}",
+          "timezone": "${SCHEDULE_TIMEZONE}",
+          "retryPolicy": "${RETRY_POLICY}"
+        }
+      }
+    },
+    "mlModel": {
+      "name": "ML Model Configuration Template",
+      "description": "Template for machine learning model deployment",
+      "config": {
+        "model": {
+          "name": "${MODEL_NAME}",
+          "version": "${MODEL_VERSION}",
+          "type": "${MODEL_TYPE}",
+          "framework": "${MODEL_FRAMEWORK}"
+        },
+        "training": {
+          "dataSource": "${TRAINING_DATA_SOURCE}",
+          "validationSplit": "${VALIDATION_SPLIT}",
+          "hyperparameters": "${HYPERPARAMETERS}"
+        },
+        "deployment": {
+          "endpoint": "${MODEL_ENDPOINT}",
+          "scaling": {
+            "minInstances": "${MIN_INSTANCES}",
+            "maxInstances": "${MAX_INSTANCES}",
+            "targetCpuUtilization": "${TARGET_CPU_UTILIZATION}"
+          },
+          "monitoring": {
+            "latencyThreshold": "${LATENCY_THRESHOLD}",
+            "errorRateThreshold": "${ERROR_RATE_THRESHOLD}",
+            "driftDetection": "${DRIFT_DETECTION}"
+          }
+        }
+      }
+    }
+  }
+}

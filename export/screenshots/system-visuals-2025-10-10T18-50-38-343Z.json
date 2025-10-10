@@ -1,0 +1,116 @@
+{
+  "metadata": {
+    "exportDate": "2025-10-10T18:50:38.456Z",
+    "visuals": [
+      {
+        "name": "Technology Stack Overview",
+        "type": "Technology radar/spider chart",
+        "description": "Visual representation of all technologies used",
+        "data": {
+          "frontend": [
+            "React",
+            "TypeScript",
+            "Tailwind CSS",
+            "Vite"
+          ],
+          "backend": [
+            "Node.js",
+            "Express.js",
+            "JWT",
+            "Redis"
+          ],
+          "database": [
+            "Supabase",
+            "PostgreSQL",
+            "Redis Cache"
+          ],
+          "data": [
+            "Fivetran",
+            "dbt",
+            "Dataiku",
+            "Collibra"
+          ],
+          "infrastructure": [
+            "Docker",
+            "Kubernetes",
+            "Nginx",
+            "Prometheus"
+          ],
+          "external": [
+            "Stripe",
+            "Telegram API",
+            "Z.ai",
+            "Travel APIs"
+          ]
+        },
+        "file": "technology-stack-overview.json"
+      },
+      {
+        "name": "Data Pipeline Flow",
+        "type": "Flow diagram",
+        "description": "End-to-end data flow from ingestion to insights",
+        "stages": [
+          "External API Ingestion",
+          "Raw Data Storage",
+          "Data Cleaning & Transformation",
+          "Business Logic Application",
+          "ML Model Training",
+          "Model Deployment",
+          "Real-time Predictions",
+          "Analytics & Reporting"
+        ],
+        "file": "data-pipeline-flow.json"
+      },
+      {
+        "name": "User Journey Map",
+        "type": "User flow diagram",
+        "description": "Complete user journey from discovery to booking",
+        "steps": [
+          "Discover Maya via web/social",
+          "Sign up and create profile",
+          "Plan trip with AI assistance",
+          "Get price predictions",
+          "Compare and select options",
+          "Secure payment processing",
+          "Receive booking confirmation",
+          "Ongoing trip management",
+          "Post-trip feedback and reviews"
+        ],
+        "file": "user-journey-map.json"
+      },
+      {
+        "name": "Performance Metrics Dashboard",
+        "type": "Metrics overview",
+        "description": "Key performance indicators and system health metrics",
+        "metrics": [
+          {
+            "name": "Response Time",
+            "target": "< 200ms",
+            "current": "145ms"
+          },
+          {
+            "name": "Uptime",
+            "target": "99.9%",
+            "current": "99.95%"
+          },
+          {
+            "name": "Error Rate",
+            "target": "< 0.1%",
+            "current": "0.05%"
+          },
+          {
+            "name": "Cache Hit Rate",
+            "target": "> 90%",
+            "current": "94%"
+          },
+          {
+            "name": "ML Model Accuracy",
+            "target": "> 85%",
+            "current": "89%"
+          }
+        ],
+        "file": "performance-metrics.json"
+      }
+    ]
+  }
+}

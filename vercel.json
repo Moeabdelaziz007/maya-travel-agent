@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "name": "maya-travel-agent",
+  "name": "amrikyy-platform",
   "builds": [
     {
       "src": "frontend/package.json",
@@ -25,4 +25,3 @@
   "framework": null,
   "installCommand": "npm install --prefix frontend"
 }
-

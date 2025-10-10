@@ -1,0 +1,38 @@
+name: maya_travel_analytics
+
+profile: maya_travel_analytics
+
+seed-paths: ["seeds"]
+model-paths: ["models"]
+macro-paths: ["macros"]
+analysis-paths: ["analyses"]
+test-paths: ["tests"]
+clean-targets:
+  - "target"
+  - "dbt_packages"
+
+seeds:
+  # Builds seeds into '<your_schema_name>_raw'
+  maya_travel_analytics:
+    +schema: raw
+
+models:
+  maya_travel_analytics:
+    # Materialize staging models as views, intermediate as views, marts as tables
+    staging:
+      +materialized: view
+      +schema: staging
+    intermediate:
+      +materialized: view
+      +schema: intermediate
+    marts:
+      +materialized: table
+      +schema: analytics
+      user_behavior:
+        +materialized: table
+      conversion_funnel:
+        +materialized: table
+      performance_metrics:
+        +materialized: table
+      business_kpis:
+        +materialized: table

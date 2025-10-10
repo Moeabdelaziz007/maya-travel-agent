@@ -1,0 +1,93 @@
+{
+  "metadata": {
+    "name": "Flight Price Prediction Model",
+    "version": "1.0.0",
+    "type": "Regression",
+    "framework": "Scikit-learn",
+    "exportDate": "2025-10-10T18:45:47.117Z",
+    "description": "Machine learning model for predicting flight prices based on historical data and market trends"
+  },
+  "architecture": {
+    "algorithm": "Random Forest Regressor",
+    "features": [
+      "departure_date",
+      "return_date",
+      "origin",
+      "destination",
+      "airline",
+      "flight_duration",
+      "booking_advance_days",
+      "season",
+      "day_of_week",
+      "holiday_indicator",
+      "demand_factor",
+      "fuel_price_index",
+      "competition_index"
+    ],
+    "hyperparameters": {
+      "n_estimators": 100,
+      "max_depth": 20,
+      "min_samples_split": 5,
+      "min_samples_leaf": 2,
+      "random_state": 42,
+      "n_jobs": -1
+    },
+    "preprocessing": {
+      "categorical_encoders": [
+        "LabelEncoder",
+        "OneHotEncoder"
+      ],
+      "numerical_scalers": [
+        "StandardScaler"
+      ],
+      "feature_selection": "SelectKBest",
+      "outlier_detection": "IsolationForest"
+    }
+  },
+  "performance": {
+    "training": {
+      "dataset_size": 50000,
+      "r2_score": 0.87,
+      "mean_absolute_error": 45.2,
+      "mean_squared_error": 3200.15,
+      "root_mean_squared_error": 56.57
+    },
+    "validation": {
+      "dataset_size": 15000,
+      "r2_score": 0.84,
+      "mean_absolute_error": 48.75,
+      "mean_squared_error": 3450.8,
+      "root_mean_squared_error": 58.74
+    },
+    "test": {
+      "dataset_size": 10000,
+      "r2_score": 0.82,
+      "mean_absolute_error": 52.1,
+      "mean_squared_error": 3780.25,
+      "root_mean_squared_error": 61.48
+    }
+  },
+  "deployment": {
+    "endpoint": "/api/models/flight-price/predict",
+    "status": "Active",
+    "last_updated": "2025-10-10T18:45:47.117Z",
+    "scaling": {
+      "min_instances": 1,
+      "max_instances": 5,
+      "target_cpu_utilization": 70
+    },
+    "monitoring": {
+      "latency_p95": 150,
+      "latency_p99": 300,
+      "error_rate_threshold": 0.01,
+      "drift_detection_enabled": true
+    }
+  },
+  "dataiku": {
+    "project_key": "MAYA_TRAVEL_AGENT",
+    "model_name": "flight_price_prediction",
+    "dataset_name": "flight_training_data",
+    "managed_folder": "flight_model_artifacts",
+    "api_service": "flight_price_prediction_service"
+  }
+}

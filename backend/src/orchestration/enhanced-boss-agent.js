@@ -9,6 +9,7 @@ const EmpathyDetectionSkill = require('../skills/empathy-detection-skill');
 const PersonalizedFriendshipSkill = require('../skills/personalized-friendship-skill');
 const DynamicVoiceAdaptationSkill = require('../skills/dynamic-voice-adaptation-skill');
 const HybridCache = require('../cache/hybrid-cache');
+const ServiceBus = require('../services/service-bus');
 const { registerDummyAgents } = require('../agents/dummy-agents');
 const logger = require('../utils/logger');
 
@@ -20,13 +21,22 @@ class EnhancedBossAgent extends BossAgent {
     this.skillSystem = new SkillSystem({
       storage: config.storage,
       jsonbinApiKey: config.jsonbinApiKey || process.env.JSONBIN_API_KEY,
-      enablePersistence: config.enableSkillPersistence !== false
+      enablePersistence: config.enableSkillPersistence !== false,
+      serviceBus: this.serviceBus // Share Service Bus instance
     });
 
     // Use hybrid cache for resilience
     this.hybridCache = new HybridCache({
       apiKey: config.jsonbinApiKey || process.env.JSONBIN_API_KEY,
       testMode: config.testMode || process.env.NODE_ENV === 'test'
+    });
+
+    // Initialize Service Bus for event streaming
+    this.serviceBus = new ServiceBus({
+      bootstrapServers: config.confluentBootstrapServers,
+      saslUsername: config.confluentSaslUsername,
+      saslPassword: config.confluentSaslPassword,
+      groupId: config.confluentGroupId || 'maya-enhanced-boss-agent'
     });
 
     // Register core skills
@@ -37,14 +47,45 @@ class EnhancedBossAgent extends BossAgent {
       this.registerMockAgents();
     }
 
+    // Initialize Service Bus and Skill System event subscriptions
+    // This will be called via initialize() method
+
     // Enhanced conversation states with skills
     this.enhancedConversationStates = new Map();
+
+    // Service Bus will be initialized later via initialize() method
 
     logger.info('🚀 Enhanced Boss Agent initialized with Skill System', {
       skillsRegistered: this.skillSystem.listSkills().length,
       agentsRegistered: this.agents.size,
-      cacheEnabled: !!this.hybridCache.apiKey
+      cacheEnabled: !!this.hybridCache.apiKey,
+      eventStreamingEnabled: this.serviceBus.isConnected
     });
+  }
+
+  /**
+   * Initialize async components (Service Bus connection)
+   */
+  async initialize() {
+    // Connect to Service Bus if credentials are available
+    if (process.env.CONFLUENT_BOOTSTRAP_SERVERS &&
+        process.env.CONFLUENT_SASL_USERNAME &&
+        process.env.CONFLUENT_SASL_PASSWORD) {
+      try {
+        await this.serviceBus.connect();
+        await this.serviceBus.createTopics();
+        logger.info('✅ Service Bus connected and topics created');
+
+        // Initialize Skill System with Service Bus
+        await this.skillSystem.initialize();
+        logger.info('✅ Skill System initialized with event subscriptions');
+
+      } catch (error) {
+        logger.warn('⚠️ Service Bus/Skill System initialization failed, continuing without event streaming:', error.message);
+      }
+    } else {
+      logger.info('ℹ️ Service Bus credentials not configured, event streaming disabled');
+    }
   }
 
   /**
@@ -145,6 +186,31 @@ class EnhancedBossAgent extends BossAgent {
       const responseTime = Date.now() - startTime;
       this.updateMetrics(responseTime, true);
 
+      // Publish orchestration result to event stream
+      if (this.serviceBus.isConnected) {
+        try {
+          await this.serviceBus.publishOrchestrationResult({
+            success: true,
+            data: finalResult,
+            metadata: {
+              requestId,
+              responseTime,
+              agentsUsed: analysis.executionPlan?.agents?.map(a => a.name) || [],
+              skillsUsed: analysis.skills_used || [],
+              strategy: analysis.executionPlan?.strategy || 'parallel',
+              emotional_context: analysis.emotional_state,
+              friendship_context: analysis.friendship_context
+            }
+          }, {
+            userId: context.userId,
+            sessionId: context.sessionId,
+            userName: context.userName
+          });
+        } catch (error) {
+          logger.warn('⚠️ Failed to publish orchestration result:', error.message);
+        }
+      }
+
       // Emit success event with enhanced data
       this.emit('request:complete', {
         requestId,
@@ -209,6 +275,20 @@ class EnhancedBossAgent extends BossAgent {
     if (empathyResult.success) {
       analysis.emotional_state = empathyResult.data;
       analysis.skills_used = (analysis.skills_used || []).concat('EmpathyDetection');
+
+      // Publish user emotion event
+      if (this.serviceBus.isConnected) {
+        try {
+          await this.serviceBus.publishUserEmotion(empathyResult.data, {
+            userId: context.userId,
+            userName: context.userName,
+            message: request.message,
+            sessionId: context.sessionId
+          });
+        } catch (error) {
+          logger.warn('⚠️ Failed to publish user emotion:', error.message);
+        }
+      }
     }
 
     // Add friendship context
@@ -341,6 +421,8 @@ class EnhancedBossAgent extends BossAgent {
    * Post-process with voice adaptation
    */
   async postProcessWithSkills(result, analysis, context) {
+    const skillStartTime = Date.now();
+
     // Base post-processing from Boss Agent
     const baseResult = await super.postProcess(result, context);
 
@@ -358,6 +440,27 @@ class EnhancedBossAgent extends BossAgent {
       if (voiceResult.success) {
         baseResult.voice_adaptation = voiceResult.data;
         baseResult.skills_used = (baseResult.skills_used || []).concat('DynamicVoiceAdaptation');
+
+        // Publish skill execution event
+        if (this.serviceBus.isConnected) {
+          try {
+            await this.serviceBus.publishSkillExecution('DynamicVoiceAdaptation', {
+              success: true,
+              input: {
+                emotional_context: analysis.emotional_state,
+                friendship_level: analysis.friendship_context?.friendship_level,
+                situation: this.determineSituation(analysis, context)
+              },
+              output: voiceResult.data,
+              executionTime: Date.now() - skillStartTime
+            }, {
+              userId: context.userId,
+              sessionId: context.sessionId
+            });
+          } catch (error) {
+            logger.warn('⚠️ Failed to publish skill execution:', error.message);
+          }
+        }
 
         // Apply adapted communication style to response
         baseResult.enhanced_response = this.applyVoiceAdaptation(

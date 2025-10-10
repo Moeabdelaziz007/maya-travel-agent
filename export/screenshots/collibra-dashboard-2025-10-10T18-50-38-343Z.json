@@ -1,0 +1,43 @@
+{
+  "metadata": {
+    "exportDate": "2025-10-10T18:50:38.452Z",
+    "instance": "maya.collibra.com",
+    "sections": [
+      {
+        "name": "Data Domains",
+        "screenshot": "collibra-domains.png",
+        "description": "Hierarchical view of Maya Travel Agent data domains"
+      },
+      {
+        "name": "Data Assets",
+        "screenshot": "collibra-assets.png",
+        "description": "Catalog of all data assets with classifications and owners"
+      },
+      {
+        "name": "Data Lineage",
+        "screenshot": "collibra-lineage.png",
+        "description": "Data flow lineage from external APIs to ML models"
+      },
+      {
+        "name": "Data Quality Rules",
+        "screenshot": "collibra-quality-rules.png",
+        "description": "Configured data quality validation rules"
+      },
+      {
+        "name": "AI Model Governance",
+        "screenshot": "collibra-ai-governance.png",
+        "description": "Governance dashboard for ML models and bias monitoring"
+      },
+      {
+        "name": "Configuration Management",
+        "screenshot": "collibra-config-management.png",
+        "description": "Environment-specific configuration governance"
+      },
+      {
+        "name": "Compliance Dashboard",
+        "screenshot": "collibra-compliance.png",
+        "description": "Compliance status and audit trails"
+      }
+    ]
+  }
+}

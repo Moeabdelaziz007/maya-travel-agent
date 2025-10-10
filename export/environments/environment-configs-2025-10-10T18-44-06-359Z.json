@@ -1,0 +1,74 @@
+{
+  "development": {
+    "name": "Development Environment",
+    "description": "Development and testing environment configuration",
+    "variables": {
+      "NODE_ENV": "development",
+      "PORT": 5000,
+      "DATABASE_URL": "postgresql://localhost:5432/maya_dev",
+      "LOG_LEVEL": "debug",
+      "CACHE_TTL": 300,
+      "RATE_LIMIT_WINDOW_MS": 900000,
+      "RATE_LIMIT_MAX_REQUESTS": 1000
+    },
+    "features": {
+      "debugMode": true,
+      "hotReload": true,
+      "detailedLogging": true,
+      "mockExternalServices": true
+    },
+    "deployment": {
+      "autoDeploy": false,
+      "backupEnabled": false,
+      "monitoringLevel": "basic"
+    }
+  },
+  "staging": {
+    "name": "Staging Environment",
+    "description": "Pre-production testing environment configuration",
+    "variables": {
+      "NODE_ENV": "staging",
+      "PORT": 5000,
+      "DATABASE_URL": "postgresql://staging-db:5432/maya_staging",
+      "LOG_LEVEL": "info",
+      "CACHE_TTL": 600,
+      "RATE_LIMIT_WINDOW_MS": 900000,
+      "RATE_LIMIT_MAX_REQUESTS": 500
+    },
+    "features": {
+      "debugMode": false,
+      "hotReload": false,
+      "detailedLogging": false,
+      "mockExternalServices": false
+    },
+    "deployment": {
+      "autoDeploy": true,
+      "backupEnabled": true,
+      "monitoringLevel": "standard"
+    }
+  },
+  "production": {
+    "name": "Production Environment",
+    "description": "Live production environment configuration",
+    "variables": {
+      "NODE_ENV": "production",
+      "PORT": 5000,
+      "DATABASE_URL": "postgresql://prod-db:5432/maya_prod",
+      "LOG_LEVEL": "warn",
+      "CACHE_TTL": 1800,
+      "RATE_LIMIT_WINDOW_MS": 900000,
+      "RATE_LIMIT_MAX_REQUESTS": 100
+    },
+    "features": {
+      "debugMode": false,
+      "hotReload": false,
+      "detailedLogging": false,
+      "mockExternalServices": false
+    },
+    "deployment": {
+      "autoDeploy": true,
+      "backupEnabled": true,
+      "monitoringLevel": "comprehensive"
+    }
+  }
+}

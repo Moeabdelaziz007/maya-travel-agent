@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "exportDate": "2025-10-10T18:50:38.450Z",
+    "project": "MAYA_TRAVEL_AGENT",
+    "url": "https://dataiku.maya-travel-agent.com",
+    "sections": [
+      {
+        "name": "Project Overview",
+        "screenshot": "dataiku-project-overview.png",
+        "description": "Main project dashboard showing datasets, recipes, and models"
+      },
+      {
+        "name": "Flight Price Model",
+        "screenshot": "flight-price-model.png",
+        "description": "ML model details for flight price prediction"
+      },
+      {
+        "name": "Hotel Price Model",
+        "screenshot": "hotel-price-model.png",
+        "description": "ML model details for hotel price prediction"
+      },
+      {
+        "name": "Churn Prediction Model",
+        "screenshot": "churn-prediction-model.png",
+        "description": "ML model details for user churn prediction"
+      },
+      {
+        "name": "Data Flow",
+        "screenshot": "dataiku-flow.png",
+        "description": "Visual flow showing data pipeline from ingestion to model deployment"
+      },
+      {
+        "name": "Model Performance",
+        "screenshot": "model-performance.png",
+        "description": "Performance metrics and evaluation results for all models"
+      },
+      {
+        "name": "API Services",
+        "screenshot": "api-services.png",
+        "description": "Deployed API services for model predictions"
+      }
+    ]
+  }
+}

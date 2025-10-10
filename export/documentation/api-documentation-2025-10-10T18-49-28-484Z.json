@@ -1,0 +1,367 @@
+{
+  "title": "Maya Travel Agent - API Documentation",
+  "version": "1.0.0",
+  "baseUrl": "https://api.maya-travel-agent.com",
+  "exportDate": "2025-10-10T18:49:28.762Z",
+  "endpoints": [
+    {
+      "path": "/api/auth/login",
+      "method": "POST",
+      "description": "User authentication and JWT token generation",
+      "parameters": [
+        {
+          "name": "email",
+          "type": "string",
+          "required": true,
+          "description": "User email address"
+        },
+        {
+          "name": "password",
+          "type": "string",
+          "required": true,
+          "description": "User password"
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Authentication successful",
+          "schema": "AuthResponse"
+        },
+        "401": {
+          "description": "Invalid credentials"
+        },
+        "429": {
+          "description": "Rate limit exceeded"
+        }
+      }
+    },
+    {
+      "path": "/api/trips/plan",
+      "method": "POST",
+      "description": "Generate personalized trip recommendations",
+      "parameters": [
+        {
+          "name": "origin",
+          "type": "string",
+          "required": true,
+          "description": "Departure city"
+        },
+        {
+          "name": "destination",
+          "type": "string",
+          "required": true,
+          "description": "Arrival city"
+        },
+        {
+          "name": "departureDate",
+          "type": "string",
+          "required": true,
+          "description": "Departure date (ISO 8601)"
+        },
+        {
+          "name": "returnDate",
+          "type": "string",
+          "required": false,
+          "description": "Return date (ISO 8601)"
+        },
+        {
+          "name": "budget",
+          "type": "number",
+          "required": false,
+          "description": "Trip budget in USD"
+        },
+        {
+          "name": "preferences",
+          "type": "object",
+          "required": false,
+          "description": "User preferences and constraints"
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Trip recommendations generated",
+          "schema": "TripPlanResponse"
+        },
+        "400": {
+          "description": "Invalid request parameters"
+        },
+        "500": {
+          "description": "Internal server error"
+        }
+      }
+    },
+    {
+      "path": "/api/models/flight-price/predict",
+      "method": "POST",
+      "description": "Predict optimal flight prices",
+      "parameters": [
+        {
+          "name": "origin",
+          "type": "string",
+          "required": true,
+          "description": "Origin airport code"
+        },
+        {
+          "name": "destination",
+          "type": "string",
+          "required": true,
+          "description": "Destination airport code"
+        },
+        {
+          "name": "departureDate",
+          "type": "string",
+          "required": true,
+          "description": "Departure date"
+        },
+        {
+          "name": "returnDate",
+          "type": "string",
+          "required": false,
+          "description": "Return date"
+        },
+        {
+          "name": "passengers",
+          "type": "number",
+          "required": false,
+          "description": "Number of passengers",
+          "default": 1
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Price prediction successful",
+          "schema": "PricePredictionResponse"
+        },
+        "400": {
+          "description": "Invalid flight parameters"
+        },
+        "503": {
+          "description": "ML service unavailable"
+        }
+      }
+    },
+    {
+      "path": "/api/models/hotel-price/predict",
+      "method": "POST",
+      "description": "Predict optimal hotel prices",
+      "parameters": [
+        {
+          "name": "city",
+          "type": "string",
+          "required": true,
+          "description": "City name"
+        },
+        {
+          "name": "checkinDate",
+          "type": "string",
+          "required": true,
+          "description": "Check-in date"
+        },
+        {
+          "name": "checkoutDate",
+          "type": "string",
+          "required": true,
+          "description": "Check-out date"
+        },
+        {
+          "name": "guests",
+          "type": "number",
+          "required": false,
+          "description": "Number of guests",
+          "default": 2
+        },
+        {
+          "name": "roomType",
+          "type": "string",
+          "required": false,
+          "description": "Preferred room type"
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Price prediction successful",
+          "schema": "PricePredictionResponse"
+        },
+        "400": {
+          "description": "Invalid hotel parameters"
+        },
+        "503": {
+          "description": "ML service unavailable"
+        }
+      }
+    },
+    {
+      "path": "/api/models/churn/predict",
+      "method": "POST",
+      "description": "Predict user churn probability",
+      "parameters": [
+        {
+          "name": "userId",
+          "type": "string",
+          "required": true,
+          "description": "User identifier"
+        },
+        {
+          "name": "features",
+          "type": "object",
+          "required": true,
+          "description": "User behavior features"
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Churn prediction successful",
+          "schema": "ChurnPredictionResponse"
+        },
+        "400": {
+          "description": "Invalid user data"
+        },
+        "503": {
+          "description": "ML service unavailable"
+        }
+      }
+    },
+    {
+      "path": "/api/payments/create-session",
+      "method": "POST",
+      "description": "Create Stripe payment session",
+      "parameters": [
+        {
+          "name": "amount",
+          "type": "number",
+          "required": true,
+          "description": "Payment amount in cents"
+        },
+        {
+          "name": "currency",
+          "type": "string",
+          "required": true,
+          "description": "Currency code (USD, EUR, etc.)"
+        },
+        {
+          "name": "description",
+          "type": "string",
+          "required": true,
+          "description": "Payment description"
+        },
+        {
+          "name": "metadata",
+          "type": "object",
+          "required": false,
+          "description": "Additional payment metadata"
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Payment session created",
+          "schema": "PaymentSessionResponse"
+        },
+        "400": {
+          "description": "Invalid payment parameters"
+        },
+        "500": {
+          "description": "Payment service error"
+        }
+      }
+    }
+  ],
+  "schemas": {
+    "AuthResponse": {
+      "type": "object",
+      "properties": {
+        "token": {
+          "type": "string",
+          "description": "JWT access token"
+        },
+        "refreshToken": {
+          "type": "string",
+          "description": "JWT refresh token"
+        },
+        "user": {
+          "type": "object",
+          "description": "User profile information"
+        },
+        "expiresIn": {
+          "type": "number",
+          "description": "Token expiration time in seconds"
+        }
+      }
+    },
+    "TripPlanResponse": {
+      "type": "object",
+      "properties": {
+        "tripId": {
+          "type": "string",
+          "description": "Unique trip identifier"
+        },
+        "recommendations": {
+          "type": "array",
+          "description": "Array of trip recommendations"
+        },
+        "totalPrice": {
+          "type": "number",
+          "description": "Estimated total trip cost"
+        },
+        "confidence": {
+          "type": "number",
+          "description": "Recommendation confidence score"
+        }
+      }
+    },
+    "PricePredictionResponse": {
+      "type": "object",
+      "properties": {
+        "predictedPrice": {
+          "type": "number",
+          "description": "Predicted price"
+        },
+        "confidence": {
+          "type": "number",
+          "description": "Prediction confidence (0-1)"
+        },
+        "priceRange": {
+          "type": "object",
+          "description": "Price range with min/max values"
+        },
+        "bestBookingDate": {
+          "type": "string",
+          "description": "Optimal booking date"
+        }
+      }
+    },
+    "ChurnPredictionResponse": {
+      "type": "object",
+      "properties": {
+        "churnProbability": {
+          "type": "number",
+          "description": "Churn probability (0-1)"
+        },
+        "riskLevel": {
+          "type": "string",
+          "description": "Risk level (low/medium/high)"
+        },
+        "recommendations": {
+          "type": "array",
+          "description": "Retention recommendations"
+        }
+      }
+    },
+    "PaymentSessionResponse": {
+      "type": "object",
+      "properties": {
+        "sessionId": {
+          "type": "string",
+          "description": "Stripe session identifier"
+        },
+        "url": {
+          "type": "string",
+          "description": "Stripe checkout URL"
+        },
+        "expiresAt": {
+          "type": "number",
+          "description": "Session expiration timestamp"
+        }
+      }
+    }
+  }
+}
