@@ -44,7 +44,7 @@ function getCultureProfile(regionOrLang = 'ar') {
 function buildCulturalSystemPrompt(regionOrLang = 'ar') {
   const profile = getCultureProfile(regionOrLang);
   const lines = [
-    `You must adapt your answers to the following cultural profile:`,
+    'You must adapt your answers to the following cultural profile:',
     `- Preferred language: ${profile.language}`,
     `- Tone: ${profile.tone}`,
     `- Currency: ${profile.currency}`,

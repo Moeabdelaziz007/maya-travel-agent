@@ -88,8 +88,8 @@ class MCPTools {
         success: false,
         error: error.message,
         fallback_data: {
-          message: "لا يمكن الحصول على بيانات الطقس حالياً، يرجى التحقق من المصادر المحلية",
-          general_advice: "تحقق من الطقس قبل السفر وخذ الملابس المناسبة"
+          message: 'لا يمكن الحصول على بيانات الطقس حالياً، يرجى التحقق من المصادر المحلية',
+          general_advice: 'تحقق من الطقس قبل السفر وخذ الملابس المناسبة'
         }
       };
     }
@@ -139,8 +139,8 @@ class MCPTools {
         success: false,
         error: error.message,
         fallback_data: {
-          message: "لا يمكن الحصول على أسعار الطيران حالياً",
-          advice: "تحقق من مواقع الخطوط الجوية مباشرة أو استخدم محركات البحث المتخصصة"
+          message: 'لا يمكن الحصول على أسعار الطيران حالياً',
+          advice: 'تحقق من مواقع الخطوط الجوية مباشرة أو استخدم محركات البحث المتخصصة'
         }
       };
     }
@@ -183,8 +183,8 @@ class MCPTools {
         success: false,
         error: error.message,
         fallback_data: {
-          message: "لا يمكن الحصول على بيانات الفنادق حالياً",
-          advice: "تحقق من مواقع الحجز المعروفة مثل Booking.com أو Agoda"
+          message: 'لا يمكن الحصول على بيانات الفنادق حالياً',
+          advice: 'تحقق من مواقع الحجز المعروفة مثل Booking.com أو Agoda'
         }
       };
     }
@@ -216,8 +216,8 @@ class MCPTools {
         success: false,
         error: error.message,
         fallback_data: {
-          message: "لا يمكن الحصول على أسعار الصرف حالياً",
-          advice: "تحقق من البنك المحلي أو مكاتب الصرافة"
+          message: 'لا يمكن الحصول على أسعار الصرف حالياً',
+          advice: 'تحقق من البنك المحلي أو مكاتب الصرافة'
         }
       };
     }
@@ -252,8 +252,8 @@ class MCPTools {
         success: false,
         error: error.message,
         fallback_data: {
-          message: "لا يمكن الحصول على معلومات التأشيرة حالياً",
-          advice: "تحقق من الموقع الرسمي لسفارة البلد المقصود"
+          message: 'لا يمكن الحصول على معلومات التأشيرة حالياً',
+          advice: 'تحقق من الموقع الرسمي لسفارة البلد المقصود'
         }
       };
     }
@@ -284,8 +284,8 @@ class MCPTools {
         success: false,
         error: error.message,
         fallback_data: {
-          message: "لا يمكن الحصول على أوقات الصلاة حالياً",
-          advice: "استخدم تطبيق الصلاة المحلي أو تحقق من المساجد المحلية"
+          message: 'لا يمكن الحصول على أوقات الصلاة حالياً',
+          advice: 'استخدم تطبيق الصلاة المحلي أو تحقق من المساجد المحلية'
         }
       };
     }
@@ -321,8 +321,8 @@ class MCPTools {
         success: false,
         error: error.message,
         fallback_data: {
-          message: "لا يمكن العثور على مطاعم حلال حالياً",
-          advice: "ابحث عن 'halal restaurants' في خرائط جوجل أو اسأل السكان المحليين"
+          message: 'لا يمكن العثور على مطاعم حلال حالياً',
+          advice: 'ابحث عن \'halal restaurants\' في خرائط جوجل أو اسأل السكان المحليين'
         }
       };
     }
@@ -352,8 +352,8 @@ class MCPTools {
         success: false,
         error: error.message,
         fallback_data: {
-          message: "لا يمكن تحسين المسار حالياً",
-          advice: "خطط المسار بناءً على المسافات والأوقات المتاحة"
+          message: 'لا يمكن تحسين المسار حالياً',
+          advice: 'خطط المسار بناءً على المسافات والأوقات المتاحة'
         }
       };
     }
@@ -388,8 +388,8 @@ class MCPTools {
         success: false,
         error: error.message,
         fallback_data: {
-          message: "لا يمكن تحليل التفضيلات حالياً",
-          advice: "أخبرني عن تفضيلاتك مباشرة"
+          message: 'لا يمكن تحليل التفضيلات حالياً',
+          advice: 'أخبرني عن تفضيلاتك مباشرة'
         }
       };
     }
@@ -424,8 +424,8 @@ class MCPTools {
         success: false,
         error: error.message,
         fallback_data: {
-          message: "لا يمكن إنشاء توصيات مخصصة حالياً",
-          advice: "سأساعدك في التخطيط بناءً على معلوماتك"
+          message: 'لا يمكن إنشاء توصيات مخصصة حالياً',
+          advice: 'سأساعدك في التخطيط بناءً على معلوماتك'
         }
       };
     }
@@ -440,13 +440,13 @@ class MCPTools {
     let recommendations = [];
     
     if (temp < 10) {
-      recommendations.push("احضر ملابس دافئة ومعطف");
+      recommendations.push('احضر ملابس دافئة ومعطف');
     } else if (temp > 30) {
-      recommendations.push("احضر ملابس خفيفة وواقي شمس");
+      recommendations.push('احضر ملابس خفيفة وواقي شمس');
     }
     
     if (description.includes('rain')) {
-      recommendations.push("احضر مظلة أو معطف واق من المطر");
+      recommendations.push('احضر مظلة أو معطف واق من المطر');
     }
     
     return recommendations;
@@ -489,7 +489,7 @@ class MCPTools {
     // AI-powered itinerary generation logic
     return {
       day1: { location: destinations[0], activities: ['وصول', 'استقرار', 'جولة سريعة'] },
-      day2: { location: destinations[0], activities: ['معالم رئيسية', 'مطعم محلي'] },
+      day2: { location: destinations[0], activities: ['معالم رئيسية', 'مطعم محلي'] }
       // ... more days based on duration
     };
   }

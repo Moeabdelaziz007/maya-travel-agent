@@ -6,12 +6,12 @@
 class MayaPersona {
   constructor() {
     this.personality = {
-      name: "مايا",
-      title: "خبيرة السفر الشخصية",
-      language: "ar",
-      tone: "professional_friendly",
-      expertise: "travel_planning",
-      cultural_sensitivity: "high"
+      name: 'مايا',
+      title: 'خبيرة السفر الشخصية',
+      language: 'ar',
+      tone: 'professional_friendly',
+      expertise: 'travel_planning',
+      cultural_sensitivity: 'high'
     };
 
     this.traits = {
@@ -37,52 +37,52 @@ class MayaPersona {
     };
 
     this.expertise_areas = [
-      "budget_travel",
-      "luxury_travel", 
-      "family_travel",
-      "business_travel",
-      "adventure_travel",
-      "halal_travel",
-      "cultural_travel",
-      "medical_travel",
-      "educational_travel",
-      "honeymoon_travel"
+      'budget_travel',
+      'luxury_travel', 
+      'family_travel',
+      'business_travel',
+      'adventure_travel',
+      'halal_travel',
+      'cultural_travel',
+      'medical_travel',
+      'educational_travel',
+      'honeymoon_travel'
     ];
 
     this.cultural_insights = {
       arabic_regions: {
-        gulf: "خبرة عميقة في دول الخليج والسفر الفاخر",
-        levant: "معرفة واسعة بالشام وثقافتها",
-        maghreb: "خبرة في المغرب العربي وتقاليده",
-        egypt: "فهم عميق لمصر وتراثها",
-        sudan: "معرفة بالثقافة السودانية"
+        gulf: 'خبرة عميقة في دول الخليج والسفر الفاخر',
+        levant: 'معرفة واسعة بالشام وثقافتها',
+        maghreb: 'خبرة في المغرب العربي وتقاليده',
+        egypt: 'فهم عميق لمصر وتراثها',
+        sudan: 'معرفة بالثقافة السودانية'
       },
       global_regions: {
-        europe: "خبرة واسعة في أوروبا والاتحاد الأوروبي",
-        asia: "معرفة عميقة بآسيا وثقافاتها",
-        americas: "خبرة في الأمريكيتين",
-        africa: "فهم للقارة الأفريقية وتنوعها",
-        oceania: "معرفة بأستراليا ونيوزيلندا"
+        europe: 'خبرة واسعة في أوروبا والاتحاد الأوروبي',
+        asia: 'معرفة عميقة بآسيا وثقافاتها',
+        americas: 'خبرة في الأمريكيتين',
+        africa: 'فهم للقارة الأفريقية وتنوعها',
+        oceania: 'معرفة بأستراليا ونيوزيلندا'
       }
     };
 
     this.specializations = {
       halal_travel: {
-        prayer_requirements: "تحديد مواقع المساجد وأوقات الصلاة",
-        halal_food: "توصيات المطاعم الحلال",
-        cultural_sensitivity: "مراعاة التقاليد الإسلامية"
+        prayer_requirements: 'تحديد مواقع المساجد وأوقات الصلاة',
+        halal_food: 'توصيات المطاعم الحلال',
+        cultural_sensitivity: 'مراعاة التقاليد الإسلامية'
       },
       budget_optimization: {
-        flight_deals: "البحث عن أفضل العروض",
-        accommodation: "خيارات الإقامة الاقتصادية",
-        local_transport: "وسائل النقل المحلية",
-        free_activities: "الأنشطة المجانية"
+        flight_deals: 'البحث عن أفضل العروض',
+        accommodation: 'خيارات الإقامة الاقتصادية',
+        local_transport: 'وسائل النقل المحلية',
+        free_activities: 'الأنشطة المجانية'
       },
       luxury_experiences: {
-        five_star_accommodation: "أرقى الفنادق",
-        exclusive_experiences: "تجارب حصرية",
-        premium_services: "خدمات راقية",
-        personalized_service: "خدمة شخصية"
+        five_star_accommodation: 'أرقى الفنادق',
+        exclusive_experiences: 'تجارب حصرية',
+        premium_services: 'خدمات راقية',
+        personalized_service: 'خدمة شخصية'
       }
     };
   }
@@ -92,11 +92,11 @@ class MayaPersona {
    */
   generateSystemPrompt(userContext = {}) {
     const {
-      user_name = "",
+      user_name = '',
       user_preferences = {},
       conversation_history = [],
-      current_goal = "",
-      cultural_background = "arabic"
+      current_goal = '',
+      cultural_background = 'arabic'
     } = userContext;
 
     const personalityTraits = this.buildPersonalityString();
@@ -123,9 +123,9 @@ ${expertiseContext}
 مساعدة المستخدمين في تخطيط رحلات مثالية تناسب ميزانيتهم واهتماماتهم، مع جمع معلومات مفيدة لتحسين الخدمة.
 
 ## معلومات المستخدم الحالية:
-${user_name ? `الاسم: ${user_name}` : ""}
-${Object.keys(user_preferences).length ? `التفضيلات: ${JSON.stringify(user_preferences)}` : ""}
-${current_goal ? `الهدف الحالي: ${current_goal}` : ""}
+${user_name ? `الاسم: ${user_name}` : ''}
+${Object.keys(user_preferences).length ? `التفضيلات: ${JSON.stringify(user_preferences)}` : ''}
+${current_goal ? `الهدف الحالي: ${current_goal}` : ''}
 
 تذكري: أنت خبيرة سفر حقيقية تريد أن تقدم أفضل تجربة سفر ممكنة!`;
   }
@@ -156,20 +156,20 @@ ${this.expertise_areas.map(area => `- ${this.translateExpertiseArea(area)}`).joi
       return `## الخبرة الثقافية العربية:
 لديك خبرة عميقة في:
 ${Object.entries(this.cultural_insights.arabic_regions).map(([region, description]) => 
-  `- ${this.translateRegion(region)}: ${description}`
-).join('\n')}
+    `- ${this.translateRegion(region)}: ${description}`
+  ).join('\n')}
 
 ## التخصصات الخاصة:
 ${Object.entries(this.specializations.halal_travel).map(([key, value]) => 
-  `- ${this.translateSpecialization(key)}: ${value}`
-).join('\n')}`;
+    `- ${this.translateSpecialization(key)}: ${value}`
+  ).join('\n')}`;
     }
 
     return `## الخبرة العالمية:
 لديك معرفة واسعة بجميع أنحاء العالم:
 ${Object.entries(this.cultural_insights.global_regions).map(([region, description]) => 
-  `- ${this.translateRegion(region)}: ${description}`
-).join('\n')}`;
+    `- ${this.translateRegion(region)}: ${description}`
+  ).join('\n')}`;
   }
 
   /**
@@ -193,16 +193,16 @@ ${Object.entries(this.cultural_insights.global_regions).map(([region, descriptio
     if (relevantSpecializations.length > 0) {
       return `## خبراتك المطبقة لهذا المستخدم:
 ${relevantSpecializations.map(spec => 
-  Object.entries(spec).map(([key, value]) => 
-    `- ${this.translateSpecialization(key)}: ${value}`
-  ).join('\n')
-).join('\n\n')}`;
+    Object.entries(spec).map(([key, value]) => 
+      `- ${this.translateSpecialization(key)}: ${value}`
+    ).join('\n')
+  ).join('\n\n')}`;
     }
 
     return `## خبراتك العامة:
 ${Object.entries(this.specializations.budget_optimization).map(([key, value]) => 
-  `- ${this.translateSpecialization(key)}: ${value}`
-).join('\n')}`;
+    `- ${this.translateSpecialization(key)}: ${value}`
+  ).join('\n')}`;
   }
 
   /**
@@ -344,24 +344,24 @@ ${Object.entries(this.specializations.budget_optimization).map(([key, value]) =>
   generateFollowUpQuestions(intent, userContext) {
     const questionMap = {
       trip_planning: [
-        "إلى أي وجهة تحب أن تسافر؟",
-        "ما هو ميزانيتك التقريبي للرحلة؟",
-        "كم شخص سيسافر معك؟",
-        "هل تفضل السفر في موسم معين؟"
+        'إلى أي وجهة تحب أن تسافر؟',
+        'ما هو ميزانيتك التقريبي للرحلة؟',
+        'كم شخص سيسافر معك؟',
+        'هل تفضل السفر في موسم معين؟'
       ],
       budget_inquiry: [
-        "ما هو ميزانيتك المحدد؟",
-        "هل تريد توفير المال أم تفضل الراحة؟",
-        "ما هي أولوياتك في الإنفاق؟"
+        'ما هو ميزانيتك المحدد؟',
+        'هل تريد توفير المال أم تفضل الراحة؟',
+        'ما هي أولوياتك في الإنفاق؟'
       ],
       destination_info: [
-        "ما نوع الأنشطة التي تحبها؟",
-        "هل سافرت من قبل إلى وجهات مشابهة؟",
-        "هل لديك أي متطلبات خاصة؟"
+        'ما نوع الأنشطة التي تحبها؟',
+        'هل سافرت من قبل إلى وجهات مشابهة؟',
+        'هل لديك أي متطلبات خاصة؟'
       ]
     };
 
-    return questionMap[intent] || ["كيف يمكنني مساعدتك أكثر؟"];
+    return questionMap[intent] || ['كيف يمكنني مساعدتك أكثر؟'];
   }
 
   /**
@@ -369,16 +369,16 @@ ${Object.entries(this.specializations.budget_optimization).map(([key, value]) =>
    */
   translateExpertiseArea(area) {
     const translations = {
-      budget_travel: "السفر الاقتصادي",
-      luxury_travel: "السفر الفاخر",
-      family_travel: "سفر العائلات",
-      business_travel: "السفر للعمل",
-      adventure_travel: "السفر المغامر",
-      halal_travel: "السفر الحلال",
-      cultural_travel: "السفر الثقافي",
-      medical_travel: "السفر الطبي",
-      educational_travel: "السفر التعليمي",
-      honeymoon_travel: "سفر شهر العسل"
+      budget_travel: 'السفر الاقتصادي',
+      luxury_travel: 'السفر الفاخر',
+      family_travel: 'سفر العائلات',
+      business_travel: 'السفر للعمل',
+      adventure_travel: 'السفر المغامر',
+      halal_travel: 'السفر الحلال',
+      cultural_travel: 'السفر الثقافي',
+      medical_travel: 'السفر الطبي',
+      educational_travel: 'السفر التعليمي',
+      honeymoon_travel: 'سفر شهر العسل'
     };
     return translations[area] || area;
   }
@@ -388,16 +388,16 @@ ${Object.entries(this.specializations.budget_optimization).map(([key, value]) =>
    */
   translateRegion(region) {
     const translations = {
-      gulf: "دول الخليج",
-      levant: "بلاد الشام",
-      maghreb: "المغرب العربي",
-      egypt: "مصر",
-      sudan: "السودان",
-      europe: "أوروبا",
-      asia: "آسيا",
-      americas: "الأمريكتان",
-      africa: "أفريقيا",
-      oceania: "أوقيانوسيا"
+      gulf: 'دول الخليج',
+      levant: 'بلاد الشام',
+      maghreb: 'المغرب العربي',
+      egypt: 'مصر',
+      sudan: 'السودان',
+      europe: 'أوروبا',
+      asia: 'آسيا',
+      americas: 'الأمريكتان',
+      africa: 'أفريقيا',
+      oceania: 'أوقيانوسيا'
     };
     return translations[region] || region;
   }
@@ -407,17 +407,17 @@ ${Object.entries(this.specializations.budget_optimization).map(([key, value]) =>
    */
   translateSpecialization(spec) {
     const translations = {
-      prayer_requirements: "متطلبات الصلاة",
-      halal_food: "الطعام الحلال",
-      cultural_sensitivity: "الحساسية الثقافية",
-      flight_deals: "عروض الطيران",
-      accommodation: "الإقامة",
-      local_transport: "النقل المحلي",
-      free_activities: "الأنشطة المجانية",
-      five_star_accommodation: "الفنادق خمس نجوم",
-      exclusive_experiences: "التجارب الحصرية",
-      premium_services: "الخدمات المميزة",
-      personalized_service: "الخدمة الشخصية"
+      prayer_requirements: 'متطلبات الصلاة',
+      halal_food: 'الطعام الحلال',
+      cultural_sensitivity: 'الحساسية الثقافية',
+      flight_deals: 'عروض الطيران',
+      accommodation: 'الإقامة',
+      local_transport: 'النقل المحلي',
+      free_activities: 'الأنشطة المجانية',
+      five_star_accommodation: 'الفنادق خمس نجوم',
+      exclusive_experiences: 'التجارب الحصرية',
+      premium_services: 'الخدمات المميزة',
+      personalized_service: 'الخدمة الشخصية'
     };
     return translations[spec] || spec;
   }

@@ -221,14 +221,14 @@ bot.on('callback_query', async (callbackQuery) => {
         const response = await fetch(`${process.env.API_URL || 'http://localhost:5000'}/api/payment/create-payment-link`, {
           method: 'POST',
           headers: {
-            'Content-Type': 'application/json',
+            'Content-Type': 'application/json'
           },
           body: JSON.stringify({
             amount: paymentAmount,
             currency: 'USD',
             description: 'Maya Trips Payment',
             customerEmail: callbackQuery.from.email
-          }),
+          })
         });
 
         const result = await response.json();

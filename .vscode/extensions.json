@@ -1,5 +1,6 @@
 {
-    "recommendations": [
-        "saoudrizwan.claude-dev"
-    ]
+  "recommendations": [
+    "saoudrizwan.claude-dev",
+    "ms-edgedevtools.vscode-edge-devtools"
+  ]
 }

@@ -15,8 +15,8 @@ class PaymentService {
         currency: currency.toLowerCase(),
         product_data: {
           name: description,
-          description: `Maya Trips - ${description}`,
-        },
+          description: `Maya Trips - ${description}`
+        }
       });
 
       // Create payment link
@@ -24,18 +24,18 @@ class PaymentService {
         line_items: [
           {
             price: price.id,
-            quantity: 1,
-          },
+            quantity: 1
+          }
         ],
         after_completion: {
           type: 'redirect',
           redirect: {
-            url: `${process.env.FRONTEND_URL || 'http://localhost:3000'}/payment/success`,
-          },
+            url: `${process.env.FRONTEND_URL || 'http://localhost:3000'}/payment/success`
+          }
         },
         allow_promotion_codes: true,
         billing_address_collection: 'auto',
-        payment_method_types: ['card'],
+        payment_method_types: ['card']
       });
 
       return { 
@@ -146,20 +146,20 @@ router.post('/create-payment', async (req, res) => {
     let paymentResult;
     
     switch (paymentMethod) {
-      case 'stripe':
-        paymentResult = await PaymentService.createStripePayment(amount, currency, description);
-        break;
-      case 'paypal':
-        paymentResult = await PaymentService.createPayPalPayment(amount, currency, description);
-        break;
-      case 'telegram':
-        paymentResult = await PaymentService.createTelegramPayment(amount, currency, description, chatId);
-        break;
-      default:
-        return res.status(400).json({
-          success: false,
-          error: 'Invalid payment method. Supported: stripe, paypal, telegram'
-        });
+    case 'stripe':
+      paymentResult = await PaymentService.createStripePayment(amount, currency, description);
+      break;
+    case 'paypal':
+      paymentResult = await PaymentService.createPayPalPayment(amount, currency, description);
+      break;
+    case 'telegram':
+      paymentResult = await PaymentService.createTelegramPayment(amount, currency, description, chatId);
+      break;
+    default:
+      return res.status(400).json({
+        success: false,
+        error: 'Invalid payment method. Supported: stripe, paypal, telegram'
+      });
     }
 
     if (paymentResult.success) {

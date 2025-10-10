@@ -81,7 +81,9 @@ router.post('/chat', async (req, res) => {
           if (content.startsWith('{') && content.endsWith('}')) {
             toolCall = JSON.parse(content);
           }
-        } catch (_e) {}
+        } catch (_e) {
+          // Empty catch block for tool call parsing
+        }
 
         if (toolCall && toolCall.tool && typeof Tools[toolCall.tool] === 'function') {
           let toolResult;

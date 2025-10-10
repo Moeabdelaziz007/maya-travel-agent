@@ -1,0 +1,140 @@
+# Gitpod Configuration for Maya Travel Agent
+# This configuration sets up a complete development environment in the cloud
+
+# Docker image configuration
+image:
+  file: .gitpod.Dockerfile
+
+# Tasks to run on workspace startup
+tasks:
+  # Task 1: Install all dependencies
+  - name: Install Dependencies
+    init: |
+      echo "🚀 Installing dependencies for Maya Travel Agent..."
+
+      # Install root dependencies
+      npm install
+
+      # Install frontend dependencies
+      cd frontend
+      npm install
+      cd ..
+
+      # Install backend dependencies
+      cd backend
+      npm install
+      cd ..
+
+      echo "✅ All dependencies installed successfully!"
+
+    # Run on every workspace start
+    command: |
+      echo "🎉 Welcome to Maya Travel Agent Development Environment!"
+      echo "📝 Workspace is ready. Use the commands below to start development."
+      echo ""
+      echo "Available commands:"
+      echo "  npm run dev              - Start both frontend and backend"
+      echo "  npm run dev:frontend     - Start only frontend (port 3000)"
+      echo "  npm run dev:backend      - Start only backend (port 5000)"
+      echo ""
+      gp sync-done dependencies
+
+  # Task 2: Start Backend Server
+  - name: Backend Server
+    init: gp sync-await dependencies
+    command: |
+      echo "🖥️  Starting Backend Server on port 5000..."
+      cd backend
+
+      # Create .env file if it doesn't exist
+      if [ ! -f .env ]; then
+        echo "📝 Creating backend .env file from example..."
+        cp env.example .env
+        echo "⚠️  Please update .env with your actual credentials"
+      fi
+
+      npm run dev
+
+  # Task 3: Start Frontend Server
+  - name: Frontend Server
+    init: gp sync-await dependencies
+    command: |
+      echo "🎨 Starting Frontend Server on port 3000..."
+      cd frontend
+
+      # Create .env file if it doesn't exist
+      if [ ! -f .env ]; then
+        echo "📝 Creating frontend .env file from example..."
+        cp env.example .env
+        echo "⚠️  Please update .env with your actual credentials"
+      fi
+
+      npm run dev
+
+# Ports configuration
+ports:
+  # Frontend port
+  - port: 3000
+    onOpen: open-preview
+    name: Frontend
+    description: React Frontend Application
+    visibility: public
+
+  # Backend API port
+  - port: 5000
+    onOpen: notify
+    name: Backend API
+    description: Express Backend Server
+    visibility: public
+
+  # Vite HMR port
+  - port: 5173
+    onOpen: ignore
+    visibility: public
+
+# VS Code extensions to install
+vscode:
+  extensions:
+    # JavaScript/TypeScript
+    - dbaeumer.vscode-eslint
+    - esbenp.prettier-vscode
+    - ms-vscode.vscode-typescript-next
+
+    # React/Frontend
+    - dsznajder.es7-react-js-snippets
+    - bradlc.vscode-tailwindcss
+
+    # Git
+    - eamodio.gitlens
+
+    # Utilities
+    - christian-kohler.path-intellisense
+    - formulahendry.auto-rename-tag
+    - naumovs.color-highlight
+    - PKief.material-icon-theme
+
+    # Database
+    - ckolkman.vscode-postgres
+
+    # Testing
+    - Orta.vscode-jest
+
+# GitHub prebuilds configuration
+github:
+  prebuilds:
+    # Enable prebuilds for main and all branches
+    master: true
+    branches: true
+    # Enable prebuilds for pull requests
+    pullRequests: true
+    # Enable prebuilds for pull requests from forks
+    pullRequestsFromForks: false
+    # Add a check to PRs
+    addCheck: true
+    # Add a label to PRs
+    addLabel: prebuilt-in-gitpod
+    # Add a comment to PRs
+    addComment: false
+
+# Workspace configuration
+workspaceLocation: '.'

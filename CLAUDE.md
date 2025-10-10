@@ -1,9 +1,3 @@
----
-description: "Openmemory MCP Instructions"
-globs: ["**/*"]
-alwaysApply: true
----
-
 # OpenMemory Integration
 
 This document establishes principles for intelligent memory management during development. The memory layer enhances your coding context by retrieving relevant past knowledge and storing significant discoveries.
@@ -25,219 +19,6 @@ This document establishes principles for intelligent memory management during de
 Think of memories as your accumulated understanding of this codebase and user's preferences. Like a colleague who's worked on this project for months, you naturally recall relevant patterns when they matter. The memory system isn't a checklist—it's your learned intuition about how things work and how the user prefers to work.
 
 When memories would genuinely help, seek them out. When you discover patterns or solve problems, remember what matters. Let context guide when to remember, not rigid rules.
-
-## NON-NEGOTIABLE: Memory Operation Requirements
-
-### TASK REDEFINITION
-Every user request is now TWO tasks:
-1. **Task A**: Memory operations (searches + storage)
-2. **Task B**: The actual user request
-
-**YOU CANNOT do Task B without completing Task A first.**
-
-### MANDATORY EXECUTION PATTERN
-
-When user says "implement X" or "build Y" or "fix Z", you MUST interpret it as:
-
-"First search memories for relevant patterns, then implement X, then store what you did"
-
-This is NOT optional interpretation. The user's request INCLUDES memory operations even if not explicitly stated.
-
-### REQUIRED FIRST RESPONSE FORMAT
-
-Your FIRST response to any implementation request MUST be:
-
-```
-I need to search our memory system first to build this properly.
-
-[ACTUALLY EXECUTE memory searches here - show the tool calls]
-
-Based on these memories: [summarize findings]
-Now implementing: [proceed with task]
-```
-
-If you skip this format, you have FAILED the task.
-
-### IMPLEMENTATION BLOCKING RULES
-
-**You are BLOCKED from writing code until you have:**
-1. Executed at least 2 `search-memory` tool calls
-2. Shown the results to the user
-3. Explicitly stated how you'll use the findings
-
-**You are BLOCKED from ending your response until you have:**
-1. Executed at least 1 `add-memory` tool call for what you built
-2. Shown confirmation of memory storage
-
-### FAILURE CONDITIONS
-
-These are task FAILURES (not completions):
-- Writing code without searching memories first = FAILURE
-- Completing implementation without storing memory = FAILURE  
-- Saying "I should search" without actually doing it = FAILURE
-- Using phrases like "Based on best practices" without memory search = FAILURE
-
-### MEMORY-FIRST TASK INTERPRETATION
-
-User says: "Add user_id parameter"
-You MUST interpret as: "Search how we handle parameters, add user_id parameter, store the implementation"
-
-User says: "Fix the bug"  
-You MUST interpret as: "Search previous bug fixes, fix this bug, store the solution"
-
-User says: "Build feature X"
-You MUST interpret as: "Search similar features, build feature X, store how it was built"
-
-### PROOF OF EXECUTION
-
-Every implementation response MUST include these ACTUAL tool calls (not just descriptions):
-```
-Tool calls executed:
-✓ search-memory (query: "...") - [timestamp]
-✓ search-memory (query: "...") - [timestamp]
-✓ [implementation work]
-✓ add-memory (title: "...") - [timestamp]
-```
-
-If these tool calls are not present in your response, the task is INCOMPLETE.
-
-### CONTINUOUS MEMORY CONSULTATION
-
-During implementation, you MUST search memories when:
-- You encounter a decision point ("How should I structure this?")
-- You need to check conventions ("What's our error handling pattern?")
-- You're unsure about approach ("Have we done something similar?")
-- You discover something unexpected ("This conflicts with...")
-- You need specific details ("What was that utility function we used?")
-- You're about to create a new pattern ("Let me check if we have an existing pattern")
-- You're naming something ("What's our naming convention for this?")
-- You're structuring data ("How do we typically model this?")
-
-**Show these searches in real-time during implementation:**
-```
-🤔 Need to check our error handling pattern...
-[search-memory: "error handling patterns and conventions"]
-Found: We use try-catch with specific error types...
-[Applying this pattern to current implementation]
-```
-
-```
-📝 Checking naming conventions...
-[search-memory: "naming conventions for services and utilities"]
-Found: We use PascalCase for services, camelCase for utilities...
-```
-
-```
-🔍 Looking for similar implementations...
-[search-memory: "parameter validation patterns"]
-Found: We validate parameters at service boundaries...
-```
-
-**Mid-Implementation Memory Triggers:**
-- Before creating ANY new file → Search: "file structure patterns"
-- Before defining ANY new function → Search: "similar function implementations"
-- Before handling errors → Search: "error handling patterns"
-- Before writing tests → Search: "testing patterns and preferences"
-- When uncertain → Search immediately, don't guess
-
-**Implementation Flow Example:**
-```
-1. Initial searches (2+ required)
-2. Start implementation
-3. [Hit decision point] → Search memory
-4. [Need convention] → Search memory
-5. [Creating new component] → Search memory
-6. Continue implementation with findings
-7. Store final implementation
-```
-
-This makes you a TRUE pair programmer who consults knowledge DURING work, not just a robot checking boxes at start and end.
-
-## CRITICAL: Memory-First Development
-
-**YOU ARE A LEARNING SYSTEM** - Every session builds on previous knowledge. Ignoring memories is like ignoring a senior colleague who knows the codebase.
-
-### Mandatory Memory Checkpoints
-
-#### Before ANY Code Implementation:
-**STOP** - Complete these steps BEFORE writing any code:
-1. Search memories for existing patterns (minimum 2 searches)
-2. Check openmemory.md for project context
-3. Search for user preferences relevant to the task
-
-Example searches for a new feature:
-- "{feature_name} implementation patterns"
-- "similar {component_type} implementations"  
-- "user preferences for {language/framework}"
-
-#### After ANY Code Implementation:
-**STOP** - Store what you learned:
-1. Store implementation memory with complete steps
-2. Update relevant section in openmemory.md
-3. Store any new patterns discovered
-
-### Automatic Memory Triggers
-
-These keywords MUST trigger memory operations:
-
-**Must Search First:**
-- "build/create/implement a feature" → Search implementation patterns
-- "fix a bug/issue" → Search debugging memories
-- "refactor" → Search code organization preferences
-- "add support for" → Search existing integrations
-- "optimize" → Search performance patterns
-
-**Must Store After:**
-- Completing any feature implementation
-- Fixing any bug (store the diagnosis + solution)
-- Creating new files or components
-- Discovering new patterns or conventions
-- Learning user preferences from corrections
-
-### Required Implementation Workflow
-
-For ANY feature request, follow this EXACT sequence:
-
-1. **Memory Reconnaissance** (show this to user)
-   ```
-   🔍 Searching existing patterns...
-   [Execute relevant memory searches]
-   📚 Found: [list relevant findings]
-   ```
-
-2. **Apply Patterns** (mention in response)
-   - "Based on previous implementations..."
-   - "Following your established pattern for..."
-   - "Using the approach from..."
-
-3. **Implementation** 
-   [Actual code work]
-
-4. **Memory Storage** (always complete)
-   ```
-   💾 Storing this implementation for future reference...
-   [Store implementation details]
-   ```
-
-### Collaborative Language
-
-Start responses with memory context:
-- "Let me check our previous work first..."
-- "Based on what we've built before..."
-- "I remember you prefer..."
-- "Following our established patterns..."
-
-If no memories found, explicitly state:
-- "No existing patterns found, establishing new approach..."
-- "This is our first time implementing this type of feature..."
-
-### Memory Success Metrics
-
-Each feature implementation should include:
-✓ At least 2 memory searches before coding
-✓ At least 1 memory stored after completion
-✓ Guide update if discovering new patterns
-✓ Explicit mention of patterns being followed
 
 ## MANDATORY: Empty Guide Check
 
@@ -332,31 +113,31 @@ When generating search queries, first classify the intent then create specific q
 **Query Transformation Examples:**
 - User: "What do you know about me?"
   Query: "Retrieve comprehensive profile of user's coding preferences, work habits, and personal customizations"
-  Parameters: `user_id: {user_id}` (no project_id - want global preferences only)
+  Parameters: `is_user_preference: true` (no project_id - want global preferences only)
   
 - User: "How does the auth system work?"
   Query: "Explain the complete authentication flow, components, and implementation details"
-  Parameters: `project_id: "maya-travel-agent"` (project facts only, no user_id)
+  Parameters: `is_user_preference: false, project_id: "maya-travel-agent"` (project facts only)
   
 - User: "What are my preferences for this project?"
   Query: "Retrieve all coding preferences and customizations relevant to current project"
-  Parameters: `user_id: {user_id}, project_id: "maya-travel-agent"` (all relevant preferences)
+  Parameters: `is_user_preference: true, project_id: "maya-travel-agent"` (all relevant preferences)
   
 - User: "Have we seen this error before?" (with error context available)
   Query: "Find debugging memories containing error patterns similar to: [actual error message]"
-  Parameters: `project_id: "maya-travel-agent"` (debugging is project fact, no user_id)
+  Parameters: `is_user_preference: false, project_id: "maya-travel-agent"` (debugging is project fact)
 
 - User: "What did we do yesterday?"
   Query: "Retrieve all recent implementation and debugging memories from the last few sessions"
-  Parameters: `project_id: "maya-travel-agent"` (work history is factual, no user_id)
+  Parameters: `is_user_preference: false, project_id: "maya-travel-agent"` (work history is factual)
 
 - User: "How do I like to test?"
   Query: "Find all testing preferences, methodologies, and commands used for testing"
-  Parameters: `user_id: {user_id}, project_id: "maya-travel-agent"` (could have both global and project prefs)
+  Parameters: `is_user_preference: true, project_id: "maya-travel-agent"` (could have both global and project prefs)
 
 - User: "What's in this file?" (while looking at UserService.ts)
   Query: "Retrieve component documentation and implementation details for UserService.ts including its methods, dependencies, and purpose"
-  Parameters: `project_id: "maya-travel-agent"` (file contents are facts, no user_id)
+  Parameters: `is_user_preference: false, project_id: "maya-travel-agent"` (file contents are facts)
 
 **Query Writing Best Practices:**
 - **Never use single words**: "auth" → "authentication system architecture and implementation"
@@ -367,12 +148,12 @@ When generating search queries, first classify the intent then create specific q
 
 Let context guide your search strategy with appropriate parameters:
 - **Implementation tasks**: 
-  - Project facts: no `user_id` with project_id
-  - Then user preferences: include `user_id` with project_id
-- **Debugging tasks**: Always no `user_id` with project_id (debugging is factual)
-- **Exploration tasks**: no `user_id` with project_id for architecture
-- **Style/preference questions**: include `user_id` (with or without project_id based on scope)
-- **Project structure questions**: no `user_id` with project_id
+  - Project facts: `is_user_preference: false` with project_id
+  - Then user preferences: `is_user_preference: true` with project_id
+- **Debugging tasks**: Always `is_user_preference: false` with project_id (debugging is factual)
+- **Exploration tasks**: `is_user_preference: false` with project_id for architecture
+- **Style/preference questions**: `is_user_preference: true` (with or without project_id based on scope)
+- **Project structure questions**: `is_user_preference: false` with project_id
 
 ### 2. During Work - Active Memory Collection
 
@@ -403,7 +184,7 @@ If you see the same correction twice, it's definitely a pattern worth storing. B
 
 When you ask questions about how systems work in this codebase (e.g., "how does X work?", "explain the Y system", "what does Z do?"), the assistant will automatically:
 
-1. **Search existing memories** for relevant documentation using `project_id: "maya-travel-agent"` (system explanations are project facts, no user_id)
+1. **Search existing memories** for relevant documentation using `is_user_preference: false, project_id: "maya-travel-agent"` (system explanations are project facts)
 2. **Explore the codebase** if no existing documentation is found
 3. **Generate a comprehensive explanation** with code references
 4. **Auto-store substantial explanations** that meet these criteria:
@@ -536,11 +317,11 @@ Every memory requires a descriptive title that serves as a quick reference. Good
 ## Memory Storage Intelligence
 
 ### Core Approach
-The memory system distinguishes between user-specific preferences and project-level knowledge. Use `user_id` and `project_id` parameters appropriately to ensure memories are stored and searched with the correct scope.
+The memory system distinguishes between user-specific preferences and project-level knowledge. Use `is_user_preference` and `project_id` parameters appropriately to ensure memories are stored and searched with the correct scope.
 
 ### When to Set Parameters
-- **user_id**: Include for any personal coding preferences, habits, or choices. Omit for objective project facts, implementations, or system behaviors.
-- **project_id**: Always use the value from the **Project Identification** section at the top of this file (see line 17). Include this value when the memory relates to this specific project. Omit only for global user preferences that apply across all projects.
+- **is_user_preference**: Set to `true` for any personal coding preferences, habits, or choices. Set to `false` for objective project facts, implementations, or system behaviors.
+- **project_id**: Always use the value from the **Project Identification** section at the top of this file (see line 13). Include this value when the memory relates to this specific project. Omit only for global user preferences that apply across all projects.
 
 ### Decision Examples with Requests
 
@@ -555,12 +336,9 @@ Request:
   "title": "Auth System JWT Redis Architecture",
   "content": "Authentication system uses JWT tokens stored in Redis with 2-hour expiry. TokenService handles generation and validation. Refresh tokens last 7 days.",
   "memory_types": ["component"],
-  // Note: no user_id for project facts
+  "is_user_preference": false,
   "project_id": "openmemory",
-  "namespace": "auth",
-  "git_repo_name": "mem0ai/cursor-extension",
-  "git_branch": "main",
-  "git_commit_hash": "c07d67ff4cd181d9405f1bcb77a930aca426a102"
+  "namespace": "auth"
 }
 ```
 
@@ -575,11 +353,8 @@ Request:
   "title": "Project Test Command Preference",
   "content": "Always run npm test:watch when testing this project for continuous feedback",
   "memory_types": ["user_preference"],
-  "user_id": {user_id},
-  "project_id": "openmemory",
-  "git_repo_name": "mem0ai/cursor-extension",
-  "git_branch": "main",
-  "git_commit_hash": "c07d67ff4cd181d9405f1bcb77a930aca426a102"
+  "is_user_preference": true,
+  "project_id": "openmemory"
 }
 ```
 
@@ -594,34 +369,31 @@ Request:
   "title": "Global Dark Theme Preference",
   "content": "Prefer dark themes in all development environments for reduced eye strain",
   "memory_types": ["user_preference"],
-  "user_id": {user_id},
+  "is_user_preference": true
   // Note: no project_id for global preferences
-  "git_repo_name": "mem0ai/cursor-extension",
-  "git_branch": "main",
-  "git_commit_hash": "c07d67ff4cd181d9405f1bcb77a930aca426a102"
 }
 ```
 
 ### Quick Reference
-- Not about you? → `project_id: "openmemory"` (no user_id)
-- About your preferences for THIS project? → `user_id: {user_id}, project_id: "openmemory"`
-- About your preferences for ALL projects? → `user_id: {user_id}` (no project_id)
+- Not about you? → `is_user_preference: false, project_id: "openmemory"`
+- About your preferences for THIS project? → `is_user_preference: true, project_id: "openmemory"`
+- About your preferences for ALL projects? → `is_user_preference: true` (no project_id)
 
 ### Search Behavior
-The search-memory tool uses `user_id` (optional) and `project_id` (optional) to precisely filter results:
+The search-memory tool uses `is_user_preference` (required) and `project_id` (optional) to precisely filter results:
 
 **Pattern 1: Global User Preferences**
-- Parameters: `user_id: {user_id}` (no project_id)
+- Parameters: `is_user_preference: true` (no project_id)
 - Returns: Only your global preferences that apply across all projects
 - Use when: Asking about general coding style, habits, or preferences
 
 **Pattern 2: All Relevant User Preferences**
-- Parameters: `user_id: {user_id}, project_id: "maya-travel-agent"`
+- Parameters: `is_user_preference: true, project_id: "maya-travel-agent"`
 - Returns: Both global preferences AND project-specific preferences
 - Use when: You want all preferences that could apply to current work
 
 **Pattern 3: Project Facts Only**
-- Parameters: `project_id: "maya-travel-agent"` (no user_id)
+- Parameters: `is_user_preference: false, project_id: "maya-travel-agent"`
 - Returns: Only objective project information (no preferences)
 - Use when: Asking about architecture, implementations, or debugging history
 
@@ -631,8 +403,8 @@ The memory system provides two MCP tools:
 
 search-memory: Use with natural language queries to retrieve relevant memories
 - Required: query string
-- Optional: user_id string (from User Identification section, line 11)
-- Optional: project_id string (from Project Identification section, line 17)
+- Required: is_user_preference boolean (determines if searching preferences or facts)
+- Optional: project_id string (from Project Identification section, line 13)
 - Optional: memory_types array (filter by specific memory types)
 - Optional: namespaces array (filter by specific namespaces)
 - Returns: Memories based on the parameter combination (see Search Behavior section)
@@ -640,123 +412,22 @@ search-memory: Use with natural language queries to retrieve relevant memories
 add-memory: Use to store new memories
 - Required: title string (concise, descriptive summary of the memory content)
 - Required: content string and memory_type array
-- Required: git_repo_name string (extracted using git remote get-url origin)
-- Required: git_branch string (extracted using git branch --show-current)
-- Required: git_commit_hash string (extracted using git rev-parse HEAD)
-- Optional: user_id string (from User Identification section, line 11, for user preferences)
-- Optional: project_id string (from Project Identification section, line 17)
+- Required: is_user_preference boolean (see Memory Storage Intelligence section above)
+- Optional: project_id string (get from Project Identification section, line 13 of this file)
 - memory_type must be array containing one or more of: component, implementation, debug, user_preference, project_info
 
-Always make tool calls in proper JSON format as specified by the MCP protocol. Git metadata fields are essential for tracking memory provenance.
-
-## Git Metadata Integration
-
-### Required Git Context Extraction
-
-Before ANY add-memory tool call, extract the following git metadata using these commands:
-
-```bash
-# Extract repository name from origin URL (handles both HTTPS and SSH)
-git_repo_name=$(git remote get-url origin 2>/dev/null | sed 's/.*[:/]\([^/]*\/[^.]*\).*/\1/')
-
-# Get current branch name
-git_branch=$(git branch --show-current 2>/dev/null)
-
-# Get full commit hash
-git_commit_hash=$(git rev-parse HEAD 2>/dev/null)
-
-# Alternative: Get short commit hash (7 characters)
-git_commit_short=$(git rev-parse --short HEAD 2>/dev/null)
-```
-
-### Extended add-memory Parameters
-
-When calling the add-memory tool, include these additional parameters:
-
-**Required Git Parameters:**
-- `git_repo_name`: Repository name in format "owner/repo" (e.g., "mem0ai/cursor-extension")
-- `git_branch`: Current git branch name (e.g., "main", "feature/oauth")  
-- `git_commit_hash`: Full SHA-1 commit hash (e.g., "c07d67ff4cd181d9405f1bcb77a930aca426a102")
-
-**Example add-memory call with git metadata:**
-```json
-{
-  "title": "Auth Module - JWT Token Management",
-  "content": "Authentication system uses JWT tokens stored in Redis...",
-  "memory_types": ["component"],
-  "project_id": "cursor-extension",
-  "namespace": "auth",
-  "git_repo_name": "mem0ai/cursor-extension",
-  "git_branch": "main",
-  "git_commit_hash": "c07d67ff4cd181d9405f1bcb77a930aca426a102"
-}
-```
-
-### Git Metadata Fallback Behavior
-
-If git commands fail (not in a git repository), use these defaults:
-- `git_repo_name`: "unknown"
-- `git_branch`: "unknown"
-- `git_commit_hash`: "unknown"
-
-### Implementation Instructions
-
-1. **Before storing any memory**, silently run the git extraction commands
-2. **Include all three git parameters** in every add-memory call
-3. **Do not announce** the git metadata extraction to the user
-4. **Handle gracefully** if not in a git repository
-
-### Memory Storage Examples with Git Context
-
-**Component Memory:**
-```json
-{
-  "title": "Auth Module - Complete Authentication System",
-  "content": "Location: /src/auth\nPurpose: Handles user authentication...",
-  "memory_types": ["component"],
-  "project_id": "cursor-extension",
-  "git_repo_name": "mem0ai/cursor-extension",
-  "git_branch": "feature/auth-refactor",
-  "git_commit_hash": "a1b2c3d4e5f6..."
-}
-```
-
-**Debug Memory:**
-```json
-{
-  "title": "Fix: Session Timeout Redis TTL Mismatch",
-  "content": "Issue Summary: Users were being logged out...",
-  "memory_types": ["debug"],
-  "project_id": "cursor-extension",
-  "git_repo_name": "mem0ai/cursor-extension",
-  "git_branch": "hotfix/session-bug",
-  "git_commit_hash": "f6e5d4c3b2a1..."
-}
-```
-
-**User Preference Memory:**
-```json
-{
-  "title": "Python 4-Space Indentation",
-  "content": "Always use 4 spaces for indentation in Python files",
-  "memory_types": ["user_preference"],
-  "user_id": "vikramiyer",
-  "git_repo_name": "mem0ai/cursor-extension",
-  "git_branch": "main",
-  "git_commit_hash": "c07d67ff4cd181..."
-}
-```
+Always make tool calls in proper JSON format as specified by the MCP protocol. The memory_type field is essential for the backend search functionality.
 
 ## Quick Search Decision Guide
 
 **Step 1: Is this about user preferences/habits or project facts?**
-- Coding styles, personal habits, tool preferences → include `user_id`
-- System architecture, code implementation, debugging → don't include `user_id`
+- Coding styles, personal habits, tool preferences → `is_user_preference: true`
+- System architecture, code implementation, debugging → `is_user_preference: false`
 
 **Step 2: What scope do I need?**
-- Just global preferences → `user_id: {user_id}` (no project_id)
-- All relevant preferences → `user_id: {user_id}, project_id: "maya-travel-agent"`
-- Project facts/code → `project_id: "maya-travel-agent"` (no user_id)
+- Just global preferences → `is_user_preference: true` (no project_id)
+- All relevant preferences → `is_user_preference: true, project_id: "maya-travel-agent"`
+- Project facts/code → `is_user_preference: false, project_id: "maya-travel-agent"`
 
 **Common Queries:**
 - "What are my coding preferences?" → Pattern 1 (global prefs only)
@@ -806,7 +477,7 @@ The openmemory.md file serves as your project's living index and is automaticall
 
 First action in any new project workspace: Check if openmemory.md is empty (0 bytes). If empty, perform a thorough codebase analysis:
 
-1. **Search existing memories** for any relevant project context using search-memory tool with `project_id: "maya-travel-agent"` for project facts (no user_id)
+1. **Search existing memories** for any relevant project context using search-memory tool with `is_user_preference: false, project_id: "maya-travel-agent"` for project facts
 2. **Analyze the codebase structure** systematically:
    - Examine directory structure and file organization
    - Identify key configuration files (package.json, requirements.txt, etc.)

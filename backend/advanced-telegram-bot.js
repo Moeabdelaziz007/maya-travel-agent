@@ -288,28 +288,28 @@ class AdvancedTelegramBot {
   async generatePersonalizedWelcome(userProfile, userName) {
     const welcomeMessages = [
       `🌍 مرحباً ${userName}! أنا مايا، خبيرة السفر الشخصية الخاصة بك ✨\n\n`,
-      `🎯 أنا هنا لمساعدتك في تخطيط رحلة مثالية تناسب تفضيلاتك وميزانيتك\n\n`,
-      `🧠 ذكائي الاصطناعي المتقدم يساعدني في:\n`,
-      `• 📍 اقتراح أفضل الوجهات\n`,
-      `• 💰 تحليل ميزانيتك بذكاء\n`,
-      `• 🏨 العثور على أفضل الإقامات\n`,
-      `• 🍽️ توصيات المطاعم الحلال\n`,
-      `• ⏰ أوقات الصلاة في وجهتك\n`,
-      `• 🌤️ حالة الطقس المحدثة\n`,
-      `• 🛡️ نصائح الأمان والسفر\n\n`,
-      `💬 تحدث معي بشكل طبيعي وسأساعدك في كل شيء!\n\n`,
-      `🚀 ما الذي تود التخطيط له اليوم؟`
+      '🎯 أنا هنا لمساعدتك في تخطيط رحلة مثالية تناسب تفضيلاتك وميزانيتك\n\n',
+      '🧠 ذكائي الاصطناعي المتقدم يساعدني في:\n',
+      '• 📍 اقتراح أفضل الوجهات\n',
+      '• 💰 تحليل ميزانيتك بذكاء\n',
+      '• 🏨 العثور على أفضل الإقامات\n',
+      '• 🍽️ توصيات المطاعم الحلال\n',
+      '• ⏰ أوقات الصلاة في وجهتك\n',
+      '• 🌤️ حالة الطقس المحدثة\n',
+      '• 🛡️ نصائح الأمان والسفر\n\n',
+      '💬 تحدث معي بشكل طبيعي وسأساعدك في كل شيء!\n\n',
+      '🚀 ما الذي تود التخطيط له اليوم؟'
     ];
 
     // Add personalized touches based on user profile
     if (userProfile.preferences.travelStyle === 'luxury') {
-      welcomeMessages.push(`\n💎 أرى أنك تحب السفر الفاخر - لدي توصيات رائعة لك!`);
+      welcomeMessages.push('\n💎 أرى أنك تحب السفر الفاخر - لدي توصيات رائعة لك!');
     } else if (userProfile.preferences.travelStyle === 'budget') {
-      welcomeMessages.push(`\n💡 سأساعدك في العثور على أفضل العروض والتوفير!`);
+      welcomeMessages.push('\n💡 سأساعدك في العثور على أفضل العروض والتوفير!');
     }
 
     if (userProfile.personalization.religiousRequirements.includes('halal_food')) {
-      welcomeMessages.push(`\n🕌 سأتأكد من توفر الطعام الحلال في جميع توصياتي!`);
+      welcomeMessages.push('\n🕌 سأتأكد من توفر الطعام الحلال في جميع توصياتي!');
     }
 
     return welcomeMessages.join('');
@@ -684,11 +684,11 @@ class AdvancedTelegramBot {
 
 🌍 <b>الوجهات المفضلة:</b>
 ${userProfile.travelHistory.favoritePlaces.length > 0 ? 
-  userProfile.travelHistory.favoritePlaces.join(', ') : 'لم يتم تحديد أي وجهات بعد'}
+    userProfile.travelHistory.favoritePlaces.join(', ') : 'لم يتم تحديد أي وجهات بعد'}
 
 📈 <b>نصائح مخصصة:</b>
 ${userProfile.personalization.interests.length > 0 ? 
-  `• مهتم بـ: ${userProfile.personalization.interests.join(', ')}` : ''}
+    `• مهتم بـ: ${userProfile.personalization.interests.join(', ')}` : ''}
 `;
 
     await this.bot.sendMessage(chatId, profileMessage, {
@@ -893,18 +893,18 @@ ${userProfile.personalization.interests.length > 0 ?
 
 📍 <b>الوجهات المقترحة:</b>
 ${recommendations.recommendations.destinations.slice(0, 3).map(dest => 
-  `• ${dest.name} (${dest.score}/100) - ${dest.reason}`
-).join('\n')}
+    `• ${dest.name} (${dest.score}/100) - ${dest.reason}`
+  ).join('\n')}
 
 🎨 <b>أنشطة مناسبة لك:</b>
 ${recommendations.recommendations.activities.slice(0, 3).map(activity => 
-  `• ${activity.name} - ${activity.description}`
-).join('\n')}
+    `• ${activity.name} - ${activity.description}`
+  ).join('\n')}
 
 🏨 <b>نوع الإقامة المناسب:</b>
 ${recommendations.recommendations.accommodations.slice(0, 2).map(acc => 
-  `• ${acc.type} - ${acc.reason}`
-).join('\n')}
+    `• ${acc.type} - ${acc.reason}`
+  ).join('\n')}
 
 📊 <b>درجة التخصيص: ${recommendations.personalizationScore}/100</b>
 `;
