@@ -52,13 +52,13 @@ class CollibraService {
       return {
         healthy: true,
         version: response.data.version,
-        url: this.collibraUrl,
+        url: this.collibraUrl
       };
     } catch (error) {
       return {
         healthy: false,
         error: error.message,
-        url: this.collibraUrl,
+        url: this.collibraUrl
       };
     }
   }
@@ -72,21 +72,21 @@ class CollibraService {
         name,
         description,
         type: { id: '00000000-0000-0000-0000-000000000000' }, // Default domain type
-        parent: parentDomainId ? { id: parentDomainId } : null,
+        parent: parentDomainId ? { id: parentDomainId } : null
       };
 
       const response = await this.client.post('/domains', domainData);
 
       logger.info('Data domain created', {
         name,
-        domainId: response.data.id,
+        domainId: response.data.id
       });
 
       return response.data;
     } catch (error) {
       logger.error('Failed to create data domain', {
         name,
-        error: error.message,
+        error: error.message
       });
       throw error;
     }
@@ -104,8 +104,8 @@ class CollibraService {
         type: { id: assetType },
         attributes: Object.entries(attributes).map(([key, value]) => ({
           type: { id: this.getAttributeTypeId(key) },
-          value: String(value),
-        })),
+          value: String(value)
+        }))
       };
 
       const response = await this.client.post('/assets', assetData);
@@ -113,7 +113,7 @@ class CollibraService {
       logger.info('Data asset created', {
         name,
         assetId: response.data.id,
-        domainId,
+        domainId
       });
 
       return response.data;
@@ -121,7 +121,7 @@ class CollibraService {
       logger.error('Failed to create data asset', {
         name,
         domainId,
-        error: error.message,
+        error: error.message
       });
       throw error;
     }
@@ -145,23 +145,23 @@ class CollibraService {
         {
           name: 'Users',
           description: 'User profiles, authentication, and engagement data',
-          parentId: mayaDomain.id,
+          parentId: mayaDomain.id
         },
         {
           name: 'Trips',
           description: 'Trip planning, bookings, and travel history data',
-          parentId: mayaDomain.id,
+          parentId: mayaDomain.id
         },
         {
           name: 'Payments',
           description: 'Payment processing, transactions, and financial data',
-          parentId: mayaDomain.id,
+          parentId: mayaDomain.id
         },
         {
           name: 'Analytics',
           description: 'Business intelligence, reporting, and analytics data',
-          parentId: mayaDomain.id,
-        },
+          parentId: mayaDomain.id
+        }
       ];
 
       const createdDomains = [];
@@ -175,7 +175,7 @@ class CollibraService {
       }
 
       logger.info('Maya Travel Agent data domains created successfully', {
-        count: createdDomains.length,
+        count: createdDomains.length
       });
 
       return { rootDomain: mayaDomain, subDomains: createdDomains };
@@ -203,8 +203,8 @@ class CollibraService {
             'Data Source': 'Supabase',
             'Data Classification': 'Internal',
             'Owner': 'Customer Success Team',
-            'Update Frequency': 'Real-time',
-          },
+            'Update Frequency': 'Real-time'
+          }
         },
         {
           name: 'User Sessions',
@@ -215,8 +215,8 @@ class CollibraService {
             'Data Source': 'Application Logs',
             'Data Classification': 'Internal',
             'Owner': 'Engineering Team',
-            'Update Frequency': 'Real-time',
-          },
+            'Update Frequency': 'Real-time'
+          }
         },
         // Trip domain assets
         {
@@ -228,8 +228,8 @@ class CollibraService {
             'Data Source': 'External APIs',
             'Data Classification': 'Confidential',
             'Owner': 'Operations Team',
-            'Update Frequency': 'Real-time',
-          },
+            'Update Frequency': 'Real-time'
+          }
         },
         {
           name: 'Trip History',
@@ -240,8 +240,8 @@ class CollibraService {
             'Data Source': 'Supabase',
             'Data Classification': 'Internal',
             'Owner': 'Data Science Team',
-            'Update Frequency': 'Daily',
-          },
+            'Update Frequency': 'Daily'
+          }
         },
         // Payment domain assets
         {
@@ -253,8 +253,8 @@ class CollibraService {
             'Data Source': 'Stripe API',
             'Data Classification': 'Restricted',
             'Owner': 'Finance Team',
-            'Update Frequency': 'Real-time',
-          },
+            'Update Frequency': 'Real-time'
+          }
         },
         {
           name: 'Payment Methods',
@@ -265,8 +265,8 @@ class CollibraService {
             'Data Source': 'Stripe API',
             'Data Classification': 'Restricted',
             'Owner': 'Finance Team',
-            'Update Frequency': 'Real-time',
-          },
+            'Update Frequency': 'Real-time'
+          }
         },
         // Analytics domain assets
         {
@@ -278,8 +278,8 @@ class CollibraService {
             'Data Source': 'dbt Models',
             'Data Classification': 'Internal',
             'Owner': 'Analytics Team',
-            'Update Frequency': 'Daily',
-          },
+            'Update Frequency': 'Daily'
+          }
         },
         {
           name: 'ML Models',
@@ -290,9 +290,9 @@ class CollibraService {
             'Data Source': 'Dataiku',
             'Data Classification': 'Internal',
             'Owner': 'Data Science Team',
-            'Update Frequency': 'Weekly',
-          },
-        },
+            'Update Frequency': 'Weekly'
+          }
+        }
       ];
 
       const createdAssets = [];
@@ -308,7 +308,7 @@ class CollibraService {
       }
 
       logger.info('Maya Travel Agent data assets created successfully', {
-        count: createdAssets.length,
+        count: createdAssets.length
       });
 
       return createdAssets;
@@ -330,38 +330,38 @@ class CollibraService {
         {
           source: 'External APIs',
           target: 'Trip Bookings',
-          transformation: 'Fivetran Ingestion',
+          transformation: 'Fivetran Ingestion'
         },
         {
           source: 'Trip Bookings',
           target: 'Supabase Raw Tables',
-          transformation: 'Fivetran → Supabase',
+          transformation: 'Fivetran → Supabase'
         },
         {
           source: 'Supabase Raw Tables',
           target: 'dbt Staging Models',
-          transformation: 'dbt Transformation',
+          transformation: 'dbt Transformation'
         },
         {
           source: 'dbt Staging Models',
           target: 'dbt Marts',
-          transformation: 'dbt Modeling',
+          transformation: 'dbt Modeling'
         },
         {
           source: 'dbt Marts',
           target: 'Business KPIs',
-          transformation: 'dbt Reporting',
+          transformation: 'dbt Reporting'
         },
         {
           source: 'dbt Marts',
           target: 'Dataiku Projects',
-          transformation: 'Dataiku ML Pipeline',
+          transformation: 'Dataiku ML Pipeline'
         },
         {
           source: 'Dataiku Projects',
           target: 'ML Models',
-          transformation: 'Model Training',
-        },
+          transformation: 'Model Training'
+        }
       ];
 
       const lineageRecords = [];
@@ -380,7 +380,7 @@ class CollibraService {
       }
 
       logger.info('Data lineage setup completed', {
-        count: lineageRecords.length,
+        count: lineageRecords.length
       });
 
       return lineageRecords;
@@ -398,7 +398,7 @@ class CollibraService {
       const lineageData = {
         sourceAsset: { id: sourceAssetId },
         targetAsset: { id: targetAssetId },
-        transformation: transformation,
+        transformation: transformation
       };
 
       const response = await this.client.post('/lineage', lineageData);
@@ -406,7 +406,7 @@ class CollibraService {
       logger.debug('Data lineage created', {
         sourceAssetId,
         targetAssetId,
-        transformation,
+        transformation
       });
 
       return response.data;
@@ -414,7 +414,7 @@ class CollibraService {
       logger.error('Failed to create data lineage', {
         sourceAssetId,
         targetAssetId,
-        error: error.message,
+        error: error.message
       });
       throw error;
     }
@@ -435,15 +435,15 @@ class CollibraService {
               name: 'Email Format Validation',
               description: 'Ensure email addresses follow valid format',
               rule: 'REGEXP_LIKE(email, \'^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$\')',
-              severity: 'High',
+              severity: 'High'
             },
             {
               name: 'Required Fields Check',
               description: 'Ensure critical user fields are not null',
               rule: 'user_id IS NOT NULL AND email IS NOT NULL',
-              severity: 'Critical',
-            },
-          ],
+              severity: 'Critical'
+            }
+          ]
         },
         {
           assetId: assetMap['Payment Transactions'].id,
@@ -452,16 +452,16 @@ class CollibraService {
               name: 'Amount Validation',
               description: 'Ensure payment amounts are positive',
               rule: 'amount > 0',
-              severity: 'Critical',
+              severity: 'Critical'
             },
             {
               name: 'Currency Code Check',
               description: 'Ensure valid currency codes',
-              rule: "currency IN ('USD', 'EUR', 'GBP')",
-              severity: 'High',
-            },
-          ],
-        },
+              rule: 'currency IN (\'USD\', \'EUR\', \'GBP\')',
+              severity: 'High'
+            }
+          ]
+        }
       ];
 
       const createdRules = [];
@@ -479,7 +479,7 @@ class CollibraService {
       }
 
       logger.info('Data quality rules setup completed', {
-        count: createdRules.length,
+        count: createdRules.length
       });
 
       return createdRules;
@@ -502,13 +502,13 @@ class CollibraService {
         attributes: [
           {
             type: { id: '00000000-0000-0000-0000-000000000000' },
-            value: rule,
+            value: rule
           },
           {
             type: { id: '00000000-0000-0000-0000-000000000000' },
-            value: severity,
-          },
-        ],
+            value: severity
+          }
+        ]
       };
 
       const response = await this.client.post('/assets', ruleData);
@@ -516,7 +516,7 @@ class CollibraService {
       logger.debug('Data quality rule created', {
         name,
         assetId,
-        severity,
+        severity
       });
 
       return response.data;
@@ -524,7 +524,7 @@ class CollibraService {
       logger.error('Failed to create data quality rule', {
         name,
         assetId,
-        error: error.message,
+        error: error.message
       });
       throw error;
     }
@@ -550,7 +550,7 @@ class CollibraService {
           'Risk Level': 'Medium',
           'Compliance Status': 'Compliant',
           'Last Assessment': new Date().toISOString(),
-          'Next Assessment': new Date(Date.now() + 90 * 24 * 60 * 60 * 1000).toISOString(),
+          'Next Assessment': new Date(Date.now() + 90 * 24 * 60 * 60 * 1000).toISOString()
         }
       );
       governanceAssets.push(riskAssessment);
@@ -565,7 +565,7 @@ class CollibraService {
           'Bias Detection': 'Enabled',
           'Fairness Metrics': 'PSI, Demographic Parity',
           'Monitoring Frequency': 'Daily',
-          'Alert Threshold': '0.05',
+          'Alert Threshold': '0.05'
         }
       );
       governanceAssets.push(biasMonitoring);
@@ -580,13 +580,13 @@ class CollibraService {
           'Total Models': '3',
           'Active Models': '3',
           'Deprecated Models': '0',
-          'Last Updated': new Date().toISOString(),
+          'Last Updated': new Date().toISOString()
         }
       );
       governanceAssets.push(modelInventory);
 
       logger.info('AI model governance setup completed', {
-        count: governanceAssets.length,
+        count: governanceAssets.length
       });
 
       return governanceAssets;
@@ -623,7 +623,7 @@ class CollibraService {
             'Environment': env,
             'Status': 'Active',
             'Last Modified': new Date().toISOString(),
-            'Modified By': 'System',
+            'Modified By': 'System'
           }
         );
         configAssets.push(configAsset);
@@ -631,7 +631,7 @@ class CollibraService {
 
       logger.info('Configuration management setup completed', {
         domainId: configDomain.id,
-        configCount: configAssets.length,
+        configCount: configAssets.length
       });
 
       return { domain: configDomain, configs: configAssets };
@@ -668,7 +668,7 @@ class CollibraService {
         users: domains.subDomains.find(d => d.name === 'Users').id,
         trips: domains.subDomains.find(d => d.name === 'Trips').id,
         payments: domains.subDomains.find(d => d.name === 'Payments').id,
-        analytics: domains.subDomains.find(d => d.name === 'Analytics').id,
+        analytics: domains.subDomains.find(d => d.name === 'Analytics').id
       };
 
       // Step 3: Setup data assets
@@ -696,7 +696,7 @@ class CollibraService {
         domains,
         assets,
         assetMap,
-        health,
+        health
       };
     } catch (error) {
       logger.error('Failed to initialize Maya governance', { error: error.message });

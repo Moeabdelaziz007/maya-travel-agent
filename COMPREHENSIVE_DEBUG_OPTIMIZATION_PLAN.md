@@ -1,4 +1,5 @@
 # 🔧 Comprehensive Debug & Optimization Plan
+
 ## Amrikyy AI Automation Platform (formerly Maya Travel Agent)
 
 **Generated**: October 10, 2025  
@@ -10,6 +11,7 @@
 ## 📊 Executive Summary
 
 ### Current State
+
 - **Build Status**: ✅ Passing (TypeScript compilation successful)
 - **Deployment**: ✅ Live on Vercel (recent rebrand from Maya → Amrikyy)
 - **Test Coverage**: ⚠️ 2 failing unit tests (TripPlanner component)
@@ -17,6 +19,7 @@
 - **Code Quality**: 🔶 Mixed (strong architecture, technical debt in places)
 
 ### Critical Findings
+
 1. **Immediate Blockers**: ESLint configuration, failing unit tests
 2. **Technical Debt**: Incomplete rebrand (567 "Maya" references), unused files
 3. **Architecture Strengths**: Solid monorepo structure, comprehensive monitoring
@@ -62,7 +65,9 @@ amrikyy-platform/
 ### 2. Technology Stack Assessment
 
 #### Frontend (★★★★☆ 4/5)
+
 **Strengths:**
+
 - Modern React 18 with TypeScript strict mode
 - Excellent build tool (Vite) for fast HMR and optimized builds
 - Comprehensive testing setup (Vitest, Playwright, RTL)
@@ -70,6 +75,7 @@ amrikyy-platform/
 - Zustand for minimal state management overhead
 
 **Weaknesses:**
+
 - No code splitting strategy evident
 - Large bundle size (513 KB reported in build)
 - Missing service worker/PWA capabilities
@@ -77,7 +83,9 @@ amrikyy-platform/
 - Inconsistent component organization
 
 #### Backend (★★★★☆ 4/5)
+
 **Strengths:**
+
 - Well-structured Express API with rate limiting
 - Prometheus metrics integration
 - Health check system
@@ -86,6 +94,7 @@ amrikyy-platform/
 - Comprehensive error handling
 
 **Weaknesses:**
+
 - No API versioning strategy
 - Limited request validation (Joi present but underutilized)
 - Cache strategy exists but not fully leveraged
@@ -93,13 +102,16 @@ amrikyy-platform/
 - MongoDB dependencies listed but not used (Supabase is primary)
 
 #### Analytics (★★★☆☆ 3/5)
+
 **Strengths:**
+
 - Professional dbt project structure
 - Clear layering (staging → intermediate → marts)
 - Dataiku ML integration
 - Collibra governance
 
 **Weaknesses:**
+
 - Limited documentation on analytics pipelines
 - No CI/CD for dbt models
 - Unclear data refresh schedules
@@ -112,7 +124,9 @@ amrikyy-platform/
 ### Priority 1: Immediate Action Required
 
 #### 1.1 ESLint Configuration Broken
+
 **Issue**: Frontend `.eslintrc.js` fails due to ESM/CommonJS conflict
+
 ```
 Error: module is not defined in ES module scope
 ```
@@ -122,6 +136,7 @@ Error: module is not defined in ES module scope
 **Root Cause**: `package.json` has `"type": "module"` but `.eslintrc.js` uses CommonJS syntax
 
 **Solution**:
+
 ```bash
 # Option A: Rename to .cjs
 mv frontend/.eslintrc.js frontend/.eslintrc.cjs
@@ -135,9 +150,11 @@ mv frontend/.eslintrc.js frontend/.eslintrc.cjs
 ---
 
 #### 1.2 Failing Unit Tests (2/6)
+
 **Issue**: TripPlanner component tests failing after UI changes
 
 **Failed Tests**:
+
 1. `TripPlanner › renders the component correctly`
 2. `TripPlanner › shows add trip button`
 
@@ -146,15 +163,16 @@ mv frontend/.eslintrc.js frontend/.eslintrc.cjs
 **Root Cause**: Test queries don't match current UI text/structure after rebrand
 
 **Solution**:
+
 ```typescript
 // Update tests to match current UI
 // frontend/src/components/__tests__/TripPlanner.test.tsx
 
 // OLD:
-const addButton = screen.getByText('Add New Trip')
+const addButton = screen.getByText('Add New Trip');
 
 // NEW: Use more robust queries
-const addButton = screen.getByRole('button', { name: /add.*trip/i })
+const addButton = screen.getByRole('button', { name: /add.*trip/i });
 // OR update test data to match current component
 ```
 
@@ -163,11 +181,13 @@ const addButton = screen.getByRole('button', { name: /add.*trip/i })
 ---
 
 #### 1.3 Incomplete Rebranding
+
 **Issue**: 567 instances of "Maya" remain across 104 files
 
 **Impact**: 🔶 Confusion in docs, logs, and analytics dashboards
 
 **Distribution**:
+
 - Documentation files: ~280 instances
 - Backend code/comments: ~120 instances
 - Analytics configs: ~80 instances
@@ -175,6 +195,7 @@ const addButton = screen.getByRole('button', { name: /add.*trip/i })
 - Other: ~27 instances
 
 **Solution Strategy**:
+
 ```bash
 # High-priority files (user-facing):
 - backend/server.js (startup message)
@@ -198,14 +219,17 @@ const addButton = screen.getByRole('button', { name: /add.*trip/i })
 ### Priority 2: Performance Optimizations
 
 #### 2.1 Frontend Bundle Size (513 KB)
+
 **Current**: Single bundle with all dependencies
 
 **Issues**:
+
 - No code splitting
 - All routes loaded upfront
 - Heavy dependencies (Framer Motion: ~60KB, Axios + Supabase: ~40KB)
 
 **Optimization Strategy**:
+
 ```typescript
 // Implement lazy loading for routes
 // frontend/src/main.tsx
@@ -221,10 +245,11 @@ const App = lazy(() => import('./App'));
     <Route path="/" element={<Landing />} />
     <Route path="/app/*" element={<App />} />
   </Routes>
-</Suspense>
+</Suspense>;
 ```
 
-**Expected Impact**: 
+**Expected Impact**:
+
 - Initial bundle: 513KB → ~180KB (-65%)
 - FCP improvement: ~800ms faster
 - TTI improvement: ~1.2s faster
@@ -232,14 +257,17 @@ const App = lazy(() => import('./App'));
 ---
 
 #### 2.2 Backend Rate Limiting Tuning
+
 **Current**: Global 100 req/15min, API 50 req/15min
 
 **Issues**:
+
 - Too restrictive for legitimate users
 - No user-based differentiation
 - No burst allowance
 
 **Recommendations**:
+
 ```javascript
 // Implement tiered rate limiting
 const rateLimits = {
@@ -258,15 +286,18 @@ const burstLimiter = rateLimit({
 ---
 
 #### 2.3 Caching Strategy Gaps
+
 **Current**: JSONbin.io for configuration caching, no edge caching
 
 **Missing**:
+
 - CDN layer (Vercel CDN not fully utilized)
 - Browser caching headers
 - Redis for session/API response caching
 - Service worker for offline capability
 
 **Recommendations**:
+
 ```javascript
 // Backend: Add cache headers
 app.use((req, res, next) => {
@@ -295,7 +326,9 @@ plugins: [
 ### Priority 3: Code Quality & Maintainability
 
 #### 3.1 Frontend Component Organization
+
 **Current Structure**:
+
 ```
 src/components/
   - Multiple top-level components
@@ -304,11 +337,13 @@ src/components/
 ```
 
 **Issues**:
+
 - No feature-based organization
 - Tests scattered
 - Shared components mixed with feature components
 
 **Recommended Structure**:
+
 ```
 src/
 ├── components/        # Shared/reusable only
@@ -340,6 +375,7 @@ src/
 ```
 
 **Benefits**:
+
 - Easier to locate feature code
 - Natural code splitting boundaries
 - Better test organization
@@ -348,15 +384,18 @@ src/
 ---
 
 #### 3.2 Backend API Structure
+
 **Current**: Routes + src/ separation is good, but:
 
 **Issues**:
+
 - Mixing concerns in server.js (363 lines)
 - No API versioning (`/api/v1/`)
 - Limited OpenAPI documentation
 - Boss Agent complexity not abstracted
 
 **Recommendations**:
+
 ```
 backend/
 ├── src/
@@ -388,14 +427,17 @@ backend/
 ---
 
 #### 3.3 TypeScript Configuration
+
 **Current**: `strict: true` ✅ (excellent)
 
 **Issues**:
+
 - `noUnusedLocals: false` (should be true)
 - `noUnusedParameters: false` (should be true)
 - Excluded files could be deleted instead
 
 **Recommendations**:
+
 ```json
 // frontend/tsconfig.json
 {
@@ -416,6 +458,7 @@ backend/
 ### Current Security Posture: ★★★★☆ (4/5)
 
 **✅ Strengths**:
+
 - Environment variables for secrets
 - Helmet.js for security headers
 - Rate limiting implemented
@@ -425,6 +468,7 @@ backend/
 - Input validation (Joi) available
 
 **⚠️ Weaknesses**:
+
 1. **No API Key Rotation**: Z.ai and Telegram tokens are static
 2. **Limited Input Sanitization**: User inputs not consistently sanitized
 3. **No CSP Headers**: Content Security Policy not configured
@@ -432,6 +476,7 @@ backend/
 5. **Session Management**: JWT expiration strategy unclear
 
 **Recommendations**:
+
 ```javascript
 // 1. Add CSP headers
 app.use(helmet.contentSecurityPolicy({
@@ -464,18 +509,21 @@ app.use(xss());
 ### Current Limits
 
 **Frontend**:
+
 - ✅ CDN-ready (Vercel)
 - ⚠️ No edge caching strategy
 - ❌ Bundle size limits mobile performance
 - ❌ No progressive enhancement
 
 **Backend**:
+
 - ⚠️ Single-instance deployment (Railway)
 - ❌ No horizontal scaling strategy
 - ⚠️ Database connection pool not optimized
 - ✅ Stateless design (good for scaling)
 
 **Database (Supabase)**:
+
 - ✅ Managed PostgreSQL (scales vertically)
 - ⚠️ No read replicas mentioned
 - ❌ No query optimization evident
@@ -484,6 +532,7 @@ app.use(xss());
 ### Scaling Recommendations
 
 #### Phase 1: 0-10K Users (Current)
+
 ```bash
 # Immediate optimizations
 1. Implement frontend code splitting
@@ -493,6 +542,7 @@ app.use(xss());
 ```
 
 #### Phase 2: 10K-100K Users
+
 ```bash
 # Horizontal scaling
 1. Deploy backend to Kubernetes (k8s configs exist)
@@ -503,6 +553,7 @@ app.use(xss());
 ```
 
 #### Phase 3: 100K+ Users
+
 ```bash
 # Advanced architecture
 1. Microservices split:
@@ -521,12 +572,14 @@ app.use(xss());
 ## 🧪 Testing Strategy Improvements
 
 ### Current Coverage
+
 - **Unit Tests**: Partial (Vitest) - 2 failing
 - **Integration Tests**: Present (backend simulation tests)
 - **E2E Tests**: Configured (Playwright) - not run in CI
 - **Load Tests**: Configured (k6) - manual only
 
 ### Gaps
+
 1. **No Test Coverage Metrics**: Can't measure progress
 2. **E2E Tests Not Automated**: Manual execution only
 3. **API Tests Missing**: No comprehensive API test suite
@@ -591,6 +644,7 @@ build: {
 ### Immediate Actions (Week 1)
 
 #### Day 1: Fix Blockers
+
 ```bash
 Priority: CRITICAL
 Estimated Time: 2-3 hours
@@ -599,21 +653,22 @@ Tasks:
 1. Fix ESLint config (5 min)
    - Rename .eslintrc.js → .eslintrc.cjs
    - OR convert to ESM format
-   
+
 2. Fix failing tests (30 min)
    - Update TripPlanner.test.tsx queries
    - Run full test suite to verify
-   
+
 3. Run security audit (15 min)
    - npm audit fix
    - Document any remaining vulnerabilities
-   
+
 4. Update deployment docs (30 min)
    - Reflect Amrikyy branding
    - Update environment variable examples
 ```
 
 #### Day 2-3: Quick Wins
+
 ```bash
 Priority: HIGH
 Estimated Time: 6-8 hours
@@ -623,22 +678,23 @@ Frontend:
    - Lazy load routes
    - Split vendor bundles
    - Measure bundle size reduction
-   
+
 2. Add caching headers (1h)
    - Configure Vercel headers
    - Add service worker basics
-   
+
 Backend:
 3. Add input validation (2h)
    - Joi schemas for all endpoints
    - Sanitization middleware
-   
+
 4. Optimize rate limiting (1h)
    - Tiered limits by user type
    - Add burst protection
 ```
 
 #### Day 4-5: Technical Debt
+
 ```bash
 Priority: MEDIUM
 Estimated Time: 8-10 hours
@@ -647,12 +703,12 @@ Estimated Time: 8-10 hours
    - High-priority files first
    - Update AI persona references
    - Collibra asset names
-   
+
 2. Reorganize frontend structure (3h)
    - Create feature folders
    - Move components to features
    - Update imports
-   
+
 3. Add API documentation (2h)
    - Swagger/OpenAPI auto-generation
    - Endpoint descriptions
@@ -663,13 +719,14 @@ Estimated Time: 8-10 hours
 ### Short-Term Improvements (Month 1)
 
 #### Week 1-2: Performance
+
 ```bash
 1. Frontend Optimization Sprint
    - Implement image optimization
    - Add lazy loading for images
    - Configure Vercel Edge caching
    - Add performance monitoring (Web Vitals)
-   
+
 2. Backend Optimization Sprint
    - Add Redis caching layer
    - Optimize database queries
@@ -678,13 +735,14 @@ Estimated Time: 8-10 hours
 ```
 
 #### Week 3-4: Quality & Testing
+
 ```bash
 1. Testing Infrastructure
    - Add coverage reporting
    - Automate E2E tests in CI
    - Create API integration test suite
    - Set up performance budgets
-   
+
 2. Code Quality
    - Enable stricter TypeScript rules
    - Add pre-commit hooks (Husky)
@@ -697,13 +755,14 @@ Estimated Time: 8-10 hours
 ### Medium-Term Strategy (Quarter 1)
 
 #### Month 1-2: Architecture Refactoring
+
 ```bash
 1. Frontend
    - Complete feature-based restructuring
    - Implement design system
    - Add Storybook for component docs
    - PWA capabilities (offline mode)
-   
+
 2. Backend
    - API versioning (/api/v1/)
    - Controller/Service pattern
@@ -712,13 +771,14 @@ Estimated Time: 8-10 hours
 ```
 
 #### Month 2-3: Scaling Preparation
+
 ```bash
 1. Infrastructure
    - Kubernetes deployment (configs exist)
    - Redis cluster setup
    - Database read replicas
    - Multi-region strategy
-   
+
 2. Monitoring & Observability
    - Distributed tracing (Jaeger/Zipkin)
    - Error tracking (Sentry)
@@ -733,6 +793,7 @@ Estimated Time: 8-10 hours
 ### Immediate Priorities
 
 #### 1. Code Quality
+
 ```bash
 # Husky + lint-staged for pre-commit hooks
 npm install -D husky lint-staged
@@ -748,6 +809,7 @@ npx lint-staged
 ```
 
 #### 2. API Documentation
+
 ```bash
 # Swagger/OpenAPI auto-generation
 npm install swagger-jsdoc swagger-ui-express
@@ -761,6 +823,7 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
 ```
 
 #### 3. Error Tracking
+
 ```bash
 # Sentry for production error tracking
 npm install @sentry/node @sentry/react
@@ -775,6 +838,7 @@ Sentry.init({ dsn: process.env.VITE_SENTRY_DSN });
 ### Performance Monitoring
 
 #### Frontend
+
 ```bash
 # Web Vitals monitoring
 npm install web-vitals
@@ -795,6 +859,7 @@ getTTFB(sendToAnalytics);
 ```
 
 #### Backend
+
 ```bash
 # Already have Prometheus - add:
 1. Grafana Loki for logs
@@ -825,6 +890,7 @@ npm install -D stryker-cli @stryker-mutator/core
 ### Technical Metrics
 
 #### Performance
+
 ```yaml
 Frontend:
   - Bundle Size: < 300 KB (initial)
@@ -832,7 +898,7 @@ Frontend:
   - LCP: < 2.5s (75th percentile)
   - TTI: < 3.5s (75th percentile)
   - CLS: < 0.1
-  
+
 Backend:
   - P95 Response Time: < 500ms
   - P99 Response Time: < 1000ms
@@ -841,12 +907,13 @@ Backend:
 ```
 
 #### Quality
+
 ```yaml
 Code Coverage:
   - Unit Tests: > 80%
   - Integration Tests: > 60%
   - E2E Tests: Critical paths covered
-  
+
 Code Quality:
   - ESLint Warnings: 0
   - TypeScript Errors: 0
@@ -855,6 +922,7 @@ Code Quality:
 ```
 
 #### Scalability
+
 ```yaml
 Load Handling:
   - Concurrent Users: 10,000+
@@ -871,7 +939,7 @@ User Experience:
   - AI Response Time: < 3s
   - Payment Success Rate: > 98%
   - Mobile Performance Score: > 90
-  
+
 Reliability:
   - Mean Time Between Failures: > 30 days
   - Mean Time To Recovery: < 15 min
@@ -884,6 +952,7 @@ Reliability:
 ## 🎯 Priority Matrix
 
 ### Critical (Do First)
+
 ```
 Impact: HIGH | Effort: LOW
 1. Fix ESLint config ⚡
@@ -893,6 +962,7 @@ Impact: HIGH | Effort: LOW
 ```
 
 ### High Priority (Do Soon)
+
 ```
 Impact: HIGH | Effort: MEDIUM
 1. Complete rebrand sweep
@@ -902,6 +972,7 @@ Impact: HIGH | Effort: MEDIUM
 ```
 
 ### Medium Priority (Plan & Schedule)
+
 ```
 Impact: MEDIUM | Effort: MEDIUM
 1. Reorganize frontend structure
@@ -911,6 +982,7 @@ Impact: MEDIUM | Effort: MEDIUM
 ```
 
 ### Low Priority (Nice to Have)
+
 ```
 Impact: LOW | Effort: HIGH
 1. Microservices split
@@ -924,17 +996,18 @@ Impact: LOW | Effort: HIGH
 ## 📅 Implementation Timeline
 
 ### Sprint 1 (Week 1-2): Stabilization
+
 ```
 Days 1-2: Critical Fixes
   - ESLint config
   - Failing tests
   - Security audit
-  
+
 Days 3-5: Quick Wins
   - Code splitting
   - Caching headers
   - Input validation
-  
+
 Days 6-10: Quality Improvements
   - Rebrand completion
   - Test coverage
@@ -942,12 +1015,13 @@ Days 6-10: Quality Improvements
 ```
 
 ### Sprint 2 (Week 3-4): Performance
+
 ```
 Days 11-15: Frontend Optimization
   - Bundle size reduction
   - Image optimization
   - PWA basics
-  
+
 Days 16-20: Backend Optimization
   - Redis integration
   - Query optimization
@@ -955,12 +1029,13 @@ Days 16-20: Backend Optimization
 ```
 
 ### Sprint 3 (Week 5-6): Scaling Prep
+
 ```
 Days 21-25: Infrastructure
   - Kubernetes configs
   - Database optimization
   - Load balancing
-  
+
 Days 26-30: Monitoring
   - Distributed tracing
   - Enhanced metrics
@@ -972,17 +1047,18 @@ Days 26-30: Monitoring
 ## 🔄 Continuous Improvement
 
 ### Weekly Practices
+
 ```bash
 Every Monday:
   - Review performance metrics
   - Check error rates
   - Analyze user feedback
-  
+
 Every Wednesday:
   - Dependency updates check
   - Security vulnerability scan
   - Code quality review
-  
+
 Every Friday:
   - Sprint retrospective
   - Technical debt assessment
@@ -990,17 +1066,18 @@ Every Friday:
 ```
 
 ### Monthly Reviews
+
 ```bash
 1. Architecture Review
    - Scalability assessment
    - Technology stack evaluation
    - Technical debt prioritization
-   
+
 2. Performance Audit
    - Bundle size analysis
    - Database query optimization
    - API endpoint performance
-   
+
 3. Security Assessment
    - Penetration testing
    - Dependency audit
@@ -1012,6 +1089,7 @@ Every Friday:
 ## 📞 Next Steps
 
 ### Immediate Actions (Today)
+
 1. ✅ Review this document with team
 2. ⚡ Fix ESLint config
 3. ⚡ Fix failing tests
@@ -1019,6 +1097,7 @@ Every Friday:
 5. 📅 Schedule implementation sprints
 
 ### This Week
+
 1. 🔧 Implement critical fixes
 2. 📊 Set up metrics dashboard
 3. 🧪 Run comprehensive test suite
@@ -1026,6 +1105,7 @@ Every Friday:
 5. 🚀 Deploy fixes to production
 
 ### This Month
+
 1. 🎯 Execute Sprint 1 & 2 plan
 2. 📈 Establish baseline metrics
 3. 🛡️ Implement security improvements
@@ -1037,6 +1117,7 @@ Every Friday:
 ## 📚 Additional Resources
 
 ### Documentation to Create
+
 - [ ] Architecture Decision Records (ADRs)
 - [ ] API Documentation (Swagger)
 - [ ] Component Library (Storybook)
@@ -1044,6 +1125,7 @@ Every Friday:
 - [ ] Incident Response Guide
 
 ### Team Knowledge Sharing
+
 - [ ] Code review guidelines
 - [ ] Git workflow documentation
 - [ ] Testing best practices
@@ -1072,4 +1154,3 @@ Every Friday:
 **Next Review**: October 17, 2025
 
 **Status**: 📋 READY FOR IMPLEMENTATION
-

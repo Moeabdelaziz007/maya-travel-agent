@@ -344,20 +344,20 @@ router.get('/model-metrics/:modelName', asyncHandler(async (req, res) => {
 
   let metrics;
   switch (modelName) {
-    case 'flight-price':
-      metrics = await flightPricePrediction.getModelMetrics();
-      break;
-    case 'hotel-price':
-      metrics = await hotelPricePrediction.getModelMetrics();
-      break;
-    case 'churn':
-      metrics = await churnPrediction.getModelMetrics();
-      break;
-    default:
-      return res.status(400).json({
-        success: false,
-        message: 'Invalid model name. Use: flight-price, hotel-price, or churn'
-      });
+  case 'flight-price':
+    metrics = await flightPricePrediction.getModelMetrics();
+    break;
+  case 'hotel-price':
+    metrics = await hotelPricePrediction.getModelMetrics();
+    break;
+  case 'churn':
+    metrics = await churnPrediction.getModelMetrics();
+    break;
+  default:
+    return res.status(400).json({
+      success: false,
+      message: 'Invalid model name. Use: flight-price, hotel-price, or churn'
+    });
   }
 
   res.json({

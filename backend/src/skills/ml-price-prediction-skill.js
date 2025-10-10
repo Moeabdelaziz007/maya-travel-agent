@@ -39,29 +39,29 @@ class MLPricePredictionSkill extends AbstractSkill {
       const predictionType = this.determinePredictionType(params, context);
 
       switch (predictionType) {
-        case 'flight': {
-            const flightResult = await this.predictFlightPrices(params, context);
-            results.push(flightResult);
-            break;
-          }
+      case 'flight': {
+        const flightResult = await this.predictFlightPrices(params, context);
+        results.push(flightResult);
+        break;
+      }
 
-        case 'hotel': {
-            const hotelResult = await this.predictHotelPrices(params, context);
-            results.push(hotelResult);
-            break;
-          }
+      case 'hotel': {
+        const hotelResult = await this.predictHotelPrices(params, context);
+        results.push(hotelResult);
+        break;
+      }
 
-        case 'both': {
-            const [flightPredictions, hotelPredictions] = await Promise.all([
-              this.predictFlightPrices(params, context),
-              this.predictHotelPrices(params, context)
-            ]);
-            results.push(flightPredictions, hotelPredictions);
-            break;
-          }
+      case 'both': {
+        const [flightPredictions, hotelPredictions] = await Promise.all([
+          this.predictFlightPrices(params, context),
+          this.predictHotelPrices(params, context)
+        ]);
+        results.push(flightPredictions, hotelPredictions);
+        break;
+      }
 
-        default:
-          throw new Error(`Unsupported prediction type: ${predictionType}`);
+      default:
+        throw new Error(`Unsupported prediction type: ${predictionType}`);
       }
 
       // Generate insights and recommendations

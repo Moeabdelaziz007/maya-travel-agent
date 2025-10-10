@@ -32,9 +32,9 @@ class CollibraConfigManager {
       baseURL: `${this.collibraUrl}/rest/2.0`,
       headers: {
         'Content-Type': 'application/json',
-        Accept: 'application/json',
+        Accept: 'application/json'
       },
-      timeout: 10000,
+      timeout: 10000
     });
 
     // Set authentication
@@ -45,13 +45,13 @@ class CollibraConfigManager {
     } else if (this.username && this.password) {
       this.client.defaults.auth = {
         username: this.username,
-        password: this.password,
+        password: this.password
       };
     }
 
     logger.info('Collibra Config Manager initialized', {
       url: this.collibraUrl,
-      authMethod: this.apiKey ? 'API Key' : 'Basic Auth',
+      authMethod: this.apiKey ? 'API Key' : 'Basic Auth'
     });
   }
 
@@ -83,7 +83,7 @@ class CollibraConfigManager {
 
       if (!asset) {
         logger.warn('Config asset not found in Collibra, using fallback', {
-          assetName,
+          assetName
         });
         return this.getFallbackConfig(environment);
       }
@@ -97,19 +97,19 @@ class CollibraConfigManager {
       // Cache the result
       this.configCache.set(cacheKey, {
         data: config,
-        timestamp: Date.now(),
+        timestamp: Date.now()
       });
 
       logger.info('Config loaded successfully from Collibra', {
         environment,
-        assetId: asset.id,
+        assetId: asset.id
       });
 
       return config;
     } catch (error) {
       logger.error('Failed to fetch config from Collibra', {
         environment,
-        error: error.message,
+        error: error.message
       });
 
       // Return fallback config on error
@@ -126,8 +126,8 @@ class CollibraConfigManager {
         params: {
           name: name,
           typeNames: type,
-          limit: 1,
-        },
+          limit: 1
+        }
       });
 
       return response.data.results?.[0] || null;
@@ -147,7 +147,7 @@ class CollibraConfigManager {
     } catch (error) {
       logger.error('Error fetching asset attributes', {
         assetId,
-        error: error.message,
+        error: error.message
       });
       return [];
     }
@@ -164,7 +164,7 @@ class CollibraConfigManager {
       telegram: {},
       cache: {},
       monitoring: {},
-      security: {},
+      security: {}
     };
 
     attributes.forEach((attr) => {
@@ -199,7 +199,7 @@ class CollibraConfigManager {
       database: {
         url: process.env.DATABASE_URL || 'postgresql://localhost:5432/maya',
         pool_size: parseInt(process.env.DB_POOL_SIZE || '10'),
-        ssl: environment === 'production',
+        ssl: environment === 'production'
       },
       ai: {
         provider: 'zai',
@@ -207,33 +207,33 @@ class CollibraConfigManager {
           process.env.ZAI_API_URL || 'https://open.bigmodel.cn/api/paas/v4',
         model: process.env.ZAI_MODEL || 'glm-4-flash',
         max_tokens: parseInt(process.env.AI_MAX_TOKENS || '2000'),
-        temperature: parseFloat(process.env.AI_TEMPERATURE || '0.7'),
+        temperature: parseFloat(process.env.AI_TEMPERATURE || '0.7')
       },
       payments: {
         stripe_enabled: process.env.STRIPE_ENABLED === 'true',
-        webhook_secret: process.env.STRIPE_WEBHOOK_SECRET,
+        webhook_secret: process.env.STRIPE_WEBHOOK_SECRET
       },
       telegram: {
         bot_token: process.env.TELEGRAM_BOT_TOKEN,
-        webhook_url: process.env.TELEGRAM_WEBHOOK_URL,
+        webhook_url: process.env.TELEGRAM_WEBHOOK_URL
       },
       cache: {
         jsonbin_api_key: process.env.JSONBIN_API_KEY,
-        ttl: parseInt(process.env.CACHE_TTL || '3600'),
+        ttl: parseInt(process.env.CACHE_TTL || '3600')
       },
       monitoring: {
         prometheus_enabled: environment !== 'development',
-        metrics_port: parseInt(process.env.METRICS_PORT || '9090'),
+        metrics_port: parseInt(process.env.METRICS_PORT || '9090')
       },
       security: {
         rate_limit_window_ms: parseInt(
           process.env.RATE_LIMIT_WINDOW || '60000'
         ),
         rate_limit_max: parseInt(process.env.RATE_LIMIT_MAX || '100'),
-        cors_origin: process.env.CORS_ORIGIN || '*',
+        cors_origin: process.env.CORS_ORIGIN || '*'
       },
       _source: 'fallback',
-      _environment: environment,
+      _environment: environment
     };
   }
 
@@ -256,7 +256,7 @@ class CollibraConfigManager {
 
       await this.client.post(`/assets/${asset.id}/attributes`, {
         name: attributeName,
-        value: stringValue,
+        value: stringValue
       });
 
       // Invalidate cache
@@ -266,7 +266,7 @@ class CollibraConfigManager {
         environment,
         section,
         key,
-        assetId: asset.id,
+        assetId: asset.id
       });
 
       return true;
@@ -275,7 +275,7 @@ class CollibraConfigManager {
         environment,
         section,
         key,
-        error: error.message,
+        error: error.message
       });
       throw error;
     }
@@ -312,12 +312,12 @@ class CollibraConfigManager {
         stewards: responsibilities.data.results
           .filter((r) => r.role.name === 'Data Steward')
           .map((r) => r.user.userName),
-        lineage: lineage.data,
+        lineage: lineage.data
       };
     } catch (error) {
       logger.error('Failed to fetch config metadata', {
         environment,
-        error: error.message,
+        error: error.message
       });
       return null;
     }
@@ -345,13 +345,13 @@ class CollibraConfigManager {
       return {
         healthy: true,
         version: response.data.version,
-        url: this.collibraUrl,
+        url: this.collibraUrl
       };
     } catch (error) {
       return {
         healthy: false,
         error: error.message,
-        url: this.collibraUrl,
+        url: this.collibraUrl
       };
     }
   }
@@ -379,5 +379,5 @@ module.exports = {
   initialize: (config) => {
     instance = new CollibraConfigManager(config);
     return instance;
-  },
+  }
 };

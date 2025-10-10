@@ -12,7 +12,7 @@ const chalk = require('chalk');
 const config = {
   baseURL: process.env.TEST_URL || 'http://localhost:3001',
   apiKey: process.env.TEST_API_KEY || 'test-key',
-  timeout: 30000,
+  timeout: 30000
 };
 
 // Test results
@@ -20,7 +20,7 @@ const results = {
   total: 0,
   passed: 0,
   failed: 0,
-  tests: [],
+  tests: []
 };
 
 // Utility functions
@@ -30,7 +30,7 @@ function log(message, type = 'info') {
     info: chalk.blue('ℹ'),
     success: chalk.green('✓'),
     error: chalk.red('✗'),
-    warn: chalk.yellow('⚠'),
+    warn: chalk.yellow('⚠')
   }[type];
 
   console.log(`${prefix} [${timestamp}] ${message}`);
@@ -67,7 +67,7 @@ async function runSmokeTests() {
   // Test 1: Health Check
   await runTest('Health Check', async () => {
     const response = await axios.get(`${config.baseURL}/health`, {
-      timeout: config.timeout,
+      timeout: config.timeout
     });
 
     if (response.status !== 200) {
@@ -82,7 +82,7 @@ async function runSmokeTests() {
   // Test 2: Metrics Endpoint
   await runTest('Metrics Endpoint', async () => {
     const response = await axios.get(`${config.baseURL}/metrics`, {
-      timeout: config.timeout,
+      timeout: config.timeout
     });
 
     if (response.status !== 200) {
@@ -101,14 +101,14 @@ async function runSmokeTests() {
       {
         userId: 'smoke-test-user',
         message: 'I want to plan a trip to Tokyo',
-        budget: 2000,
+        budget: 2000
       },
       {
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${config.apiKey}`,
+          Authorization: `Bearer ${config.apiKey}`
         },
-        timeout: config.timeout,
+        timeout: config.timeout
       }
     );
 
@@ -132,14 +132,14 @@ async function runSmokeTests() {
       {
         userId: 'smoke-test-user',
         message: 'مرحباً! ما هي أفضل وجهة سياحية في الصيف؟',
-        conversationId: 'smoke-test-conv',
+        conversationId: 'smoke-test-conv'
       },
       {
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${config.apiKey}`,
+          Authorization: `Bearer ${config.apiKey}`
         },
-        timeout: config.timeout,
+        timeout: config.timeout
       }
     );
 
@@ -158,14 +158,14 @@ async function runSmokeTests() {
       `${config.baseURL}/api/v1/skills/empathy`,
       {
         message: 'أنا قلقان جداً بخصوص الرحلة',
-        language: 'ar',
+        language: 'ar'
       },
       {
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${config.apiKey}`,
+          Authorization: `Bearer ${config.apiKey}`
         },
-        timeout: config.timeout,
+        timeout: config.timeout
       }
     );
 
@@ -214,9 +214,9 @@ async function runSmokeTests() {
         {
           headers: {
             'Content-Type': 'application/json',
-            Authorization: `Bearer ${config.apiKey}`,
+            Authorization: `Bearer ${config.apiKey}`
           },
-          timeout: config.timeout,
+          timeout: config.timeout
         }
       );
 
@@ -240,14 +240,14 @@ async function runSmokeTests() {
           {
             userId: `concurrent-user-${i}`,
             message: 'Test message',
-            conversationId: `concurrent-conv-${i}`,
+            conversationId: `concurrent-conv-${i}`
           },
           {
             headers: {
               'Content-Type': 'application/json',
-              Authorization: `Bearer ${config.apiKey}`,
+              Authorization: `Bearer ${config.apiKey}`
             },
-            timeout: config.timeout,
+            timeout: config.timeout
           }
         )
       );

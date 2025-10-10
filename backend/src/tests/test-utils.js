@@ -24,7 +24,7 @@ class TestDataFactory {
       tier: 'standard',
       createdAt: new Date().toISOString(),
       ...overrides
-    }
+    };
 
     return baseUser;
   }
@@ -37,7 +37,7 @@ class TestDataFactory {
       'أبحث عن رحلة اقتصادية إلى لندن',
       'أريد قضاء إجازة في باريس',
       'رحلة عمل إلى نيويورك'
-    ]
+    ];
 
     const baseRequest = {
       message: messages[Math.floor(Math.random() * messages.length)],
@@ -55,7 +55,7 @@ class TestDataFactory {
         pace: 'moderate'
       },
       ...overrides
-    }
+    };
 
     return baseRequest;
   }
@@ -78,7 +78,7 @@ class TestDataFactory {
       language: 'ar',
       timestamp: new Date().toISOString(),
       ...overrides
-    }
+    };
 
     return baseMessage;
   }
@@ -111,21 +111,21 @@ class TestDataFactory {
       context: skillRequests[skillName] || {},
       startTime: Date.now(),
       ...overrides
-    }
+    };
 
-    return baseRequest
+    return baseRequest;
   }
 
   static generateFutureDate(daysFromNow = 1) {
-    const date = new Date()
-    date.setDate(date.getDate() + daysFromNow)
-    return date.toISOString().split('T')[0]
+    const date = new Date();
+    date.setDate(date.getDate() + daysFromNow);
+    return date.toISOString().split('T')[0];
   }
 
   static createBulkTestData(count, factoryMethod, overrides = {}) {
     return Array.from({ length: count }, (_, index) =>
       factoryMethod({ ...overrides, index, id: `${overrides.prefix || 'test'}_${index}` })
-    )
+    );
   }
 }
 
@@ -139,48 +139,48 @@ class ApiTestClient {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${apiKey}`
       }
-    })
+    });
   }
 
   async post(endpoint, data = {}) {
-    const response = await this.client.post(endpoint, data)
-    return response
+    const response = await this.client.post(endpoint, data);
+    return response;
   }
 
   async get(endpoint, params = {}) {
-    const response = await this.client.get(endpoint, { params })
-    return response
+    const response = await this.client.get(endpoint, { params });
+    return response;
   }
 
   async put(endpoint, data = {}) {
-    const response = await this.client.put(endpoint, data)
-    return response
+    const response = await this.client.put(endpoint, data);
+    return response;
   }
 
   async delete(endpoint) {
-    const response = await this.client.delete(endpoint)
-    return response
+    const response = await this.client.delete(endpoint);
+    return response;
   }
 
   // Specialized methods for common operations
   async planTrip(tripRequest) {
-    return this.post('/api/orchestration/plan-trip', tripRequest)
+    return this.post('/api/orchestration/plan-trip', tripRequest);
   }
 
   async sendChatMessage(chatMessage) {
-    return this.post('/api/orchestration/chat', chatMessage)
+    return this.post('/api/orchestration/chat', chatMessage);
   }
 
   async getHealth() {
-    return this.get('/api/orchestration/health')
+    return this.get('/api/orchestration/health');
   }
 
   async getSkills() {
-    return this.get('/api/orchestration/skills')
+    return this.get('/api/orchestration/skills');
   }
 
   async executeSkill(skillName, context) {
-    return this.post(`/api/orchestration/skills/${skillName}/execute`, context)
+    return this.post(`/api/orchestration/skills/${skillName}/execute`, context);
   }
 }
 
@@ -209,9 +209,9 @@ class ResponseValidator {
         enhanced: Joi.boolean().valid(true).required(),
         skills_enabled: Joi.boolean().valid(true).required()
       }).required()
-    })
+    });
 
-    return this.validateSchema(response.data, schema, 'Trip Planning Response')
+    return this.validateSchema(response.data, schema, 'Trip Planning Response');
   }
 
   static validateChatResponse(response) {
@@ -229,9 +229,9 @@ class ResponseValidator {
         requestId: Joi.string().required(),
         responseTime: Joi.number().positive().required()
       }).required()
-    })
+    });
 
-    return this.validateSchema(response.data, schema, 'Chat Response')
+    return this.validateSchema(response.data, schema, 'Chat Response');
   }
 
   static validateHealthResponse(response) {
@@ -251,9 +251,9 @@ class ResponseValidator {
         }).required()
       }).required(),
       timestamp: Joi.string().isoDate().required()
-    })
+    });
 
-    return this.validateSchema(response.data, schema, 'Health Response')
+    return this.validateSchema(response.data, schema, 'Health Response');
   }
 
   static validateErrorResponse(response, expectedStatus = 400) {
@@ -265,75 +265,75 @@ class ResponseValidator {
         processingTime: Joi.number().positive().optional(),
         enhanced: Joi.boolean().valid(true).optional()
       }).optional()
-    })
+    });
 
     if (response.status !== expectedStatus) {
-      throw new Error(`Expected status ${expectedStatus}, got ${response.status}`)
+      throw new Error(`Expected status ${expectedStatus}, got ${response.status}`);
     }
 
-    return this.validateSchema(response.data, schema, 'Error Response')
+    return this.validateSchema(response.data, schema, 'Error Response');
   }
 
   static validateSchema(data, schema, schemaName) {
     const { error } = schema.validate(data, {
       allowUnknown: false,
       stripUnknown: false
-    })
+    });
 
     if (error) {
-      throw new Error(`${schemaName} validation failed: ${error.details[0].message}`)
+      throw new Error(`${schemaName} validation failed: ${error.details[0].message}`);
     }
 
-    return true
+    return true;
   }
 }
 
 // Performance measurement utilities
 class PerformanceUtils {
   static async measureExecutionTime(operation) {
-    const startTime = process.hrtime.bigint()
-    const result = await operation()
-    const endTime = process.hrtime.bigint()
-    const executionTime = Number(endTime - startTime) / 1000000 // Convert to milliseconds
+    const startTime = process.hrtime.bigint();
+    const result = await operation();
+    const endTime = process.hrtime.bigint();
+    const executionTime = Number(endTime - startTime) / 1000000; // Convert to milliseconds
 
     return {
       result,
       executionTime,
       startTime: new Date().toISOString()
-    }
+    };
   }
 
   static async measureConcurrentOperations(operations, concurrency = 5) {
-    const results = []
-    const batches = []
+    const results = [];
+    const batches = [];
 
     // Split operations into batches
     for (let i = 0; i < operations.length; i += concurrency) {
-      batches.push(operations.slice(i, i + concurrency))
+      batches.push(operations.slice(i, i + concurrency));
     }
 
     for (const batch of batches) {
       const batchPromises = batch.map(async (operation, index) => {
-        const measurement = await this.measureExecutionTime(operation)
-        return { ...measurement, batchIndex: batches.indexOf(batch), operationIndex: index }
-      })
+        const measurement = await this.measureExecutionTime(operation);
+        return { ...measurement, batchIndex: batches.indexOf(batch), operationIndex: index };
+      });
 
-      const batchResults = await Promise.allSettled(batchPromises)
+      const batchResults = await Promise.allSettled(batchPromises);
 
       results.push(...batchResults.map(result =>
         result.status === 'fulfilled'
           ? result.value
           : { error: result.reason, executionTime: 0 }
-      ))
+      ));
     }
 
-    return results
+    return results;
   }
 
   static calculatePerformanceStats(measurements) {
     const executionTimes = measurements
       .filter(m => !m.error)
-      .map(m => m.executionTime)
+      .map(m => m.executionTime);
 
     if (executionTimes.length === 0) {
       return {
@@ -344,10 +344,10 @@ class PerformanceUtils {
         minTime: 0,
         maxTime: 0,
         percentiles: {}
-      }
+      };
     }
 
-    executionTimes.sort((a, b) => a - b)
+    executionTimes.sort((a, b) => a - b);
 
     return {
       total: measurements.length,
@@ -362,14 +362,14 @@ class PerformanceUtils {
         p95: executionTimes[Math.floor(executionTimes.length * 0.95)],
         p99: executionTimes[Math.floor(executionTimes.length * 0.99)]
       }
-    }
+    };
   }
 }
 
 // Mock utilities
 class MockUtils {
   static createMockSupabaseClient() {
-    const data = new Map()
+    const data = new Map();
 
     return {
       from: (table) => ({
@@ -399,9 +399,9 @@ class MockUtils {
         })
       }),
       setTestData: (table, key, value, data) => {
-        data.set(`${table}_${key}_${value}`, data)
+        data.set(`${table}_${key}_${value}`, data);
       }
-    }
+    };
   }
 
   static createMockBossAgent() {
@@ -456,7 +456,7 @@ class MockUtils {
         friendshipLevel: 'new_acquaintance',
         history: []
       })
-    }
+    };
   }
 }
 
@@ -464,22 +464,22 @@ class MockUtils {
 class DatabaseTestUtils {
   static async cleanupTestUsers(connection) {
     // Implementation depends on your database
-    console.log('Cleaning up test users...')
+    console.log('Cleaning up test users...');
   }
 
   static async cleanupTestTrips(connection) {
     // Implementation depends on your database
-    console.log('Cleaning up test trips...')
+    console.log('Cleaning up test trips...');
   }
 
   static async cleanupTestConversations(connection) {
     // Implementation depends on your database
-    console.log('Cleaning up test conversations...')
+    console.log('Cleaning up test conversations...');
   }
 
   static async seedTestUsers(connection, count = 5) {
     // Implementation depends on your database
-    console.log(`Seeding ${count} test users...`)
+    console.log(`Seeding ${count} test users...`);
   }
 }
 
@@ -501,19 +501,19 @@ class TestConfigUtils {
         maxConcurrentUsers: parseInt(process.env.TEST_MAX_CONCURRENT_USERS || '50')
       },
       environment: process.env.TEST_ENV || 'development'
-    }
+    };
   }
 
   static isCI() {
-    return process.env.CI === 'true'
+    return process.env.CI === 'true';
   }
 
   static shouldRunPerformanceTests() {
-    return process.env.RUN_PERFORMANCE_TESTS === 'true'
+    return process.env.RUN_PERFORMANCE_TESTS === 'true';
   }
 
   static shouldRunIntegrationTests() {
-    return process.env.RUN_INTEGRATION_TESTS !== 'false'
+    return process.env.RUN_INTEGRATION_TESTS !== 'false';
   }
 }
 
@@ -526,4 +526,4 @@ module.exports = {
   MockUtils,
   DatabaseTestUtils,
   TestConfigUtils
-}
+};

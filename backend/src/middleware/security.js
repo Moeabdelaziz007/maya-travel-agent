@@ -18,7 +18,7 @@ const securityHeaders = helmet({
       objectSrc: ['none'],
       upgradeInsecureRequests: []
     }
-  }
+  },
   hsts: {
     maxAge: 31536000,
     includeSubDomains: true,
@@ -94,7 +94,7 @@ function configureRateLimiting(app) {
     message: {
       error: 'Too many requests from this IP, please try again later.',
       retryAfter: '15 minutes'
-    }
+    },
     standardHeaders: true,
     legacyHeaders: false,
     skip: (req) => {
@@ -110,7 +110,7 @@ function configureRateLimiting(app) {
     message: {
       error: 'Too many API requests from this IP, please try again later.',
       retryAfter: '15 minutes'
-    }
+    },
     standardHeaders: true,
     legacyHeaders: false,
     skip: (req) => {

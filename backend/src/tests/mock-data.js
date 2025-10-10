@@ -3,7 +3,7 @@
  * Provides realistic test data for backend services and API responses
  */
 
-const { TestDataFactory } = require('./test-utils')
+const { TestDataFactory } = require('./test-utils');
 
 // Mock API Responses
 const mockApiResponses = {
@@ -133,7 +133,7 @@ const mockApiResponses = {
       timestamp: '2024-01-15T10:30:00Z'
     }
   }
-}
+};
 
 // Mock Database Records
 const mockDatabaseRecords = {
@@ -230,7 +230,7 @@ const mockDatabaseRecords = {
       updatedAt: '2024-01-15T10:00:05Z'
     }
   ]
-}
+};
 
 // Mock External Service Responses
 const mockExternalServices = {
@@ -347,7 +347,7 @@ const mockExternalServices = {
       }
     }
   }
-}
+};
 
 // Mock Error Scenarios
 const mockErrors = {
@@ -386,7 +386,7 @@ const mockErrors = {
     code: 'SERVICE_UNAVAILABLE',
     status: 503
   }
-}
+};
 
 // Mock Performance Data
 const mockPerformanceData = {
@@ -408,16 +408,16 @@ const mockPerformanceData = {
     percentile95: 1200,
     percentile99: 1500
   }
-}
+};
 
 // Factory Functions for Dynamic Mock Data
 class MockDataFactory {
   static createRandomTrip(overrides = {}) {
-    return TestDataFactory.createTripRequest(overrides)
+    return TestDataFactory.createTripRequest(overrides);
   }
 
   static createRandomUser(overrides = {}) {
-    return TestDataFactory.createUser(overrides)
+    return TestDataFactory.createUser(overrides);
   }
 
   static createChatMessage(overrides = {}) {
@@ -427,32 +427,32 @@ class MockDataFactory {
       sender: 'user',
       timestamp: new Date().toISOString(),
       ...overrides
-    }
+    };
   }
 
   static createApiResponse(endpoint, status = 'success', overrides = {}) {
-    const baseResponse = mockApiResponses[endpoint]?.[status] || {}
-    return { ...baseResponse, ...overrides }
+    const baseResponse = mockApiResponses[endpoint]?.[status] || {};
+    return { ...baseResponse, ...overrides };
   }
 
   static createExternalServiceResponse(service, operation, status = 'success', overrides = {}) {
-    const baseResponse = mockExternalServices[service]?.[operation]?.[status] || {}
-    return { ...baseResponse, ...overrides }
+    const baseResponse = mockExternalServices[service]?.[operation]?.[status] || {};
+    return { ...baseResponse, ...overrides };
   }
 
   static createErrorResponse(errorType, overrides = {}) {
-    return { ...mockErrors[errorType], ...overrides }
+    return { ...mockErrors[errorType], ...overrides };
   }
 
   static createBulkData(count, factoryMethod, overrides = {}) {
     return Array.from({ length: count }, (_, index) =>
       factoryMethod({ ...overrides, index, id: `${overrides.prefix || 'mock'}_${index}` })
-    )
+    );
   }
 
   static createDatabaseRecord(table, overrides = {}) {
-    const baseRecord = mockDatabaseRecords[table]?.[0] || {}
-    return { ...baseRecord, ...overrides }
+    const baseRecord = mockDatabaseRecords[table]?.[0] || {};
+    return { ...baseRecord, ...overrides };
   }
 }
 
@@ -464,4 +464,4 @@ module.exports = {
   mockErrors,
   mockPerformanceData,
   MockDataFactory
-}
+};
