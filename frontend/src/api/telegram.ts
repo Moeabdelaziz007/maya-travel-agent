@@ -1,7 +1,7 @@
 // Telegram API Integration
 import {
   getTelegramUser,
-  getInitData,
+  getInitDataUnsafe,
   isTelegramWebApp,
 } from '../telegram-webapp';
 
@@ -62,7 +62,7 @@ export class TelegramService {
       return null;
     }
 
-    const initData = getInitData();
+    const initData = getInitDataUnsafe();
     if (initData?.chat) {
       return initData.chat;
     }
