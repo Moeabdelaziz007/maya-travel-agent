@@ -413,6 +413,28 @@ class SupabaseDB {
    * Create new travel offer
    */
   async createTravelOffer(offerData) {
+    if (!this.supabase) {
+      const offer = {
+        id: String(Date.now()),
+        title: offerData.title,
+        destination: offerData.destination,
+        description: offerData.description,
+        price: offerData.price,
+        original_price: offerData.originalPrice || offerData.original_price || offerData.price,
+        discount_percentage: offerData.discountPercentage || offerData.discount_percentage || 0,
+        category: offerData.category || 'general',
+        duration_days: offerData.durationDays || offerData.duration_days || 7,
+        includes: offerData.includes || [],
+        image_url: offerData.imageUrl || offerData.image_url || null,
+        is_active: offerData.is_active !== undefined ? offerData.is_active : true,
+        priority: offerData.priority || 0,
+        valid_until: offerData.validUntil || offerData.valid_until || null,
+        created_at: new Date().toISOString()
+      };
+      this.memoryStorage.offers.push(offer);
+      return offer;
+    }
+    
     try {
       const { data, error } = await this.supabase
         .from('travel_offers')
@@ -421,15 +443,15 @@ class SupabaseDB {
           destination: offerData.destination,
           description: offerData.description,
           price: offerData.price,
-          original_price: offerData.originalPrice || offerData.price,
-          discount_percentage: offerData.discountPercentage || 0,
+          original_price: offerData.originalPrice || offerData.original_price || offerData.price,
+          discount_percentage: offerData.discountPercentage || offerData.discount_percentage || 0,
           category: offerData.category || 'general',
-          duration_days: offerData.durationDays || 7,
+          duration_days: offerData.durationDays || offerData.duration_days || 7,
           includes: offerData.includes || [],
-          image_url: offerData.imageUrl || null,
-          is_active: true,
+          image_url: offerData.imageUrl || offerData.image_url || null,
+          is_active: offerData.is_active !== undefined ? offerData.is_active : true,
           priority: offerData.priority || 0,
-          valid_until: offerData.validUntil || null,
+          valid_until: offerData.validUntil || offerData.valid_until || null,
           created_at: new Date().toISOString()
         }])
         .select()
@@ -447,6 +469,21 @@ class SupabaseDB {
    * Track user interaction with offer
    */
   async trackOfferInteraction(telegramId, offerId, interactionType) {
+    if (!this.supabase) {
+      const interaction = {
+        id: String(Date.now()),
+        telegram_id: telegramId,
+        offer_id: offerId,
+        interaction_type: interactionType, // 'view', 'click', 'book'
+        timestamp: new Date().toISOString()
+      };
+      if (!this.memoryStorage.interactions) {
+        this.memoryStorage.interactions = [];
+      }
+      this.memoryStorage.interactions.push(interaction);
+      return interaction;
+    }
+    
     try {
       const { data, error } = await this.supabase
         .from('offer_interactions')
@@ -471,6 +508,22 @@ class SupabaseDB {
    * Get user analytics
    */
   async getUserAnalytics(telegramId) {
+    if (!this.supabase) {
+      const profile = await this.getUserProfile(telegramId);
+      const conversations = await this.getConversationHistory(telegramId, 100);
+      const interactions = (this.memoryStorage.interactions || []).filter(
+        i => i.telegram_id === telegramId
+      );
+
+      return {
+        profile,
+        totalConversations: conversations.length,
+        totalInteractions: interactions.length,
+        travelHistory: profile?.travel_history || [],
+        preferences: profile?.preferences || {}
+      };
+    }
+    
     try {
       const profile = await this.getUserProfile(telegramId);
       const conversations = await this.getConversationHistory(telegramId, 100);
@@ -499,6 +552,17 @@ class SupabaseDB {
    * Search offers by query
    */
   async searchOffers(query) {
+    if (!this.supabase) {
+      const searchTerm = query.toLowerCase();
+      return this.memoryStorage.offers.filter(offer => 
+        offer.is_active && (
+          offer.title.toLowerCase().includes(searchTerm) ||
+          offer.destination.toLowerCase().includes(searchTerm) ||
+          offer.description.toLowerCase().includes(searchTerm)
+        )
+      ).sort((a, b) => b.priority - a.priority).slice(0, 10);
+    }
+    
     try {
       const { data, error } = await this.supabase
         .from('travel_offers')

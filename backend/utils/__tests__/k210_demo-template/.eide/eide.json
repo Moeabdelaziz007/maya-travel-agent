@@ -1,0 +1,218 @@
+{
+    "name": "k210_demo",
+    "type": "RISC-V",
+    "mode": "Debug",
+    "toolchain": "RISCV_GCC",
+    "dependenceList": [
+        {
+            "groupName": "custom",
+            "depList": [
+                {
+                    "name": "default",
+                    "incList": [
+                        ".\\lib\\drivers\\include",
+                        ".\\lib\\bsp\\include",
+                        ".\\lib\\utils\\include"
+                    ],
+                    "libList": [],
+                    "sourceDirList": [],
+                    "defineList": [
+                        "CONFIG_LOG_LEVEL=LOG_VERBOSE",
+                        "CONFIG_LOG_ENABLE",
+                        "CONFIG_LOG_COLORS",
+                        "LOG_KERNEL",
+                        "__riscv64",
+                        "LV_CONF_INCLUDE_SIMPLE",
+                        "DEBUG"
+                    ]
+                }
+            ]
+        },
+        {
+            "groupName": "build-in",
+            "depList": [
+                {
+                    "name": "default",
+                    "incList": [],
+                    "libList": [],
+                    "sourceDirList": [],
+                    "defineList": []
+                },
+                {
+                    "name": "toolchain",
+                    "incList": [
+                        "d:\\kendryte-toolchain-win-i386-8.2.0\\riscv64-unknown-elf\\include\\c++\\8.2.0",
+                        "d:\\kendryte-toolchain-win-i386-8.2.0\\riscv64-unknown-elf\\include\\c++\\8.2.0\\riscv64-unknown-elf",
+                        "d:\\kendryte-toolchain-win-i386-8.2.0\\riscv64-unknown-elf\\include\\c++\\8.2.0\\backward",
+                        "d:\\kendryte-toolchain-win-i386-8.2.0\\lib\\gcc\\riscv64-unknown-elf\\8.2.0\\include",
+                        "d:\\kendryte-toolchain-win-i386-8.2.0\\lib\\gcc\\riscv64-unknown-elf\\8.2.0\\include-fixed",
+                        "d:\\kendryte-toolchain-win-i386-8.2.0\\riscv64-unknown-elf\\include"
+                    ],
+                    "sourceDirList": [],
+                    "libList": [],
+                    "defineList": []
+                }
+            ]
+        }
+    ],
+    "compileConfig": {
+        "linkerScriptPath": ".\\lds\\kendryte.ld",
+        "options": "null"
+    },
+    "uploader": "Custom",
+    "srcDirs": [],
+    "virtualFolder": [
+        {
+            "name": "App",
+            "files": [
+                {
+                    "path": ".\\src\\main.c"
+                }
+            ],
+            "folders": []
+        },
+        {
+            "name": "Libraries",
+            "files": [],
+            "folders": [
+                {
+                    "name": "Bsp",
+                    "files": [
+                        {
+                            "path": ".\\lib\\bsp\\crt.S"
+                        },
+                        {
+                            "path": ".\\lib\\bsp\\entry.c"
+                        },
+                        {
+                            "path": ".\\lib\\bsp\\entry_user.c"
+                        },
+                        {
+                            "path": ".\\lib\\bsp\\interrupt.c"
+                        },
+                        {
+                            "path": ".\\lib\\bsp\\locks.c"
+                        },
+                        {
+                            "path": ".\\lib\\bsp\\printf.c"
+                        },
+                        {
+                            "path": ".\\lib\\bsp\\sleep.c"
+                        },
+                        {
+                            "path": ".\\lib\\bsp\\syscalls.c"
+                        }
+                    ],
+                    "folders": []
+                },
+                {
+                    "name": "Drivers",
+                    "files": [
+                        {
+                            "path": ".\\lib\\drivers\\aes.c"
+                        },
+                        {
+                            "path": ".\\lib\\drivers\\apu.c"
+                        },
+                        {
+                            "path": ".\\lib\\drivers\\clint.c"
+                        },
+                        {
+                            "path": ".\\lib\\drivers\\dmac.c"
+                        },
+                        {
+                            "path": ".\\lib\\drivers\\dvp.c"
+                        },
+                        {
+                            "path": ".\\lib\\drivers\\fft.c"
+                        },
+                        {
+                            "path": ".\\lib\\drivers\\fpioa.c"
+                        },
+                        {
+                            "path": ".\\lib\\drivers\\gpio.c"
+                        },
+                        {
+                            "path": ".\\lib\\drivers\\gpiohs.c"
+                        },
+                        {
+                            "path": ".\\lib\\drivers\\i2c.c"
+                        },
+                        {
+                            "path": ".\\lib\\drivers\\i2s.c"
+                        },
+                        {
+                            "path": ".\\lib\\drivers\\kpu.c"
+                        },
+                        {
+                            "path": ".\\lib\\drivers\\plic.c"
+                        },
+                        {
+                            "path": ".\\lib\\drivers\\pwm.c"
+                        },
+                        {
+                            "path": ".\\lib\\drivers\\rtc.c"
+                        },
+                        {
+                            "path": ".\\lib\\drivers\\sha256.c"
+                        },
+                        {
+                            "path": ".\\lib\\drivers\\spi.c"
+                        },
+                        {
+                            "path": ".\\lib\\drivers\\sysctl.c"
+                        },
+                        {
+                            "path": ".\\lib\\drivers\\timer.c"
+                        },
+                        {
+                            "path": ".\\lib\\drivers\\uart.c"
+                        },
+                        {
+                            "path": ".\\lib\\drivers\\uarths.c"
+                        },
+                        {
+                            "path": ".\\lib\\drivers\\utils.c"
+                        },
+                        {
+                            "path": ".\\lib\\drivers\\wdt.c"
+                        }
+                    ],
+                    "folders": []
+                }
+            ]
+        }
+    ],
+    "excludeList": [],
+    "outDir": ".\\build",
+    "deviceName": null,
+    "packDir": null,
+    "uploadConfig": {
+        "bin": ".\\build\\Debug\\k210_demo.hex",
+        "commandLine": "python tools/kflash.py -B dan -n \"${programFile}\""
+    },
+    "miscInfo": {},
+    "targets": {
+        "Debug": {
+            "excludeList": [],
+            "toolchain": "RISCV_GCC",
+            "compileConfig": {
+                "linkerScriptPath": ".\\lds\\kendryte.ld",
+                "options": "null"
+            },
+            "uploader": "Custom",
+            "uploadConfig": {
+                "bin": ".\\build\\Debug\\k210_demo.hex",
+                "commandLine": "python tools/kflash.py -B dan -n \"${programFile}\""
+            },
+            "uploadConfigMap": {},
+            "custom_dep": {
+                "name": "default",
+                "incList": [],
+                "libList": [],
+                "defineList": []
+            }
+        }
+    },
+    "version": "2.0"
+}

@@ -1,3 +1,15 @@
 node_modules
 backend/.env
 backend/.env.temp
+
+# Test reports and coverage
+coverage/
+playwright-report/
+test-results/
+*.log
+
+# IDE folders
+.cursor/
+.continue/
+.trunk/
+.vscode/

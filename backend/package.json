@@ -32,7 +32,8 @@
   },
   "devDependencies": {
     "jest": "^30.2.0",
-    "nodemon": "^2.0.20"
+    "nodemon": "^2.0.20",
+    "supertest": "^7.1.4"
   },
   "keywords": [
     "travel",
