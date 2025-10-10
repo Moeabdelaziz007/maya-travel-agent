@@ -11,7 +11,7 @@
 ✅ **Monitoring Stack** - Prometheus + Grafana ready  
 ✅ **Test Suite** - Smoke tests + Load tests  
 ✅ **Deployment Scripts** - One-command deployments  
-✅ **Security** - Rate limiting, validation, headers  
+✅ **Security** - Rate limiting, validation, headers
 
 ---
 
@@ -30,6 +30,7 @@ nano backend/.env
 ```
 
 **Minimum required:**
+
 - `DATABASE_URL` - Your Supabase/PostgreSQL URL
 - `ZAI_API_KEY` - Your Z.ai API key
 - `SUPABASE_URL` + `SUPABASE_ANON_KEY`
@@ -93,8 +94,9 @@ Run the helper script:
 Or manually add at: `Settings → Secrets → Actions`
 
 **Required secrets:**
+
 - `RAILWAY_TOKEN` - Get from https://railway.app/account/tokens
-- `VERCEL_TOKEN` - Get from https://vercel.com/account/tokens  
+- `VERCEL_TOKEN` - Get from https://vercel.com/account/tokens
 - `COLLIBRA_API_KEY` - Optional (uses fallback if not set)
 
 ### 2. Collibra Setup (10 min) - OPTIONAL
@@ -115,6 +117,7 @@ The system will automatically use fallback configs from environment variables. E
 ### 3. Monitoring Setup (5 min) - OPTIONAL
 
 **For local development:**
+
 ```bash
 # Use the built-in health check
 curl http://localhost:3001/health
@@ -124,6 +127,7 @@ curl http://localhost:3001/metrics
 ```
 
 **For production:**
+
 - Set up Prometheus (see `prometheus.yml`)
 - Import Grafana dashboard (see `grafana/maya-dashboard.json`)
 - Or use Railway/Vercel built-in monitoring
@@ -133,12 +137,14 @@ curl http://localhost:3001/metrics
 ## ✅ Validation Checklist
 
 ### Pre-Deployment
+
 - [ ] Environment variables configured
 - [ ] Tests passing (`npm test`)
 - [ ] Build successful (`npm run build`)
 - [ ] Collibra test passed (or using fallback)
 
 ### Post-Deployment
+
 - [ ] Health check works: `curl https://your-api.com/health`
 - [ ] Metrics endpoint works: `curl https://your-api.com/metrics`
 - [ ] Frontend loads correctly
@@ -170,12 +176,14 @@ k6 run k6/load-test.js
 ## 📦 Deployment Targets
 
 ### Backend (Railway)
+
 - **Staging**: Auto-deploy from PRs
 - **Production**: Auto-deploy from `main` branch
 - **Manual**: `railway up --environment production`
 
 ### Frontend (Vercel)
-- **Staging**: Auto-deploy from PRs  
+
+- **Staging**: Auto-deploy from PRs
 - **Production**: Auto-deploy from `main` branch
 - **Manual**: `vercel --prod`
 
@@ -184,9 +192,11 @@ k6 run k6/load-test.js
 ## 🆘 Troubleshooting
 
 ### "Collibra connection failed"
+
 ✅ **This is NORMAL!** System uses fallback configs automatically.
 
 ### "Tests failed"
+
 ```bash
 # Check what failed
 cd backend && npm test
@@ -196,6 +206,7 @@ node test-simulation.js
 ```
 
 ### "Deployment failed"
+
 ```bash
 # Check Railway logs
 railway logs
@@ -208,6 +219,7 @@ TEST_URL=your-url npm run smoke-test
 ```
 
 ### "Environment variables missing"
+
 ```bash
 # Check .env file exists
 ls backend/.env
@@ -255,7 +267,7 @@ curl http://localhost:3001/metrics  # Prometheus metrics
 Your Maya Travel Agent is production-ready with:
 
 - ✅ Intelligent configuration management
-- ✅ Automated CI/CD pipeline  
+- ✅ Automated CI/CD pipeline
 - ✅ Comprehensive testing
 - ✅ Production monitoring
 - ✅ Security hardening
@@ -266,4 +278,3 @@ Your Maya Travel Agent is production-ready with:
 ---
 
 **Need help?** Check `DEPLOYMENT.md` for detailed instructions.
-
