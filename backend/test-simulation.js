@@ -1,14 +1,14 @@
 #!/usr/bin/env node
 
 /**
- * Maya Travel Agent - Complete System Simulation Runner
+ * Amriyy Travel Agent - Complete System Simulation Runner
  * Tests the entire system integration
  */
 
 const SystemSimulation = require('./src/tests/integration/complete-system-simulation.test');
 
 async function runSimulation() {
-  console.log('🚀 Maya Travel Agent - Complete System Simulation');
+  console.log('🚀 Amriyy Travel Agent - Complete System Simulation');
   console.log('================================================\n');
 
   const simulation = new SystemSimulation();

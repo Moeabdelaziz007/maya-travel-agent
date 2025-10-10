@@ -1,6 +1,6 @@
 /**
  * Hybrid Cache - Local-First with Remote Fallback
- * Perfect solution for Maya Travel Agent caching needs
+ * Perfect solution for Amriyy Travel Agent caching needs
  *
  * Strategy:
  * 1. Always use local cache first (fastest)

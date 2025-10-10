@@ -1,5 +1,5 @@
 /**
- * Boss Agent - Main Orchestration Layer for Maya Travel Agent
+ * Boss Agent - Main Orchestration Layer for Amriyy Travel Agent
  * Production-ready, enterprise-grade agent orchestration system
  *
  * Features:

@@ -1,6 +1,6 @@
 /**
  * Complete System Simulation Test
- * Tests the entire Maya Travel Agent system integration
+ * Tests the entire Amriyy Travel Agent system integration
  *
  * Tests:
  * - Boss Agent orchestration

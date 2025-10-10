@@ -30,7 +30,7 @@ class DummyAgent {
   }
 }
 
-// Specific dummy agents for Maya Travel Agent
+// Specific dummy agents for Amriyy Travel Agent
 const dummyAgents = {
   conversation: new DummyAgent('conversation', ['conversation']),
   hotel_search: new DummyAgent('hotel_search', ['hotel_search']),

@@ -1,6 +1,6 @@
 /**
  * JSONbin.io Caching Service
- * High-performance caching layer for Maya Travel Agent
+ * High-performance caching layer for Amriyy Travel Agent
  *
  * Perfect for:
  * - BossAgent metrics (temporary data)

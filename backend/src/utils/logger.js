@@ -1,5 +1,5 @@
 /**
- * Simple Logger Utility for Maya Travel Agent
+ * Simple Logger Utility for Amriyy Travel Agent
  * Provides consistent logging across all components
  */
 

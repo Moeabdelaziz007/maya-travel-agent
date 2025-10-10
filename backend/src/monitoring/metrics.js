@@ -1,5 +1,5 @@
 /**
- * Prometheus Metrics Collection for Maya Travel Agent
+ * Prometheus Metrics Collection for Amriyy Travel Agent
  * Comprehensive monitoring for Boss Agent, Skills, API performance, and system health
  */
 

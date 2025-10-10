@@ -1,5 +1,5 @@
 /**
- * Smoke Tests for Maya Travel Agent
+ * Smoke Tests for Amriyy Travel Agent
  * Quick validation tests to run after deployment
  *
  * Run with: npm run smoke-test
@@ -60,7 +60,7 @@ async function runTest(name, testFn) {
 
 // Test Suite
 async function runSmokeTests() {
-  log('🚀 Starting Maya Travel Agent Smoke Tests', 'info');
+  log('🚀 Starting Amriyy Travel Agent Smoke Tests', 'info');
   log(`Target URL: ${config.baseURL}`, 'info');
   log('─'.repeat(60), 'info');
 

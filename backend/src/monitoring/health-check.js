@@ -1,5 +1,5 @@
 /**
- * Comprehensive Health Check System for Maya Travel Agent
+ * Comprehensive Health Check System for Amriyy Travel Agent
  * Checks database connectivity, external APIs, system resources, and dependencies
  */
 
