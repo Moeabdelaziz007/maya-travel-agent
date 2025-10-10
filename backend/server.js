@@ -3,12 +3,22 @@ const cors = require('cors');
 const bodyParser = require('body-parser');
 require('dotenv').config();
 
+// Import monitoring modules
+const metrics = require('./src/monitoring/metrics');
+const HealthChecker = require('./src/monitoring/health-check');
+
 const app = express();
 const PORT = process.env.PORT || 5000;
+
+// Initialize health checker
+const healthChecker = new HealthChecker();
 
 // Middleware
 app.use(cors());
 app.use(express.json({ limit: '10mb' })); // Increased limit for enhanced requests
+
+// Add metrics middleware for HTTP request monitoring
+app.use(metrics.httpMetricsMiddleware);
 
 // Stripe webhook requires raw body; mount raw parser just for that route
 app.use('/api/payment/webhook', bodyParser.raw({ type: 'application/json' }));
@@ -56,6 +66,45 @@ app.get('/api/health', (req, res) => {
     memory: process.memoryUsage(),
     version: '2.0.0'
   });
+});
+
+// Comprehensive health check endpoint
+app.get('/api/health/detailed', async (req, res) => {
+  try {
+    const healthReport = await healthChecker.getHealthReport();
+
+    // Update metrics with health status
+    metrics.updateSystemHealth(healthReport.overall_status);
+
+    // Update dependency health metrics
+    Object.entries(healthReport.checks).forEach(([dependency, check]) => {
+      metrics.updateDependencyHealth(dependency, check.status);
+    });
+
+    const statusCode = healthReport.overall_status === 'healthy' ? 200 :
+      healthReport.overall_status === 'degraded' ? 200 : 503;
+
+    res.status(statusCode).json(healthReport);
+  } catch (error) {
+    console.error('Detailed health check error:', error);
+    metrics.recordError('health_check_failed', 'monitoring');
+    res.status(503).json({
+      overall_status: 'unhealthy',
+      error: error.message,
+      timestamp: new Date().toISOString()
+    });
+  }
+});
+
+// Prometheus metrics endpoint
+app.get('/metrics', (req, res) => {
+  try {
+    res.set('Content-Type', metrics.getRegistry().contentType);
+    res.end(metrics.getMetrics());
+  } catch (error) {
+    console.error('Metrics endpoint error:', error);
+    res.status(500).end('# Error generating metrics\n');
+  }
 });
 
 // Trip routes (legacy - will be replaced by orchestration)

@@ -57,4 +57,3 @@ scrape_configs:
       - targets: ['localhost:9090']
         labels:
           component: 'monitoring'
-

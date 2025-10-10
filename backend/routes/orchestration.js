@@ -7,6 +7,7 @@ const express = require('express');
 const router = express.Router();
 const EnhancedBossAgent = require('../src/orchestration/enhanced-boss-agent');
 const logger = require('../utils/logger');
+const metrics = require('../src/monitoring/metrics');
 
 // Initialize Enhanced Boss Agent
 const bossAgent = new EnhancedBossAgent({
@@ -99,6 +100,13 @@ router.post('/plan-trip', validateOrchestrationRequest, enhanceUserContext, asyn
         skillsUsed: result.metadata?.skillsUsed?.length || 0
       });
 
+      // Record successful orchestration metrics
+      metrics.recordBossAgentOrchestration(
+        result.metadata?.intent || 'trip_planning',
+        processingTime,
+        true
+      );
+
       res.json({
         success: true,
         data: result.data,
@@ -114,6 +122,14 @@ router.post('/plan-trip', validateOrchestrationRequest, enhanceUserContext, asyn
         error: result.error,
         processingTime
       });
+
+      // Record failed orchestration metrics
+      metrics.recordBossAgentOrchestration(
+        'trip_planning',
+        processingTime,
+        false
+      );
+      metrics.recordError('orchestration_failed', 'boss_agent');
 
       res.status(500).json({
         success: false,
@@ -249,15 +265,22 @@ router.post('/skills/:skillName/execute', async (req, res) => {
 
     logger.info(`🧪 Executing skill: ${skillName}`, { context });
 
+    const startTime = Date.now();
     const result = await bossAgent.skillSystem.executeSkill(skillName, {
       ...context,
-      startTime: Date.now()
+      startTime
     });
+
+    const executionTime = Date.now() - startTime;
+
+    // Record skill execution metrics
+    metrics.recordSkillExecution(skillName, executionTime, result.success !== false);
 
     res.json({
       success: result.success !== false,
       result,
       skill: skillName,
+      executionTime,
       timestamp: new Date().toISOString()
     });
 

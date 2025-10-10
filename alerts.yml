@@ -1,0 +1,144 @@
+# Alerting Rules for Maya Travel Agent
+# Defines alerting conditions and notification rules
+
+groups:
+  - name: maya-travel-agent-alerts
+    rules:
+      # System Health Alerts
+      - alert: SystemUnhealthy
+        expr: system_health_status == 0
+        for: 5m
+        labels:
+          severity: critical
+          service: backend
+        annotations:
+          summary: "Maya Travel Agent system is unhealthy"
+          description: "System health status is unhealthy for more than 5 minutes"
+
+      - alert: SystemDegraded
+        expr: system_health_status == 1
+        for: 10m
+        labels:
+          severity: warning
+          service: backend
+        annotations:
+          summary: "Maya Travel Agent system is degraded"
+          description: "System health status is degraded for more than 10 minutes"
+
+      # High Error Rate Alerts
+      - alert: HighErrorRate
+        expr: rate(errors_total[5m]) > 0.1
+        for: 5m
+        labels:
+          severity: warning
+          service: backend
+        annotations:
+          summary: "High error rate detected"
+          description: "Error rate is {{ $value }} errors per second for more than 5 minutes"
+
+      - alert: CriticalErrorRate
+        expr: rate(errors_total[5m]) > 0.5
+        for: 2m
+        labels:
+          severity: critical
+          service: backend
+        annotations:
+          summary: "Critical error rate detected"
+          description: "Error rate is {{ $value }} errors per second for more than 2 minutes"
+
+      # Boss Agent Performance Alerts
+      - alert: SlowBossAgentOrchestration
+        expr: histogram_quantile(0.95, rate(boss_agent_orchestration_duration_seconds_bucket[5m])) > 30
+        for: 5m
+        labels:
+          severity: warning
+          service: backend
+        annotations:
+          summary: "Boss Agent orchestration is slow"
+          description: "95th percentile of Boss Agent orchestration duration is {{ $value }}s for more than 5 minutes"
+
+      # HTTP Response Time Alerts
+      - alert: SlowHTTPResponses
+        expr: histogram_quantile(0.95, rate(http_request_duration_seconds_bucket[5m])) > 5
+        for: 5m
+        labels:
+          severity: warning
+          service: backend
+        annotations:
+          summary: "HTTP responses are slow"
+          description: "95th percentile of HTTP response time is {{ $value }}s for more than 5 minutes"
+
+      # High HTTP Error Rate
+      - alert: HighHTTPErrorRate
+        expr: rate(http_requests_total{status_code=~"5.."}[5m]) / rate(http_requests_total[5m]) > 0.05
+        for: 5m
+        labels:
+          severity: warning
+          service: backend
+        annotations:
+          summary: "High HTTP 5xx error rate"
+          description: "HTTP 5xx error rate is {{ $value | humanizePercentage }} for more than 5 minutes"
+
+      # Dependency Health Alerts
+      - alert: DatabaseUnhealthy
+        expr: dependency_health_status{dependency="database"} == 0
+        for: 5m
+        labels:
+          severity: critical
+          service: database
+        annotations:
+          summary: "Database is unhealthy"
+          description: "Database health check has failed for more than 5 minutes"
+
+      - alert: ZaiApiUnhealthy
+        expr: dependency_health_status{dependency="zai_api"} == 0
+        for: 10m
+        labels:
+          severity: warning
+          service: zai_api
+        annotations:
+          summary: "Z.ai API is unhealthy"
+          description: "Z.ai API health check has failed for more than 10 minutes"
+
+      - alert: TelegramBotUnhealthy
+        expr: dependency_health_status{dependency="telegram_bot"} == 0
+        for: 15m
+        labels:
+          severity: warning
+          service: telegram_bot
+        annotations:
+          summary: "Telegram Bot is unhealthy"
+          description: "Telegram Bot health check has failed for more than 15 minutes"
+
+      # Cache Performance Alerts
+      - alert: LowCacheHitRate
+        expr: cache_hits / (cache_hits + cache_misses) < 0.5
+        for: 10m
+        labels:
+          severity: warning
+          service: cache
+        annotations:
+          summary: "Low cache hit rate"
+          description: "Cache hit rate is {{ $value | humanizePercentage }} for more than 10 minutes"
+
+      # Memory Usage Alerts
+      - alert: HighMemoryUsage
+        expr: process_resident_memory_bytes / process_virtual_memory_bytes > 0.9
+        for: 5m
+        labels:
+          severity: warning
+          service: backend
+        annotations:
+          summary: "High memory usage"
+          description: "Memory usage is {{ $value | humanizePercentage }} for more than 5 minutes"
+
+      # External API Call Alerts
+      - alert: HighExternalApiErrorRate
+        expr: rate(external_api_calls_total{status="failure"}[5m]) > 0.1
+        for: 5m
+        labels:
+          severity: warning
+          service: external_apis
+        annotations:
+          summary: "High external API error rate"
+          description: "External API error rate is {{ $value }} errors per second for more than 5 minutes"
