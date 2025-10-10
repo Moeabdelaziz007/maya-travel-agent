@@ -438,9 +438,9 @@ class ContractValidationTests {
             {
               headers: {
                 'Content-Type': 'application/json',
-                Authorization: `Bearer ${this.apiKey}`,
+                Authorization: `Bearer ${this.apiKey}`
               },
-              timeout: config.timeout,
+              timeout: config.timeout
             }
           );
 
