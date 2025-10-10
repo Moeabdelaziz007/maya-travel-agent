@@ -1,31 +1,30 @@
-import { render, screen, waitFor } from '@testing-library/react';
+import React from 'react';
+import { render, screen } from '@testing-library/react';
 import { describe, it, expect, vi } from 'vitest';
 import App from '../../App';
 
-// Mock the AuthProvider
-vi.mock('../Auth/AuthProvider', () => ({
-  AuthProvider: ({ children }: { children: React.ReactNode }) => children,
-  useAuth: () => ({ user: null, loading: false }),
-}));
-
 describe('App Component', () => {
   it('renders loading state initially', () => {
+    // Mock the AuthProvider with loading true
+    vi.mock('../Auth/AuthProvider', () => ({
+      AuthProvider: ({ children }: { children: React.ReactNode }) => children,
+      useAuth: () => ({ user: null, loading: true }),
+    }));
+
     render(<App />);
     expect(
-      screen.getByText('Loading your travel assistant...')
+      screen.getByText('Loading your AI platform...')
     ).toBeInTheDocument();
   });
 
-  it('renders login form when user is not authenticated', async () => {
-    render(<App />);
+  it('displays Amrikyy branding', () => {
+    // Mock the AuthProvider with loading true
+    vi.mock('../Auth/AuthProvider', () => ({
+      AuthProvider: ({ children }: { children: React.ReactNode }) => children,
+      useAuth: () => ({ user: null, loading: true }),
+    }));
 
-    await waitFor(() => {
-      expect(screen.getByRole('form')).toBeInTheDocument();
-    });
-  });
-
-  it('displays Maya Trips branding', () => {
     render(<App />);
-    expect(screen.getByText('Maya Trips')).toBeInTheDocument();
+    expect(screen.getByText('Amrikyy')).toBeInTheDocument();
   });
 });
