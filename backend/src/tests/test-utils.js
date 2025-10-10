@@ -26,11 +26,11 @@ class TestDataFactory {
       ...overrides
     }
 
-    return baseUser
+    return baseUser;
   }
 
   static createTripRequest(overrides = {}) {
-    const destinations = ['Tokyo', 'Dubai', 'Istanbul', 'Paris', 'London', 'New York', 'Barcelona', 'Rome']
+    const destinations = ['Tokyo', 'Dubai', 'Istanbul', 'Paris', 'London', 'New York', 'Barcelona', 'Rome'];
     const messages = [
       'أريد رحلة إلى دبي لشخصين',
       'أخطط لرحلة عائلية إلى اسطنبول',
@@ -57,7 +57,7 @@ class TestDataFactory {
       ...overrides
     }
 
-    return baseRequest
+    return baseRequest;
   }
 
   static createChatMessage(overrides = {}) {
@@ -69,7 +69,7 @@ class TestDataFactory {
       'هل يمكنك اقتراح خط سير للرحلة؟',
       'أشعر بالقلق من السفر لوحدي',
       'شكراً لمساعدتك مايا!'
-    ]
+    ];
 
     const baseMessage = {
       message: messages[Math.floor(Math.random() * messages.length)],
