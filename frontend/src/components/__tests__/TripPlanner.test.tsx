@@ -26,14 +26,14 @@ describe('TripPlanner Component', () => {
 
   it('displays trip planning interface', () => {
     render(<TripPlanner trips={mockTrips} setTrips={mockSetTrips} />)
-    
-    expect(screen.getByText('Plan Your Next Adventure')).toBeInTheDocument()
+
+    expect(screen.getByText('Plan and manage your travel adventures')).toBeInTheDocument()
   })
 
   it('handles trip creation', () => {
     render(<TripPlanner trips={mockTrips} setTrips={mockSetTrips} />)
-    
-    const addButton = screen.getByText('Add New Trip')
+
+    const addButton = screen.getByText('Add Trip')
     expect(addButton).toBeInTheDocument()
   })
 })
