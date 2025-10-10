@@ -7,9 +7,9 @@ const { getInstance } = require('./src/config/collibra-config');
 
 async function testCollibra() {
   console.log('🔧 Testing Collibra Configuration Manager...\n');
-  
+
   const collibra = getInstance();
-  
+
   // Test 1: Health Check
   console.log('1️⃣ Testing Collibra Connection Health...');
   try {
@@ -25,7 +25,7 @@ async function testCollibra() {
     console.log('⚠️  Collibra not configured (will use fallback)');
   }
   console.log('');
-  
+
   // Test 2: Get Development Config
   console.log('2️⃣ Loading Development Configuration...');
   try {
@@ -33,14 +33,16 @@ async function testCollibra() {
     console.log('✅ Config loaded successfully!');
     console.log(`   Source: ${devConfig._source}`);
     console.log(`   Environment: ${devConfig._environment}`);
-    console.log(`   Database URL: ${devConfig.database.url ? '✓ Set' : '✗ Not set'}`);
+    console.log(
+      `   Database URL: ${devConfig.database.url ? '✓ Set' : '✗ Not set'}`
+    );
     console.log(`   AI Provider: ${devConfig.ai.provider}`);
     console.log(`   Cache TTL: ${devConfig.cache.ttl}s`);
   } catch (error) {
     console.log('❌ Failed to load config:', error.message);
   }
   console.log('');
-  
+
   // Test 3: Get Staging Config
   console.log('3️⃣ Loading Staging Configuration...');
   try {
@@ -52,7 +54,7 @@ async function testCollibra() {
     console.log('❌ Failed to load config:', error.message);
   }
   console.log('');
-  
+
   // Test 4: Get Production Config
   console.log('4️⃣ Loading Production Configuration...');
   try {
@@ -60,12 +62,14 @@ async function testCollibra() {
     console.log('✅ Config loaded successfully!');
     console.log(`   Source: ${prodConfig._source}`);
     console.log(`   Environment: ${prodConfig._environment}`);
-    console.log(`   Monitoring Enabled: ${prodConfig.monitoring.prometheus_enabled}`);
+    console.log(
+      `   Monitoring Enabled: ${prodConfig.monitoring.prometheus_enabled}`
+    );
   } catch (error) {
     console.log('❌ Failed to load config:', error.message);
   }
   console.log('');
-  
+
   // Test 5: Cache Performance
   console.log('5️⃣ Testing Configuration Cache...');
   const start = Date.now();
@@ -76,7 +80,7 @@ async function testCollibra() {
     console.log('   ⚡ Excellent cache performance!');
   }
   console.log('');
-  
+
   // Summary
   console.log('═══════════════════════════════════════════');
   console.log('📊 Test Summary:');
@@ -92,8 +96,7 @@ async function testCollibra() {
   console.log('   3. Re-run this test to verify connection');
 }
 
-testCollibra().catch(error => {
+testCollibra().catch((error) => {
   console.error('❌ Test failed:', error);
   process.exit(1);
 });
-

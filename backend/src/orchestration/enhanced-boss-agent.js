@@ -43,7 +43,7 @@ class EnhancedBossAgent extends BossAgent {
     logger.info('🚀 Enhanced Boss Agent initialized with Skill System', {
       skillsRegistered: this.skillSystem.listSkills().length,
       agentsRegistered: this.agents.size,
-      cacheEnabled: !!this.jsonbinCache.apiKey
+      cacheEnabled: !!this.hybridCache.apiKey
     });
   }
 
@@ -595,7 +595,7 @@ class EnhancedBossAgent extends BossAgent {
         emotional_intelligence: true,
         friendship_tracking: true,
         voice_adaptation: true,
-        caching_enabled: !!this.jsonbinCache.apiKey
+        caching_enabled: !!this.hybridCache.apiKey
       }
     };
   }

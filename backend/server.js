@@ -194,17 +194,22 @@ app.use('/api/ai', aiRoutes);
 const orchestrationRoutes = require('./routes/orchestration');
 app.use('/api/orchestration', orchestrationRoutes);
 
-// Advanced Telegram Bot (only start if token is provided)
-if (process.env.TELEGRAM_BOT_TOKEN) {
-  const advancedTelegramBot = require('./advanced-telegram-bot');
-  console.log('🤖 Advanced Maya Telegram Bot integration enabled');
-  console.log('🧠 AI Persona: Maya - Professional Travel Agent with Emotional Intelligence');
-  console.log('🎯 Boss Agent: Enhanced orchestration with skill plugins');
-  console.log('💰 Price Monitoring: Real-time alerts and optimization');
-  console.log('🛠️ MCP Tools: Weather, Flights, Hotels, Halal Restaurants, Prayer Times');
-  console.log('👤 User Profiling: Advanced personalization and data collection');
+// Advanced Telegram Bot (only start if token is provided and not in test mode)
+if (process.env.TELEGRAM_BOT_TOKEN && process.env.NODE_ENV !== 'test') {
+  try {
+    const advancedTelegramBot = require('./advanced-telegram-bot');
+    console.log('🤖 Advanced Maya Telegram Bot integration enabled');
+    console.log('🧠 AI Persona: Maya - Professional Travel Agent with Emotional Intelligence');
+    console.log('🎯 Boss Agent: Enhanced orchestration with skill plugins');
+    console.log('💰 Price Monitoring: Real-time alerts and optimization');
+    console.log('🛠️ MCP Tools: Weather, Flights, Hotels, Halal Restaurants, Prayer Times');
+    console.log('👤 User Profiling: Advanced personalization and data collection');
+  } catch (error) {
+    console.log('⚠️ Failed to initialize Telegram Bot:', error.message);
+    console.log('📊 Monitoring setup will continue without Telegram Bot');
+  }
 } else {
-  console.log('⚠️ Telegram Bot token not provided - Advanced Bot integration disabled');
+  console.log('⚠️ Telegram Bot token not provided or in test mode - Advanced Bot integration disabled');
 }
 
 // Error handling middleware

@@ -6,7 +6,8 @@
 const express = require('express');
 const router = express.Router();
 const EnhancedBossAgent = require('../src/orchestration/enhanced-boss-agent');
-const logger = require('../utils/logger');
+const supabase = require('../src/utils/supabase');
+const logger = require('../src/utils/logger');
 const metrics = require('../src/monitoring/metrics');
 
 // Initialize Enhanced Boss Agent
@@ -14,7 +15,7 @@ const bossAgent = new EnhancedBossAgent({
   timeout: 30000,
   maxRetries: 3,
   parallelExecution: true,
-  storage: require('../utils/supabase'), // Assuming you have this
+  storage: supabase,
   jsonbinApiKey: process.env.JSONBIN_API_KEY,
   enableSkillPersistence: true
 });
