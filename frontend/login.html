@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Amrikyy Travel Agent | Login</title>
+    <link rel="icon" type="image/x-icon" href="/static/favicon.ico">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/feather-icons"></script>
+    <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#3B82F6',
+                        secondary: '#8B5CF6',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .auth-bg {
+            background-image: url('https://source.unsplash.com/random/1200x630/?quantum,space');
+            background-size: cover;
+            background-position: center;
+            transition: background-image 1s ease-in-out;
+        }
+        .blur-bg {
+            backdrop-filter: blur(8px);
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+        .btn-social {
+            transition: all 0.3s ease;
+        }
+        .btn-social:hover {
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+<body class="min-h-screen flex items-center justify-center auth-bg">
+    <div class="w-full max-w-md mx-4">
+        <div class="rounded-xl shadow-2xl overflow-hidden blur-bg">
+            <div class="p-8">
+                <div class="flex justify-center mb-8">
+                    <div class="bg-white p-3 rounded-full shadow-lg">
+                        <div class="w-16 h-16 bg-gradient-to-r from-primary to-secondary rounded-full flex items-center justify-center shadow-lg animate-pulse">
+                            <div class="relative w-12 h-12">
+                                <div class="absolute inset-0 rounded-full border-2 border-white animate-spin" style="animation-duration: 3s"></div>
+                                <div class="absolute inset-1 rounded-full border-t-2 border-white animate-spin" style="animation-duration: 6s; animation-direction: reverse"></div>
+                                <img src="https://api.dicebear.com/7.x/bottts-neutral/svg?seed=Amrikyy&backgroundType=gradientLinear&backgroundColor=3b82f6,8b5cf6"
+                                      class="w-full h-full object-contain rounded-full"
+                                      alt="AI Avatar">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <h1 class="text-3xl font-bold text-center text-white mb-6">Welcome to Amrikyy</h1>
+                <p class="text-center text-white/80 mb-6">Your AI-powered travel companion</p>
+
+                <div class="space-y-4">
+                    <button class="w-full btn-social flex items-center justify-center gap-2 bg-white text-gray-800 py-3 px-4 rounded-lg font-medium">
+                        <i data-feather="mail" class="w-5 h-5"></i>
+                        Continue with Email
+                    </button>
+                    
+                    <div class="grid grid-cols-2 gap-3">
+                        <button class="btn-social flex items-center justify-center gap-2 bg-white text-gray-800 py-3 px-4 rounded-lg font-medium">
+                            <i data-feather="github" class="w-5 h-5"></i>
+                        </button>
+                        <button class="btn-social flex items-center justify-center gap-2 bg-white text-gray-800 py-3 px-4 rounded-lg font-medium">
+                            <i data-feather="facebook" class="w-5 h-5 text-blue-600"></i>
+                        </button>
+                    </div>
+                    
+                    <div class="relative my-6">
+                        <div class="absolute inset-0 flex items-center">
+                            <div class="w-full border-t border-gray-300"></div>
+                        </div>
+                        <div class="relative flex justify-center text-sm">
+                            <span class="px-2 bg-transparent text-white">or</span>
+                        </div>
+                    </div>
+                    
+                    <div class="space-y-3">
+                        <input type="email" placeholder="Email address" class="w-full px-4 py-3 rounded-lg border-none bg-white bg-opacity-90 placeholder-gray-500 focus:ring-2 focus:ring-primary">
+                        <button class="w-full bg-primary hover:bg-primary-600 text-white py-3 px-4 rounded-lg font-medium transition duration-200">
+                            Continue
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="mt-6 text-center text-white text-sm">
+                    New to Amrikyy? 
+                    <a href="signup.html" class="font-medium text-white hover:text-primary-100 transition">Create Account</a>
+                </div>
+            </div>
+            
+            <div class="px-8 py-4 bg-black bg-opacity-20 text-center">
+                <div class="flex justify-center space-x-4 text-xs text-white">
+                    <a href="#" class="hover:text-primary-100 transition">Terms</a>
+                    <a href="#" class="hover:text-primary-100 transition">Privacy Policy</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        feather.replace();
+        
+        const travelImages = [
+            'https://images.unsplash.com/photo-1501785888041-af3ef285b470?ixlib=rb-4.0.3&w=1200&h=630&auto=format&fit=crop',
+            'https://images.unsplash.com/photo-1465779172564-9b10f82a82d3?ixlib=rb-4.0.3&w=1200&h=630&auto=format&fit=crop',
+            'https://images.unsplash.com/photo-1499591934245-40b55745b2dd?ixlib=rb-4.0.3&w=1200&h=630&auto=format&fit=crop',
+            'https://images.unsplash.com/photo-1527631746610-bca00a040d60?ixlib=rb-4.0.3&w=1200&h=630&auto=format&fit=crop',
+            'https://images.unsplash.com/photo-1508672019048-805c876b67e2?ixlib=rb-4.0.3&w=1200&h=630&auto=format&fit=crop',
+            'https://images.unsplash.com/photo-1519046904884-53103b34b206?ixlib=rb-4.0.3&w=1200&h=630&auto=format&fit=crop'
+        ];
+
+        function changeBackground() {
+            const randomImage = travelImages[Math.floor(Math.random() * travelImages.length)];
+            document.querySelector('.auth-bg').style.backgroundImage = `url('${randomImage}')`;
+        }
+        
+        // Change background immediately and then every 10 seconds
+        changeBackground();
+        setInterval(changeBackground, 10000);
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const buttons = document.querySelectorAll('button');
+            buttons.forEach(button => {
+                button.addEventListener('mousedown', function() {
+                    this.classList.add('scale-95');
+                });
+                button.addEventListener('mouseup', function() {
+                    this.classList.remove('scale-95');
+                });
+                button.addEventListener('mouseleave', function() {
+                    this.classList.remove('scale-95');
+                });
+            });
+        });
+    </script>
+</body>
+</html>
+
