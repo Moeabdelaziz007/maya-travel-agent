@@ -19,7 +19,7 @@ class QFOMasterController {
       total_requests: 0,
       successful: 0,
       failed: 0,
-      avg_time: 0
+      avg_time: 0,
     };
   }
 
@@ -32,21 +32,32 @@ class QFOMasterController {
     logger.info('QFO Processing', {
       requestId,
       userId: request.userId,
-      message: request.message?.substring(0, 30)
+      message: request.message?.substring(0, 30),
     });
 
     try {
       // Step 1: Quantum Intent Analysis
       const analysis = await quantumIntentEngine.analyzeIntent(
         request.message,
-        { sessionId: request.sessionId, userId: request.userId, ...request.context }
+        {
+          sessionId: request.sessionId,
+          userId: request.userId,
+          ...request.context,
+        }
       );
 
       // Step 2: Synthesize Workflow
-      const workflow = await dynamicWorkflowSynthesizer.synthesizeWorkflow(analysis, request.context);
+      const workflow = await dynamicWorkflowSynthesizer.synthesizeWorkflow(
+        analysis,
+        request.context
+      );
 
       // Step 3: Execute with Multi-Agent Orchestrator
-      const orchestrationResult = await multiAgentOrchestrator.orchestrate(workflow, request.context, request.message);
+      const orchestrationResult = await multiAgentOrchestrator.orchestrate(
+        workflow,
+        request.context,
+        request.message
+      );
 
       // Step 4: Record on Blockchain
       await blockchainTrustLayer.createTransaction({
@@ -56,8 +67,8 @@ class QFOMasterController {
           requestId,
           workflowId: workflow.workflow_id,
           intent: analysis.primary_intent,
-          success: orchestrationResult.success
-        }
+          success: orchestrationResult.success,
+        },
       });
 
       // Step 5: Gamification Reward
@@ -75,10 +86,9 @@ class QFOMasterController {
 
       // Step 7: Cross-Platform Sync
       if (request.syncAcrossPlatforms) {
-        await superAppOrchestrator.syncStateAcrossPlatforms(
-          request.userId,
-          { lastAction: analysis.primary_intent }
-        );
+        await superAppOrchestrator.syncStateAcrossPlatforms(request.userId, {
+          lastAction: analysis.primary_intent,
+        });
       }
 
       const processingTime = Date.now() - startTime;
@@ -87,7 +97,7 @@ class QFOMasterController {
       logger.info('QFO Complete', {
         requestId,
         time: processingTime,
-        success: true
+        success: true,
       });
 
       return {
@@ -99,23 +109,22 @@ class QFOMasterController {
           confidence: analysis.confidence,
           workflow: {
             id: workflow.workflow_id,
-            steps_completed: orchestrationResult.metadata.steps_completed
+            steps_completed: orchestrationResult.metadata.steps_completed,
           },
           gamification: {
             points_earned: reward.points,
             level: reward.level,
             level_up: reward.leveledUp,
-            achievements: reward.newAchievements
+            achievements: reward.newAchievements,
           },
           predictions: predictions.predictions,
-          blockchain: { verified: true }
+          blockchain: { verified: true },
         },
         metadata: {
           processing_time: processingTime,
-          agents_involved: orchestrationResult.metadata.agents_involved
-        }
+          agents_involved: orchestrationResult.metadata.agents_involved,
+        },
       };
-
     } catch (error) {
       const processingTime = Date.now() - startTime;
       this.updateStats(processingTime, false);
@@ -126,15 +135,15 @@ class QFOMasterController {
         success: false,
         requestId,
         error: error.message,
-        fallback_response: 'عذراً، حدث خطأ. يرجى المحاولة مرة أخرى.'
+        fallback_response: 'عذراً، حدث خطأ. يرجى المحاولة مرة أخرى.',
       };
     }
   }
 
   updateStats(time, success) {
     const total = this.stats.total_requests;
-    this.stats.avg_time = ((this.stats.avg_time * (total - 1)) + time) / total;
-    
+    this.stats.avg_time = (this.stats.avg_time * (total - 1) + time) / total;
+
     if (success) {
       this.stats.successful++;
     } else {
@@ -147,7 +156,10 @@ class QFOMasterController {
       version: this.version,
       statistics: {
         ...this.stats,
-        success_rate: ((this.stats.successful / this.stats.total_requests) * 100).toFixed(2) + '%'
+        success_rate:
+          ((this.stats.successful / this.stats.total_requests) * 100).toFixed(
+            2
+          ) + '%',
       },
       components: {
         quantum_engine: 'operational',
@@ -156,12 +168,11 @@ class QFOMasterController {
         gamification: 'operational',
         super_app: 'operational',
         blockchain: 'operational',
-        prediction: 'operational'
+        prediction: 'operational',
       },
-      health: 'excellent'
+      health: 'excellent',
     };
   }
 }
 
 module.exports = new QFOMasterController();
-

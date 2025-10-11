@@ -13,12 +13,12 @@ const HealthChecker = require('./src/monitoring/health-check');
 const {
   securityHeaders,
   configureCORS,
-  configureRateLimiting
+  configureRateLimiting,
 } = require('./src/middleware/security');
 const {
   validateAnalyticsEvent,
   createValidationMiddleware,
-  schemas
+  schemas,
 } = require('./src/middleware/validation');
 
 const app = express();
@@ -65,9 +65,9 @@ app.get('/', (req, res) => {
       'Flight & Hotel Price Prediction',
       'User Churn Prediction',
       'Arabic/English Support',
-      'Travel Services Module'
+      'Travel Services Module',
     ],
-    timestamp: new Date().toISOString()
+    timestamp: new Date().toISOString(),
   });
 });
 
@@ -93,7 +93,7 @@ app.get('/api/health', (req, res) => {
     timestamp: new Date().toISOString(),
     uptime: process.uptime(),
     memory: process.memoryUsage(),
-    version: '2.0.0'
+    version: '2.0.0',
   });
 });
 
@@ -114,8 +114,8 @@ app.get('/api/health/detailed', async (req, res) => {
       healthReport.overall_status === 'healthy'
         ? 200
         : healthReport.overall_status === 'degraded'
-          ? 200
-          : 503;
+        ? 200
+        : 503;
 
     res.status(statusCode).json(healthReport);
   } catch (error) {
@@ -124,7 +124,7 @@ app.get('/api/health/detailed', async (req, res) => {
     res.status(503).json({
       overall_status: 'unhealthy',
       error: error.message,
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
     });
   }
 });
@@ -147,7 +147,7 @@ app.get('/api/trips', (req, res) => {
     trips: [],
     message:
       'Trips endpoint ready - Use /api/orchestration/plan-trip for enhanced planning',
-    legacy: true
+    legacy: true,
   });
 });
 
@@ -163,7 +163,7 @@ app.get('/api/destinations', (req, res) => {
           'https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?w=400',
         rating: 4.8,
         priceRange: '$$$',
-        bestTime: 'Mar-May, Sep-Nov'
+        bestTime: 'Mar-May, Sep-Nov',
       },
       {
         id: 2,
@@ -173,7 +173,7 @@ app.get('/api/destinations', (req, res) => {
           'https://images.unsplash.com/photo-1502602898536-47ad22581b52?w=400',
         rating: 4.9,
         priceRange: '$$$$',
-        bestTime: 'Apr-Jun, Sep-Oct'
+        bestTime: 'Apr-Jun, Sep-Oct',
       },
       {
         id: 3,
@@ -183,9 +183,9 @@ app.get('/api/destinations', (req, res) => {
           'https://images.unsplash.com/photo-1512453979798-5ea266f8880c?w=400',
         rating: 4.7,
         priceRange: '$$$',
-        bestTime: 'Nov-Mar'
-      }
-    ]
+        bestTime: 'Nov-Mar',
+      },
+    ],
   });
 });
 
@@ -198,7 +198,7 @@ app.post('/api/analytics/events', validateAnalyticsEvent, (req, res) => {
     userId: userId || null,
     payload: payload || {},
     ts: Date.now(),
-    ua: req.headers['user-agent'] || ''
+    ua: req.headers['user-agent'] || '',
   });
   res.json({ success: true });
 });
@@ -239,6 +239,38 @@ app.use('/api/fivetran', fivetranRoutes);
 // Dataiku ML Model routes (NEW)
 const dataikuRoutes = require('./routes/dataiku');
 app.use('/api/dataiku', dataikuRoutes);
+
+// ============ QuantumFlow Orchestrator (QFO) Routes ============
+
+// QFO Master API (Main Entry Point)
+const qfoRoutes = require('./routes/qfo');
+app.use('/api/qfo', qfoRoutes);
+
+// Workflow Engine routes
+const workflowRoutes = require('./routes/workflow');
+app.use('/api/workflow', workflowRoutes);
+
+// Gamification routes
+const gamificationRoutes = require('./routes/gamification');
+app.use('/api/gamification', gamificationRoutes);
+
+// Super App routes
+const superappRoutes = require('./routes/superapp');
+app.use('/api/superapp', superappRoutes);
+
+// Blockchain routes
+const blockchainRoutes = require('./routes/blockchain');
+app.use('/api/blockchain', blockchainRoutes);
+
+// Live Stream routes
+const livestreamRoutes = require('./routes/livestream');
+app.use('/api/livestream', livestreamRoutes);
+
+// Prediction routes
+const predictionRoutes = require('./routes/prediction');
+app.use('/api/prediction', predictionRoutes);
+
+logger.info('✅ QFO Routes mounted successfully');
 
 // Advanced Telegram Bot (only start if token is provided and not in test mode)
 if (process.env.TELEGRAM_BOT_TOKEN && process.env.NODE_ENV !== 'test') {
@@ -282,7 +314,7 @@ app.use((err, req, res, next) => {
   res.status(500).json({
     error: 'Something went wrong!',
     message: err.message,
-    timestamp: new Date().toISOString()
+    timestamp: new Date().toISOString(),
   });
 });
 
@@ -350,8 +382,8 @@ app.use('*', (req, res) => {
       'GET /api/telegram/webhook',
       'POST /api/telegram/webhook',
       'GET /api/telegram/user/:userId',
-      'POST /api/telegram/send-message'
-    ]
+      'POST /api/telegram/send-message',
+    ],
   });
 });
 

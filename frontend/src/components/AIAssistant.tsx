@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { aiService, analyticsService } from '../api/services';
 import { motion } from 'framer-motion';
+import toast from 'react-hot-toast';
 import {
   Bot,
   Send,
@@ -56,6 +57,13 @@ const AIAssistant: React.FC = () => {
   const [detectedIntent, setDetectedIntent] = useState<any>(null);
   const [isAnalyzingIntent, setIsAnalyzingIntent] = useState(false);
 
+  // QFO States
+  const [qfoActive, setQfoActive] = useState(true);
+  const [gamificationData, setGamificationData] = useState<any>(null);
+  const [predictions, setPredictions] = useState<any[]>([]);
+  const [blockchainVerified, setBlockchainVerified] = useState(false);
+  const [sessionId] = useState(`session_${Date.now()}`);
+
   // دالة تحليل النية قبل إرسال الرسالة
   const analyzeIntent = async (message: string) => {
     setIsAnalyzingIntent(true);
@@ -72,8 +80,8 @@ const AIAssistant: React.FC = () => {
             currentPage: 'ai-assistant',
             previousIntent: detectedIntent?.intent,
             conversationDepth: messages.length,
-          }
-        })
+          },
+        }),
       });
 
       const data = await response.json();
@@ -118,12 +126,7 @@ const AIAssistant: React.FC = () => {
         case 'show_budget_tracker':
           toast('هل تريد مراجعة الميزانية؟', {
             icon: '💰',
-            action: {
-              label: 'نعم',
-              onClick: () => {
-                window.location.href = '/app/budget';
-              }
-            }
+            duration: 5000,
           });
           break;
 
@@ -153,45 +156,108 @@ const AIAssistant: React.FC = () => {
     setIsTyping(true);
 
     try {
-      // 1. تحليل النية أولاً
-      const intentResult = await analyzeIntent(inputMessage);
-
-      const history = messages.slice(-5).map(msg => ({
-        role: msg.isUser ? 'user' : 'assistant',
-        content: msg.text,
-      }));
-      const { data } = await aiService.sendMessage(inputMessage, {
-        useTools,
-        conversationHistory: history,
-        intent: intentResult?.intent,
-        confidence: intentResult?.confidence,
-      });
-      try {
-        await analyticsService.track({
-          type: 'chat_reply',
-          payload: { success: !!data?.success },
+      if (qfoActive) {
+        // 🌟 استخدام QFO الكامل!
+        const response = await fetch('/api/qfo/process', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            userId: 'user_123', // Replace with actual userId
+            sessionId: sessionId,
+            message: inputMessage,
+            platform: 'web',
+            context: {
+              currentPage: window.location.pathname,
+              previousMessages: messages.slice(-5),
+            },
+            syncAcrossPlatforms: true,
+          }),
         });
-      } catch {}
 
-      const aiResponse: Message = {
-        id: (Date.now() + 1).toString(),
-        text: data?.success
-          ? data.reply
-          : 'عذراً، حدث خطأ في الاتصال. يرجى المحاولة مرة أخرى.',
-        isUser: false,
-        timestamp: new Date(),
-        intent: intentResult,
-        suggestions: data.success
-          ? [
-              'أخبرني المزيد عن هذا الاقتراح',
-              'ما هي التكلفة المتوقعة؟',
-              'متى أفضل وقت للزيارة؟',
-              'أريد خيارات أخرى',
-            ]
-          : ['حاول مرة أخرى', 'اتصل بالدعم الفني', 'استخدم خيارات أخرى'],
-      };
+        const data = await response.json();
 
-      setMessages(prev => [...prev, aiResponse]);
+        if (data.success) {
+          // Add AI response
+          const aiResponse: Message = {
+            id: (Date.now() + 1).toString(),
+            text: data.response.message || 'تم إكمال طلبك بنجاح!',
+            isUser: false,
+            timestamp: new Date(),
+            intent: data.response.intent
+              ? {
+                  intent: data.response.intent,
+                  confidence: data.response.confidence,
+                }
+              : undefined,
+            suggestions: [
+              'أخبرني المزيد',
+              'ما هي الخطوة التالية؟',
+              'اقتراح آخر',
+            ],
+          };
+
+          setMessages(prev => [...prev, aiResponse]);
+
+          // Update gamification data
+          if (data.response.gamification) {
+            setGamificationData(data.response.gamification);
+          }
+
+          // Update predictions
+          if (data.response.predictions?.length > 0) {
+            setPredictions(data.response.predictions);
+          }
+
+          // Update blockchain status
+          if (data.response.blockchain?.verified) {
+            setBlockchainVerified(true);
+          }
+
+          try {
+            await analyticsService.track({
+              type: 'qfo_success',
+              payload: { intent: data.response.intent },
+            });
+          } catch {}
+        } else {
+          throw new Error(data.error || 'QFO processing failed');
+        }
+      } else {
+        // Fallback to regular AI
+        const intentResult = await analyzeIntent(inputMessage);
+
+        const history = messages.slice(-5).map(msg => ({
+          role: msg.isUser ? 'user' : 'assistant',
+          content: msg.text,
+        }));
+        const { data } = await aiService.sendMessage(inputMessage, {
+          useTools,
+          conversationHistory: history,
+        });
+
+        const aiResponse: Message = {
+          id: (Date.now() + 1).toString(),
+          text: data?.success
+            ? data.reply
+            : 'عذراً، حدث خطأ في الاتصال. يرجى المحاولة مرة أخرى.',
+          isUser: false,
+          timestamp: new Date(),
+          intent: intentResult,
+          suggestions: data.success
+            ? [
+                'أخبرني المزيد عن هذا الاقتراح',
+                'ما هي التكلفة المتوقعة؟',
+                'متى أفضل وقت للزيارة؟',
+                'أريد خيارات أخرى',
+              ]
+            : ['حاول مرة أخرى', 'اتصل بالدعم الفني', 'استخدم خيارات أخرى'],
+        };
+
+        setMessages(prev => [...prev, aiResponse]);
+      }
+
       setIsTyping(false);
     } catch (error) {
       console.error('AI Chat Error:', error);
@@ -326,10 +392,14 @@ const AIAssistant: React.FC = () => {
             <div className="flex items-center gap-2">
               <Target className="w-4 h-4 text-blue-600" />
               <span className="text-sm font-medium text-blue-900">
-                فهمت: {detectedIntent.intent === 'plan_trip' ? 'تخطيط رحلة' :
-                        detectedIntent.intent === 'budget_inquiry' ? 'استفسار عن الميزانية' :
-                        detectedIntent.intent === 'destination_info' ? 'معلومات عن الوجهة' :
-                        detectedIntent.intent}
+                فهمت:{' '}
+                {detectedIntent.intent === 'plan_trip'
+                  ? 'تخطيط رحلة'
+                  : detectedIntent.intent === 'budget_inquiry'
+                  ? 'استفسار عن الميزانية'
+                  : detectedIntent.intent === 'destination_info'
+                  ? 'معلومات عن الوجهة'
+                  : detectedIntent.intent}
               </span>
             </div>
             <span className="text-xs text-blue-600">
@@ -339,17 +409,76 @@ const AIAssistant: React.FC = () => {
 
           {detectedIntent.matchedKeywords?.length > 0 && (
             <div className="mt-2 flex flex-wrap gap-1">
-              {detectedIntent.matchedKeywords.map((keyword: string, i: number) => (
-                <span
-                  key={i}
-                  className="px-2 py-0.5 bg-blue-100 text-blue-700 text-xs rounded"
-                >
-                  {keyword}
-                </span>
-              ))}
+              {detectedIntent.matchedKeywords.map(
+                (keyword: string, i: number) => (
+                  <span
+                    key={i}
+                    className="px-2 py-0.5 bg-blue-100 text-blue-700 text-xs rounded"
+                  >
+                    {keyword}
+                  </span>
+                )
+              )}
             </div>
           )}
         </motion.div>
+      )}
+
+      {/* QFO Status Indicators */}
+      {qfoActive && (
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+          {/* Gamification Status */}
+          {gamificationData && (
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              className="bg-gradient-to-br from-yellow-50 to-amber-50 rounded-xl p-4 border border-yellow-200"
+            >
+              <div className="flex items-center gap-2 mb-2">
+                <Star className="w-5 h-5 text-yellow-600" />
+                <span className="font-semibold text-yellow-900">
+                  Level {gamificationData.level}
+                </span>
+              </div>
+              <p className="text-sm text-yellow-700">
+                {gamificationData.points_earned &&
+                  `+${gamificationData.points_earned} نقطة`}
+              </p>
+            </motion.div>
+          )}
+
+          {/* Predictions */}
+          {predictions.length > 0 && (
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              className="bg-gradient-to-br from-purple-50 to-pink-50 rounded-xl p-4 border border-purple-200"
+            >
+              <div className="flex items-center gap-2 mb-2">
+                <Lightbulb className="w-5 h-5 text-purple-600" />
+                <span className="font-semibold text-purple-900">
+                  اقتراحات ذكية
+                </span>
+              </div>
+              <p className="text-sm text-purple-700">{predictions[0].title}</p>
+            </motion.div>
+          )}
+
+          {/* Blockchain Verification */}
+          {blockchainVerified && (
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              className="bg-gradient-to-br from-green-50 to-emerald-50 rounded-xl p-4 border border-green-200"
+            >
+              <div className="flex items-center gap-2 mb-2">
+                <Shield className="w-5 h-5 text-green-600" />
+                <span className="font-semibold text-green-900">موثق</span>
+              </div>
+              <p className="text-sm text-green-700">تم التحقق على Blockchain</p>
+            </motion.div>
+          )}
+        </div>
       )}
 
       {/* Chat Interface */}
