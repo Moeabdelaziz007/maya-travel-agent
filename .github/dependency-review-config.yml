@@ -1,0 +1,49 @@
+fail_on_severity: moderate
+
+allow_licenses:
+  - MIT
+  - ISC
+  - BSD-2-Clause
+  - BSD-3-Clause
+  - Apache-2.0
+  - CC0-1.0
+  - Unlicense
+
+deny_licenses:
+  - MS-PL
+  - WSL
+
+vulnerability_check: true
+license_check: true
+base_ref: main
+head_ref: HEAD
+
+allow_packages:
+  - package: "@types/*"
+  - package: "eslint*"
+  - package: "typescript"
+  - package: "@typescript-eslint/*"
+  - package: "vitest"
+  - package: "@testing-library/*"
+  - package: "playwright"
+
+deny_packages: []
+
+license_mapping: {}
+
+vulnerability_severity:
+  - critical
+  - high
+  - moderate
+
+allow_vulnerabilities: []
+
+change_types:
+  - added
+  - removed
+  - updated
+
+max_dependencies: 0
+include_dev_dependencies: true
+include_transitive_dependencies: true
+output_format: sarif
