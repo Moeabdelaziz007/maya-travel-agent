@@ -29,15 +29,18 @@ const AnalyticsPage: React.FC = () => {
       </div>
       <div className="bg-white rounded-xl p-4 shadow border">
         <div className="text-sm text-gray-500 mb-2">Events by type</div>
-        <pre className="text-xs whitespace-pre-wrap">{JSON.stringify(data?.byType || {}, null, 2)}</pre>
+        <pre className="text-xs whitespace-pre-wrap">
+          {JSON.stringify(data?.byType || {}, null, 2)}
+        </pre>
       </div>
       <div className="bg-white rounded-xl p-4 shadow border">
         <div className="text-sm text-gray-500 mb-2">Last 10 events</div>
-        <pre className="text-xs whitespace-pre-wrap">{JSON.stringify(data?.last10 || [], null, 2)}</pre>
+        <pre className="text-xs whitespace-pre-wrap">
+          {JSON.stringify(data?.last10 || [], null, 2)}
+        </pre>
       </div>
     </div>
   );
 };
 
 export default AnalyticsPage;
-

@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { 
-  ExternalLink, 
-  X, 
-  Copy, 
-  CheckCircle, 
+import {
+  ExternalLink,
+  X,
+  Copy,
+  CheckCircle,
   AlertCircle,
   Loader,
   CreditCard,
-  Share2
+  Share2,
 } from 'lucide-react';
 import { PaymentService } from '../api/paymentService';
 
@@ -27,7 +27,7 @@ const PaymentLinkModal: React.FC<PaymentLinkModalProps> = ({
   amount,
   currency = 'USD',
   description = 'Maya Trips Payment',
-  customerEmail
+  customerEmail,
 }) => {
   const [isCreating, setIsCreating] = useState(false);
   const [paymentLink, setPaymentLink] = useState<string>('');
@@ -105,13 +105,17 @@ const PaymentLinkModal: React.FC<PaymentLinkModalProps> = ({
             animate={{ scale: 1, opacity: 1 }}
             exit={{ scale: 0.9, opacity: 0 }}
             className="bg-white rounded-2xl shadow-2xl max-w-md w-full max-h-[90vh] overflow-y-auto"
-            onClick={(e) => e.stopPropagation()}
+            onClick={e => e.stopPropagation()}
           >
             {/* Header */}
             <div className="flex items-center justify-between p-6 border-b border-gray-200">
               <div>
-                <h2 className="text-xl font-bold text-gray-800">Create Payment Link</h2>
-                <p className="text-sm text-gray-600">Generate a secure payment link</p>
+                <h2 className="text-xl font-bold text-gray-800">
+                  Create Payment Link
+                </h2>
+                <p className="text-sm text-gray-600">
+                  Generate a secure payment link
+                </p>
               </div>
               <button
                 onClick={handleClose}
@@ -170,10 +174,13 @@ const PaymentLinkModal: React.FC<PaymentLinkModalProps> = ({
                   <div className="bg-green-50 border border-green-200 rounded-lg p-4">
                     <div className="flex items-center space-x-2 mb-2">
                       <CheckCircle className="w-5 h-5 text-green-600" />
-                      <span className="text-sm font-medium text-green-800">Payment Link Created!</span>
+                      <span className="text-sm font-medium text-green-800">
+                        Payment Link Created!
+                      </span>
                     </div>
                     <p className="text-sm text-green-700 mb-3">
-                      Share this link with your customer to complete the payment.
+                      Share this link with your customer to complete the
+                      payment.
                     </p>
                     <div className="bg-white border border-green-200 rounded-lg p-3 flex items-center space-x-2">
                       <code className="flex-1 text-sm text-gray-800 break-all">
@@ -239,8 +246,9 @@ const PaymentLinkModal: React.FC<PaymentLinkModalProps> = ({
                 <div className="flex items-start space-x-2">
                   <div className="w-5 h-5 text-blue-600 mt-0.5">🔒</div>
                   <div className="text-sm text-blue-700">
-                    <strong>Secure Payment:</strong> This link is powered by Stripe and is completely secure. 
-                    Your customers can pay with any major credit card.
+                    <strong>Secure Payment:</strong> This link is powered by
+                    Stripe and is completely secure. Your customers can pay with
+                    any major credit card.
                   </div>
                 </div>
               </div>

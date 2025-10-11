@@ -16,6 +16,8 @@ import {
   Lightbulb,
   Shield,
   Zap,
+  Target,
+  CheckCircle,
 } from 'lucide-react';
 
 interface Message {
@@ -24,6 +26,7 @@ interface Message {
   isUser: boolean;
   timestamp: Date;
   suggestions?: string[];
+  intent?: any;
 }
 
 const AIAssistant: React.FC = () => {
@@ -50,6 +53,84 @@ const AIAssistant: React.FC = () => {
   const [mediaReply, setMediaReply] = useState<string | null>(null);
   const [analyzing, setAnalyzing] = useState(false);
   const [useTools, setUseTools] = useState(true);
+  const [detectedIntent, setDetectedIntent] = useState<any>(null);
+  const [isAnalyzingIntent, setIsAnalyzingIntent] = useState(false);
+
+  // دالة تحليل النية قبل إرسال الرسالة
+  const analyzeIntent = async (message: string) => {
+    setIsAnalyzingIntent(true);
+
+    try {
+      const response = await fetch('/api/ai/predict-intent', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          message,
+          context: {
+            currentPage: 'ai-assistant',
+            previousIntent: detectedIntent?.intent,
+            conversationDepth: messages.length,
+          }
+        })
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        setDetectedIntent(data.result);
+
+        // إذا كانت النية واضحة، نفذ الإجراءات المقترحة
+        if (data.result.confidence > 0.7) {
+          executeIntentActions(data.result.actions);
+        }
+
+        return data.result;
+      }
+    } catch (error) {
+      console.error('Intent analysis error:', error);
+    } finally {
+      setIsAnalyzingIntent(false);
+    }
+
+    return null;
+  };
+
+  // دالة تنفيذ الإجراءات بناءً على النية
+  const executeIntentActions = (actions: string[]) => {
+    actions.forEach(action => {
+      switch (action) {
+        case 'show_trip_planner':
+          // إظهار اقتراح للذهاب لصفحة التخطيط
+          // Simple alert for now - can be replaced with proper toast library
+          if (confirm('هل تريد الذهاب إلى صفحة تخطيط الرحلات؟')) {
+            window.location.href = '/app/planner';
+          }
+          break;
+
+        case 'show_destinations':
+          if (confirm('هل تريد استعراض الوجهات المتاحة؟')) {
+            window.location.href = '/app/destinations';
+          }
+          break;
+
+        case 'show_budget_tracker':
+          toast('هل تريد مراجعة الميزانية؟', {
+            icon: '💰',
+            action: {
+              label: 'نعم',
+              onClick: () => {
+                window.location.href = '/app/budget';
+              }
+            }
+          });
+          break;
+
+        // أضف المزيد من الإجراءات حسب الحاجة
+      }
+    });
+  };
 
   const handleSendMessage = async () => {
     if (!inputMessage.trim()) return;
@@ -72,15 +153,18 @@ const AIAssistant: React.FC = () => {
     setIsTyping(true);
 
     try {
-      const history = messages
-        .slice(-5)
-        .map(msg => ({
-          role: msg.isUser ? 'user' : 'assistant',
-          content: msg.text,
-        }));
+      // 1. تحليل النية أولاً
+      const intentResult = await analyzeIntent(inputMessage);
+
+      const history = messages.slice(-5).map(msg => ({
+        role: msg.isUser ? 'user' : 'assistant',
+        content: msg.text,
+      }));
       const { data } = await aiService.sendMessage(inputMessage, {
         useTools,
         conversationHistory: history,
+        intent: intentResult?.intent,
+        confidence: intentResult?.confidence,
       });
       try {
         await analyticsService.track({
@@ -96,6 +180,7 @@ const AIAssistant: React.FC = () => {
           : 'عذراً، حدث خطأ في الاتصال. يرجى المحاولة مرة أخرى.',
         isUser: false,
         timestamp: new Date(),
+        intent: intentResult,
         suggestions: data.success
           ? [
               'أخبرني المزيد عن هذا الاقتراح',
@@ -229,6 +314,43 @@ const AIAssistant: React.FC = () => {
           </p>
         </motion.div>
       </div>
+
+      {/* Intent Indicator */}
+      {detectedIntent && detectedIntent.confidence > 0.5 && (
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="mb-4 p-3 bg-blue-50 border border-blue-200 rounded-lg"
+        >
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <Target className="w-4 h-4 text-blue-600" />
+              <span className="text-sm font-medium text-blue-900">
+                فهمت: {detectedIntent.intent === 'plan_trip' ? 'تخطيط رحلة' :
+                        detectedIntent.intent === 'budget_inquiry' ? 'استفسار عن الميزانية' :
+                        detectedIntent.intent === 'destination_info' ? 'معلومات عن الوجهة' :
+                        detectedIntent.intent}
+              </span>
+            </div>
+            <span className="text-xs text-blue-600">
+              {Math.round(detectedIntent.confidence * 100)}% دقة
+            </span>
+          </div>
+
+          {detectedIntent.matchedKeywords?.length > 0 && (
+            <div className="mt-2 flex flex-wrap gap-1">
+              {detectedIntent.matchedKeywords.map((keyword: string, i: number) => (
+                <span
+                  key={i}
+                  className="px-2 py-0.5 bg-blue-100 text-blue-700 text-xs rounded"
+                >
+                  {keyword}
+                </span>
+              ))}
+            </div>
+          )}
+        </motion.div>
+      )}
 
       {/* Chat Interface */}
       <div className="bg-white rounded-2xl shadow-lg overflow-hidden">

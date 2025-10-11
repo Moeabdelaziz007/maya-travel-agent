@@ -5,23 +5,23 @@
 export const initTelegramWebApp = () => {
   if (typeof window !== 'undefined' && window.Telegram?.WebApp) {
     const tg = window.Telegram.WebApp;
-    
+
     // Configure WebApp
     tg.ready();
     tg.expand();
-    
+
     // Enable closing confirmation
     tg.enableClosingConfirmation();
-    
+
     // Set header color to match theme
     tg.setHeaderColor('#0ea5e9');
-    
+
     // Set background color
     tg.setBackgroundColor('#f8fafc');
-    
+
     return tg;
   }
-  
+
   return null;
 };
 
@@ -48,7 +48,10 @@ export const showTelegramAlert = (message: string) => {
 };
 
 // Show Telegram confirm
-export const showTelegramConfirm = (message: string, callback?: (confirmed: boolean) => void) => {
+export const showTelegramConfirm = (
+  message: string,
+  callback?: (confirmed: boolean) => void
+) => {
   const tg = initTelegramWebApp();
   if (tg) {
     tg.showConfirm(message, callback);
@@ -125,9 +128,11 @@ export const getInitDataUnsafe = (): {
 
 // Check if running in Telegram
 export const isTelegramWebApp = () => {
-  return typeof window !== 'undefined' && 
-         window.Telegram?.WebApp && 
-         window.Telegram.WebApp.initData !== '';
+  return (
+    typeof window !== 'undefined' &&
+    window.Telegram?.WebApp &&
+    window.Telegram.WebApp.initData !== ''
+  );
 };
 
 // Get main button
@@ -149,7 +154,10 @@ export const getHapticFeedback = () => {
 };
 
 // Trigger haptic feedback
-export const triggerHapticFeedback = (type: 'impact' | 'notification' | 'selection' = 'impact', style?: 'light' | 'medium' | 'heavy' | 'rigid' | 'soft') => {
+export const triggerHapticFeedback = (
+  type: 'impact' | 'notification' | 'selection' = 'impact',
+  style?: 'light' | 'medium' | 'heavy' | 'rigid' | 'soft'
+) => {
   const haptic = getHapticFeedback();
   if (haptic) {
     if (type === 'impact') {
@@ -163,7 +171,11 @@ export const triggerHapticFeedback = (type: 'impact' | 'notification' | 'selecti
 };
 
 // Set main button
-export const setMainButton = (text: string, onClick: () => void, color?: string) => {
+export const setMainButton = (
+  text: string,
+  onClick: () => void,
+  color?: string
+) => {
   const mainButton = getMainButton();
   if (mainButton) {
     mainButton.setText(text);
@@ -213,7 +225,10 @@ declare global {
         setHeaderColor: (color: string) => void;
         setBackgroundColor: (color: string) => void;
         showAlert: (message: string, callback?: () => void) => void;
-        showConfirm: (message: string, callback?: (confirmed: boolean) => void) => void;
+        showConfirm: (
+          message: string,
+          callback?: (confirmed: boolean) => void
+        ) => void;
         showPopup: (params: any) => void;
         sendData: (data: string) => void;
         initData: string;
@@ -273,7 +288,9 @@ declare global {
           hide: () => void;
         };
         HapticFeedback: {
-          impactOccurred: (style: 'light' | 'medium' | 'heavy' | 'rigid' | 'soft') => void;
+          impactOccurred: (
+            style: 'light' | 'medium' | 'heavy' | 'rigid' | 'soft'
+          ) => void;
           notificationOccurred: (type: 'error' | 'success' | 'warning') => void;
           selectionChanged: () => void;
         };

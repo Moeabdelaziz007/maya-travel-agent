@@ -8,6 +8,7 @@ const router = express.Router();
 const ZaiClient = require('../src/ai/zaiClient');
 const { Tools, getToolSchemas } = require('../src/ai/tools');
 const { buildCulturalSystemPrompt } = require('../src/ai/culture');
+const qicsService = require('../src/ai/qicsService');
 
 // Initialize Z.ai client
 const zaiClient = new ZaiClient();
@@ -32,7 +33,7 @@ router.use(validateApiKey);
  */
 router.post('/chat', async (req, res) => {
   try {
-    const { message, userId, conversationHistory = [], useTools = false, region = 'ar' } = req.body;
+    const { message, userId, conversationHistory = [], useTools = false, region = 'ar', context = {} } = req.body;
 
     if (!message) {
       return res.status(400).json({
@@ -43,11 +44,41 @@ router.post('/chat', async (req, res) => {
 
     console.log(`🤖 Maya AI Chat - User: ${userId}, Message: ${message.substring(0, 50)}...`);
 
+    // QICS: Quantum-Inspired Intent Classification
+    const intentResult = await qicsService.predictIntent(message, {
+      ...context,
+      userId,
+      region,
+      conversationLength: conversationHistory.length
+    });
+
+    console.log(`🧠 QICS Intent: ${intentResult.intent} (confidence: ${(intentResult.confidence * 100).toFixed(1)}%)`);
+
     let response;
+    let enhancedPrompt = '';
+
+    // Build enhanced system prompt based on QICS intent
+    if (intentResult.intent !== 'unclear') {
+      enhancedPrompt = `You are Maya, an intelligent travel assistant. The user intent is: ${intentResult.intent}.
+
+Intent Details:
+- Confidence: ${(intentResult.confidence * 100).toFixed(1)}%
+- Matched Keywords: ${intentResult.matchedKeywords.join(', ')}
+- Suggested Actions: ${intentResult.actions.join(', ')}
+
+${intentResult.alternatives.length > 0 ? `Alternative interpretations: ${intentResult.alternatives.map(alt => alt.message).join('; ')}` : ''}
+
+Provide a helpful, context-aware response that addresses the user's intent. If the intent is clear, focus on that specific need. If unclear, ask for clarification while providing helpful suggestions.`;
+    }
+
     if (!useTools) {
       const systemCulture = { role: 'system', content: buildCulturalSystemPrompt(region) };
+      const enhancedSystem = enhancedPrompt
+        ? { role: 'system', content: `${enhancedPrompt}\n\n${systemCulture.content}` }
+        : systemCulture;
+
       response = await zaiClient.chatCompletion([
-        systemCulture,
+        enhancedSystem,
         ...conversationHistory,
         { role: 'user', content: message }
       ], { maxTokens: 900 });
@@ -417,7 +448,8 @@ router.get('/models', (req, res) => {
         'budget_analysis',
         'destination_insights',
         'payment_recommendations',
-        'multilingual_support'
+        'multilingual_support',
+        'quantum_intent_classification'
       ],
       languages: ['Arabic', 'English'],
       maxTokens: 2000,
@@ -425,6 +457,76 @@ router.get('/models', (req, res) => {
     },
     timestamp: new Date().toISOString()
   });
+});
+
+/**
+ * POST /api/ai/predict-intent
+ * Quantum-Inspired Intent Classification Service
+ */
+router.post('/predict-intent', async (req, res) => {
+  try {
+    const { message, context } = req.body;
+
+    if (!message || typeof message !== 'string') {
+      return res.status(400).json({
+        success: false,
+        error: 'Message is required and must be a string'
+      });
+    }
+
+    console.log(`🧠 QICS Intent Prediction - Message: ${message.substring(0, 50)}...`);
+
+    // التنبؤ بالنية
+    const intentResult = await qicsService.predictIntent(message, context);
+
+    res.json({
+      success: true,
+      result: intentResult,
+      timestamp: new Date().toISOString()
+    });
+
+  } catch (error) {
+    console.error('QICS Intent prediction error:', error);
+    res.status(500).json({
+      success: false,
+      error: 'Failed to predict intent',
+      message: error.message
+    });
+  }
+});
+
+/**
+ * POST /api/ai/intent-feedback
+ * Learning from user feedback for QICS improvement
+ */
+router.post('/intent-feedback', async (req, res) => {
+  try {
+    const { message, predictedIntent, correctIntent } = req.body;
+
+    if (!message || !predictedIntent || !correctIntent) {
+      return res.status(400).json({
+        success: false,
+        error: 'Message, predictedIntent, and correctIntent are required'
+      });
+    }
+
+    console.log(`📚 QICS Learning - Feedback: ${predictedIntent} → ${correctIntent}`);
+
+    await qicsService.learnFromFeedback(message, correctIntent, predictedIntent);
+
+    res.json({
+      success: true,
+      message: 'Feedback recorded successfully for QICS improvement'
+    });
+
+  } catch (error) {
+    console.error('QICS Intent feedback error:', error);
+    res.status(500).json({
+      success: false,
+      error: 'Failed to record feedback',
+      message: error.message
+    });
+  }
 });
 
 module.exports = router;

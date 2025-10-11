@@ -33,7 +33,9 @@ export class PaymentService {
   private static baseURL = '/api/payment';
 
   // Create a new payment
-  static async createPayment(request: PaymentRequest): Promise<PaymentResponse> {
+  static async createPayment(
+    request: PaymentRequest
+  ): Promise<PaymentResponse> {
     try {
       const response = await fetch(`${this.baseURL}/create-payment`, {
         method: 'POST',
@@ -54,7 +56,10 @@ export class PaymentService {
   }
 
   // Confirm a payment
-  static async confirmPayment(paymentId: string, paymentMethod: string): Promise<PaymentResponse> {
+  static async confirmPayment(
+    paymentId: string,
+    paymentMethod: string
+  ): Promise<PaymentResponse> {
     try {
       const response = await fetch(`${this.baseURL}/confirm-payment`, {
         method: 'POST',
@@ -78,9 +83,13 @@ export class PaymentService {
   }
 
   // Get payment status
-  static async getPaymentStatus(paymentId: string): Promise<{ success: boolean; payment?: PaymentStatus; error?: string }> {
+  static async getPaymentStatus(
+    paymentId: string
+  ): Promise<{ success: boolean; payment?: PaymentStatus; error?: string }> {
     try {
-      const response = await fetch(`${this.baseURL}/payment-status/${paymentId}`);
+      const response = await fetch(
+        `${this.baseURL}/payment-status/${paymentId}`
+      );
       const data = await response.json();
       return data;
     } catch (error) {
@@ -92,7 +101,11 @@ export class PaymentService {
   }
 
   // Telegram Bot payment integration
-  static async createTelegramPayment(amount: number, description: string, chatId: string): Promise<PaymentResponse> {
+  static async createTelegramPayment(
+    amount: number,
+    description: string,
+    chatId: string
+  ): Promise<PaymentResponse> {
     return this.createPayment({
       amount,
       currency: 'USD',
@@ -103,7 +116,22 @@ export class PaymentService {
   }
 
   // Stripe payment integration with payment links
-  static async createStripePaymentLink(amount: number, description: string, customerEmail?: string): Promise<{ success: boolean; paymentLink?: { id: string; url: string; amount: number; currency: string; description: string; status: string }; error?: string }> {
+  static async createStripePaymentLink(
+    amount: number,
+    description: string,
+    customerEmail?: string
+  ): Promise<{
+    success: boolean;
+    paymentLink?: {
+      id: string;
+      url: string;
+      amount: number;
+      currency: string;
+      description: string;
+      status: string;
+    };
+    error?: string;
+  }> {
     try {
       const response = await fetch(`${this.baseURL}/create-payment-link`, {
         method: 'POST',
@@ -129,7 +157,10 @@ export class PaymentService {
   }
 
   // Stripe payment integration
-  static async createStripePayment(amount: number, description: string): Promise<PaymentResponse> {
+  static async createStripePayment(
+    amount: number,
+    description: string
+  ): Promise<PaymentResponse> {
     return this.createPayment({
       amount,
       currency: 'USD',
@@ -139,7 +170,10 @@ export class PaymentService {
   }
 
   // PayPal payment integration
-  static async createPayPalPayment(amount: number, description: string): Promise<PaymentResponse> {
+  static async createPayPalPayment(
+    amount: number,
+    description: string
+  ): Promise<PaymentResponse> {
     return this.createPayment({
       amount,
       currency: 'USD',
@@ -168,7 +202,12 @@ export class PaymentService {
   }
 
   // Get supported payment methods
-  static getSupportedMethods(): Array<{ id: string; name: string; description: string; available: boolean }> {
+  static getSupportedMethods(): Array<{
+    id: string;
+    name: string;
+    description: string;
+    available: boolean;
+  }> {
     return [
       {
         id: 'stripe',

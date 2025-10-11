@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense, lazy } from 'react';
 import { motion } from 'framer-motion';
 import {
   Plane,
@@ -14,14 +14,16 @@ import {
 import { AuthProvider, useAuth } from './components/Auth/AuthProvider';
 import LoginForm from './components/Auth/LoginForm';
 import SignupForm from './components/Auth/SignupForm';
-import TripPlanner from './components/TripPlanner';
-import Destinations from './components/Destinations';
-import BudgetTracker from './components/BudgetTracker';
-import TripHistory from './components/TripHistory';
-import AIAssistant from './components/AIAssistant';
 import ErrorBoundary from './components/ErrorBoundary';
 import AuthCallback from './pages/AuthCallback';
 import { initTelegramWebApp, isTelegramWebApp } from './telegram-webapp';
+
+// Lazy load heavy components to reduce initial bundle size
+const TripPlanner = lazy(() => import('./components/TripPlanner'));
+const Destinations = lazy(() => import('./components/Destinations'));
+const BudgetTracker = lazy(() => import('./components/BudgetTracker'));
+const TripHistory = lazy(() => import('./components/TripHistory'));
+const AIAssistant = lazy(() => import('./components/AIAssistant'));
 
 interface Trip {
   id: string;
@@ -93,20 +95,33 @@ const AppContent: React.FC = () => {
   ];
 
   const renderContent = () => {
-    switch (activeTab) {
-      case 'planner':
-        return <TripPlanner trips={trips} setTrips={setTrips} />;
-      case 'destinations':
-        return <Destinations />;
-      case 'budget':
-        return <BudgetTracker trips={trips} />;
-      case 'history':
-        return <TripHistory trips={trips} />;
-      case 'ai':
-        return <AIAssistant />;
-      default:
-        return <TripPlanner trips={trips} setTrips={setTrips} />;
-    }
+    const LoadingSpinner = () => (
+      <div className="flex items-center justify-center py-12">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
+        <span className="ml-3 text-gray-600">Loading...</span>
+      </div>
+    );
+
+    return (
+      <Suspense fallback={<LoadingSpinner />}>
+        {(() => {
+          switch (activeTab) {
+            case 'planner':
+              return <TripPlanner trips={trips} setTrips={setTrips} />;
+            case 'destinations':
+              return <Destinations />;
+            case 'budget':
+              return <BudgetTracker trips={trips} />;
+            case 'history':
+              return <TripHistory trips={trips} />;
+            case 'ai':
+              return <AIAssistant />;
+            default:
+              return <TripPlanner trips={trips} setTrips={setTrips} />;
+          }
+        })()}
+      </Suspense>
+    );
   };
 
   // Check if we're on an auth callback page and show the callback component

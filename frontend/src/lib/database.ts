@@ -1,7 +1,7 @@
-import { supabase } from './supabase'
-import { Database } from './supabase'
+import { supabase } from './supabase';
+import { Database } from './supabase';
 
-type Tables = Database['public']['Tables']
+type Tables = Database['public']['Tables'];
 
 // Trip service
 export class TripService {
@@ -12,12 +12,12 @@ export class TripService {
         .from('trips')
         .select('*')
         .eq('user_id', userId)
-        .order('created_at', { ascending: false })
-      
-      if (error) throw error
-      return { data, error: null }
+        .order('created_at', { ascending: false });
+
+      if (error) throw error;
+      return { data, error: null };
     } catch (error) {
-      return { data: null, error }
+      return { data: null, error };
     }
   }
 
@@ -28,12 +28,12 @@ export class TripService {
         .from('trips')
         .select('*')
         .eq('id', tripId)
-        .single()
-      
-      if (error) throw error
-      return { data, error: null }
+        .single();
+
+      if (error) throw error;
+      return { data, error: null };
     } catch (error) {
-      return { data: null, error }
+      return { data: null, error };
     }
   }
 
@@ -44,12 +44,12 @@ export class TripService {
         .from('trips')
         .insert(trip)
         .select()
-        .single()
-      
-      if (error) throw error
-      return { data, error: null }
+        .single();
+
+      if (error) throw error;
+      return { data, error: null };
     } catch (error) {
-      return { data: null, error }
+      return { data: null, error };
     }
   }
 
@@ -61,12 +61,12 @@ export class TripService {
         .update(updates)
         .eq('id', tripId)
         .select()
-        .single()
-      
-      if (error) throw error
-      return { data, error: null }
+        .single();
+
+      if (error) throw error;
+      return { data, error: null };
     } catch (error) {
-      return { data: null, error }
+      return { data: null, error };
     }
   }
 
@@ -76,12 +76,12 @@ export class TripService {
       const { data, error } = await supabase
         .from('trips')
         .delete()
-        .eq('id', tripId)
-      
-      if (error) throw error
-      return { data, error: null }
+        .eq('id', tripId);
+
+      if (error) throw error;
+      return { data, error: null };
     } catch (error) {
-      return { data: null, error }
+      return { data: null, error };
     }
   }
 }
@@ -94,12 +94,12 @@ export class DestinationService {
       const { data, error } = await supabase
         .from('destinations')
         .select('*')
-        .order('rating', { ascending: false })
-      
-      if (error) throw error
-      return { data, error: null }
+        .order('rating', { ascending: false });
+
+      if (error) throw error;
+      return { data, error: null };
     } catch (error) {
-      return { data: null, error }
+      return { data: null, error };
     }
   }
 
@@ -110,12 +110,12 @@ export class DestinationService {
         .from('destinations')
         .select('*')
         .or(`name.ilike.%${query}%,country.ilike.%${query}%`)
-        .order('rating', { ascending: false })
-      
-      if (error) throw error
-      return { data, error: null }
+        .order('rating', { ascending: false });
+
+      if (error) throw error;
+      return { data, error: null };
     } catch (error) {
-      return { data: null, error }
+      return { data: null, error };
     }
   }
 
@@ -126,12 +126,12 @@ export class DestinationService {
         .from('destinations')
         .select('*')
         .eq('id', destinationId)
-        .single()
-      
-      if (error) throw error
-      return { data, error: null }
+        .single();
+
+      if (error) throw error;
+      return { data, error: null };
     } catch (error) {
-      return { data: null, error }
+      return { data: null, error };
     }
   }
 }
@@ -145,12 +145,12 @@ export class ExpenseService {
         .from('expenses')
         .select('*')
         .eq('trip_id', tripId)
-        .order('date', { ascending: false })
-      
-      if (error) throw error
-      return { data, error: null }
+        .order('date', { ascending: false });
+
+      if (error) throw error;
+      return { data, error: null };
     } catch (error) {
-      return { data: null, error }
+      return { data: null, error };
     }
   }
 
@@ -161,29 +161,32 @@ export class ExpenseService {
         .from('expenses')
         .insert(expense)
         .select()
-        .single()
-      
-      if (error) throw error
-      return { data, error: null }
+        .single();
+
+      if (error) throw error;
+      return { data, error: null };
     } catch (error) {
-      return { data: null, error }
+      return { data: null, error };
     }
   }
 
   // Update expense
-  static async updateExpense(expenseId: string, updates: Tables['expenses']['Update']) {
+  static async updateExpense(
+    expenseId: string,
+    updates: Tables['expenses']['Update']
+  ) {
     try {
       const { data, error } = await supabase
         .from('expenses')
         .update(updates)
         .eq('id', expenseId)
         .select()
-        .single()
-      
-      if (error) throw error
-      return { data, error: null }
+        .single();
+
+      if (error) throw error;
+      return { data, error: null };
     } catch (error) {
-      return { data: null, error }
+      return { data: null, error };
     }
   }
 
@@ -193,12 +196,12 @@ export class ExpenseService {
       const { data, error } = await supabase
         .from('expenses')
         .delete()
-        .eq('id', expenseId)
-      
-      if (error) throw error
-      return { data, error: null }
+        .eq('id', expenseId);
+
+      if (error) throw error;
+      return { data, error: null };
     } catch (error) {
-      return { data: null, error }
+      return { data: null, error };
     }
   }
 }
@@ -212,28 +215,30 @@ export class AIConversationService {
         .from('ai_conversations')
         .select('*')
         .eq('user_id', userId)
-        .order('created_at', { ascending: false })
-      
-      if (error) throw error
-      return { data, error: null }
+        .order('created_at', { ascending: false });
+
+      if (error) throw error;
+      return { data, error: null };
     } catch (error) {
-      return { data: null, error }
+      return { data: null, error };
     }
   }
 
   // Save conversation
-  static async saveConversation(conversation: Tables['ai_conversations']['Insert']) {
+  static async saveConversation(
+    conversation: Tables['ai_conversations']['Insert']
+  ) {
     try {
       const { data, error } = await supabase
         .from('ai_conversations')
         .insert(conversation)
         .select()
-        .single()
-      
-      if (error) throw error
-      return { data, error: null }
+        .single();
+
+      if (error) throw error;
+      return { data, error: null };
     } catch (error) {
-      return { data: null, error }
+      return { data: null, error };
     }
   }
 }

@@ -2,7 +2,7 @@
   "compilerOptions": {
     "target": "ES2020",
     "useDefineForClassFields": true,
-    "lib": ["ES2020", "DOM", "DOM.Iterable"],
+    "lib": ["ES2020", "DOM", "DOM.Iterable", "ES2015.Promise"],
     "module": "ESNext",
     "skipLibCheck": true,
     "allowSyntheticDefaultImports": true,
@@ -25,6 +25,6 @@
     "noFallthroughCasesInSwitch": true
   },
   "include": ["src"],
-  "exclude": ["src/test/**/*", "src/pages/Auth.tsx", "src/pages/Home.tsx"],
+  "exclude": ["src/test/**/*"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }

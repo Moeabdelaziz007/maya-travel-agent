@@ -12,9 +12,7 @@ describe('App Component', () => {
     }));
 
     render(<App />);
-    expect(
-      screen.getByText('Loading your AI platform...')
-    ).toBeInTheDocument();
+    expect(screen.getByText('Loading your AI platform...')).toBeInTheDocument();
   });
 
   it('displays Amrikyy branding', () => {

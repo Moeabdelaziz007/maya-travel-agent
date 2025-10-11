@@ -1,4 +1,4 @@
-# 🎉 Maya Trips AI - Final Project Report
+# 🎉 Amrikyy Travel Agent - Final Project Report
 
 ## 📊 Project Status: COMPLETE ✅
 
@@ -223,7 +223,7 @@ Personal.Trips.Assistnce/
 ## 🎉 خلاصة المشروع
 
 ### ✅ Mission Accomplished
-**Maya Trips AI** هو الآن نظام سفر ذكي متكامل يشمل:
+**Amrikyy Travel Agent** هو الآن نظام سفر ذكي متكامل يشمل:
 
 1. **🤖 مساعد AI ذكي** (Z.ai GLM-4.6)
 2. **📱 بوت Telegram احترافي** (@maya_trips_bot)

@@ -9,11 +9,21 @@ const securityHeaders = helmet({
   contentSecurityPolicy: {
     directives: {
       defaultSrc: ['self'],
-      styleSrc: ['self', 'unsafe-inline', 'https://fonts.googleapis.com', 'https://cdn.jsdelivr.net'],
+      styleSrc: [
+        'self',
+        'unsafe-inline',
+        'https://fonts.googleapis.com',
+        'https://cdn.jsdelivr.net'
+      ],
       fontSrc: ['self', 'https://fonts.gstatic.com'],
       scriptSrc: ['self', 'unsafe-inline', 'https://cdn.jsdelivr.net'],
       imgSrc: ['self', 'data:', 'https:', 'blob:'],
-      connectSrc: ['self', 'https://api.z.ai', 'https://*.supabase.co', 'https://api.stripe.com'],
+      connectSrc: [
+        'self',
+        'https://api.z.ai',
+        'https://*.supabase.co',
+        'https://api.stripe.com'
+      ],
       frameSrc: ['self', 'https://js.stripe.com', 'https://hooks.stripe.com'],
       objectSrc: ['none'],
       upgradeInsecureRequests: []
@@ -48,7 +58,7 @@ function configureCORS(app) {
       ];
 
       // Check if origin matches allowed patterns
-      const isAllowed = allowedOrigins.some(allowed => {
+      const isAllowed = allowedOrigins.some((allowed) => {
         if (typeof allowed === 'string') {
           return allowed === origin;
         } else if (allowed instanceof RegExp) {

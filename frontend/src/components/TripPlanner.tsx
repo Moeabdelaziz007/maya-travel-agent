@@ -1,15 +1,15 @@
 import React, { useState } from 'react';
 import { aiService } from '../api/services';
 import { motion } from 'framer-motion';
-import { 
-  Plus, 
-  MapPin, 
-  Calendar, 
-  DollarSign, 
+import {
+  Plus,
+  MapPin,
+  Calendar,
+  DollarSign,
   Plane,
   Clock,
   Users,
-  Star
+  Star,
 } from 'lucide-react';
 
 interface Trip {
@@ -33,7 +33,7 @@ const TripPlanner: React.FC<TripPlannerProps> = ({ trips, setTrips }) => {
     destination: '',
     startDate: '',
     endDate: '',
-    budget: 0
+    budget: 0,
   });
   const [mediaUrl, setMediaUrl] = useState('');
   const [videoUrl, setVideoUrl] = useState('');
@@ -49,7 +49,9 @@ const TripPlanner: React.FC<TripPlannerProps> = ({ trips, setTrips }) => {
         endDate: newTrip.endDate,
         budget: newTrip.budget,
         status: 'planned',
-        image: `https://images.unsplash.com/photo-${Math.floor(Math.random() * 1000000)}?w=400`
+        image: `https://images.unsplash.com/photo-${Math.floor(
+          Math.random() * 1000000
+        )}?w=400`,
       };
       setTrips([...trips, trip]);
       setNewTrip({ destination: '', startDate: '', endDate: '', budget: 0 });
@@ -59,10 +61,14 @@ const TripPlanner: React.FC<TripPlannerProps> = ({ trips, setTrips }) => {
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'planned': return 'bg-yellow-100 text-yellow-800';
-      case 'ongoing': return 'bg-green-100 text-green-800';
-      case 'completed': return 'bg-blue-100 text-blue-800';
-      default: return 'bg-gray-100 text-gray-800';
+      case 'planned':
+        return 'bg-yellow-100 text-yellow-800';
+      case 'ongoing':
+        return 'bg-green-100 text-green-800';
+      case 'completed':
+        return 'bg-blue-100 text-blue-800';
+      default:
+        return 'bg-gray-100 text-gray-800';
     }
   };
 
@@ -72,13 +78,15 @@ const TripPlanner: React.FC<TripPlannerProps> = ({ trips, setTrips }) => {
     setAnalysis(null);
     try {
       const { data } = await aiService.analyzeMedia({
-        prompt: `Analyze this media for trip planning to ${newTrip.destination || 'the shown place'}.` ,
+        prompt: `Analyze this media for trip planning to ${
+          newTrip.destination || 'the shown place'
+        }.`,
         imageUrls: mediaUrl ? [mediaUrl] : [],
         videoUrl: videoUrl || null,
         options: {
           enableKvCacheOffload: true,
-          attentionImpl: 'flash-attn-3'
-        }
+          attentionImpl: 'flash-attn-3',
+        },
       });
       setAnalysis(data?.analysis || 'No analysis available');
     } catch (err) {
@@ -96,7 +104,9 @@ const TripPlanner: React.FC<TripPlannerProps> = ({ trips, setTrips }) => {
       <div className="flex items-center justify-between">
         <div>
           <h2 className="text-3xl font-bold text-gray-800">Trip Planner</h2>
-          <p className="text-gray-600 mt-1">Plan and manage your travel adventures</p>
+          <p className="text-gray-600 mt-1">
+            Plan and manage your travel adventures
+          </p>
         </div>
         <motion.button
           onClick={() => setShowAddForm(!showAddForm)}
@@ -116,62 +126,84 @@ const TripPlanner: React.FC<TripPlannerProps> = ({ trips, setTrips }) => {
           animate={{ opacity: 1, y: 0 }}
           className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100"
         >
-          <h3 className="text-xl font-semibold text-gray-800 mb-4">Add New Trip</h3>
+          <h3 className="text-xl font-semibold text-gray-800 mb-4">
+            Add New Trip
+          </h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Destination</label>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Destination
+              </label>
               <input
                 type="text"
                 value={newTrip.destination}
-                onChange={(e) => setNewTrip({ ...newTrip, destination: e.target.value })}
+                onChange={e =>
+                  setNewTrip({ ...newTrip, destination: e.target.value })
+                }
                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 placeholder="Where do you want to go?"
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Budget</label>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Budget
+              </label>
               <input
                 type="number"
                 value={newTrip.budget}
-                onChange={(e) => setNewTrip({ ...newTrip, budget: Number(e.target.value) })}
+                onChange={e =>
+                  setNewTrip({ ...newTrip, budget: Number(e.target.value) })
+                }
                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 placeholder="Budget in USD"
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Start Date</label>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Start Date
+              </label>
               <input
                 type="date"
                 value={newTrip.startDate}
-                onChange={(e) => setNewTrip({ ...newTrip, startDate: e.target.value })}
+                onChange={e =>
+                  setNewTrip({ ...newTrip, startDate: e.target.value })
+                }
                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">End Date</label>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                End Date
+              </label>
               <input
                 type="date"
                 value={newTrip.endDate}
-                onChange={(e) => setNewTrip({ ...newTrip, endDate: e.target.value })}
+                onChange={e =>
+                  setNewTrip({ ...newTrip, endDate: e.target.value })
+                }
                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               />
             </div>
             <div className="md:col-span-2">
-              <label className="block text-sm font-medium text-gray-700 mb-2">Image URL (optional)</label>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Image URL (optional)
+              </label>
               <input
                 type="url"
                 value={mediaUrl}
-                onChange={(e) => setMediaUrl(e.target.value)}
+                onChange={e => setMediaUrl(e.target.value)}
                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 placeholder="https://...jpg"
               />
             </div>
             <div className="md:col-span-2">
-              <label className="block text-sm font-medium text-gray-700 mb-2">Video URL (optional)</label>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Video URL (optional)
+              </label>
               <input
                 type="url"
                 value={videoUrl}
-                onChange={(e) => setVideoUrl(e.target.value)}
+                onChange={e => setVideoUrl(e.target.value)}
                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 placeholder="https://...mp4"
               />
@@ -229,33 +261,46 @@ const TripPlanner: React.FC<TripPlannerProps> = ({ trips, setTrips }) => {
                 className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
               />
               <div className="absolute top-4 right-4">
-                <span className={`px-3 py-1 rounded-full text-xs font-medium ${getStatusColor(trip.status)}`}>
+                <span
+                  className={`px-3 py-1 rounded-full text-xs font-medium ${getStatusColor(
+                    trip.status
+                  )}`}
+                >
                   {trip.status}
                 </span>
               </div>
             </div>
-            
+
             <div className="p-6">
               <div className="flex items-center space-x-2 mb-3">
                 <MapPin className="w-5 h-5 text-blue-500" />
-                <h3 className="text-xl font-semibold text-gray-800">{trip.destination}</h3>
+                <h3 className="text-xl font-semibold text-gray-800">
+                  {trip.destination}
+                </h3>
               </div>
-              
+
               <div className="space-y-2 mb-4">
                 <div className="flex items-center space-x-2 text-gray-600">
                   <Calendar className="w-4 h-4" />
-                  <span className="text-sm">{trip.startDate} - {trip.endDate}</span>
+                  <span className="text-sm">
+                    {trip.startDate} - {trip.endDate}
+                  </span>
                 </div>
                 <div className="flex items-center space-x-2 text-gray-600">
                   <DollarSign className="w-4 h-4" />
-                  <span className="text-sm">${trip.budget.toLocaleString()}</span>
+                  <span className="text-sm">
+                    ${trip.budget.toLocaleString()}
+                  </span>
                 </div>
               </div>
-              
+
               <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-1">
                   {[...Array(5)].map((_, i) => (
-                    <Star key={i} className="w-4 h-4 text-yellow-400 fill-current" />
+                    <Star
+                      key={i}
+                      className="w-4 h-4 text-yellow-400 fill-current"
+                    />
                   ))}
                 </div>
                 <motion.button
@@ -278,7 +323,9 @@ const TripPlanner: React.FC<TripPlannerProps> = ({ trips, setTrips }) => {
           className="text-center py-12"
         >
           <Plane className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-          <h3 className="text-xl font-semibold text-gray-600 mb-2">No trips planned yet</h3>
+          <h3 className="text-xl font-semibold text-gray-600 mb-2">
+            No trips planned yet
+          </h3>
           <p className="text-gray-500">Start planning your next adventure!</p>
         </motion.div>
       )}

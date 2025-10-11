@@ -9,7 +9,10 @@ export const testBackendConnection = async () => {
     return { success: true, data: response.data };
   } catch (error) {
     console.error('❌ Backend connection failed:', error);
-    return { success: false, error: error instanceof Error ? error.message : 'Unknown error' };
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : 'Unknown error',
+    };
   }
 };
 
@@ -21,7 +24,7 @@ export const testAPIEndpoints = async () => {
   ];
 
   const results = [];
-  
+
   for (const { name, test } of tests) {
     try {
       console.log(`🔄 Testing ${name}...`);
@@ -30,9 +33,13 @@ export const testAPIEndpoints = async () => {
       results.push({ name, success: true, data: response.data });
     } catch (error) {
       console.error(`❌ ${name} failed:`, error);
-      results.push({ name, success: false, error: error instanceof Error ? error.message : 'Unknown error' });
+      results.push({
+        name,
+        success: false,
+        error: error instanceof Error ? error.message : 'Unknown error',
+      });
     }
   }
-  
+
   return results;
 };

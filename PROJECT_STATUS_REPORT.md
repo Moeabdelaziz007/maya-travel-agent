@@ -1,4 +1,4 @@
-# 🎉 Maya Trips - Project Status Report
+# 🎉 Amrikyy Travel Agent - Project Status Report
 
 ## ✅ **المشروع يعمل بنجاح!**
 
@@ -20,7 +20,7 @@
 ### **2. Frontend Web App - ✅ يعمل**
 ```bash
 ✅ React App: http://localhost:3000
-✅ Title: "Maya Trips - AI Travel Assistant"
+✅ Title: "Amrikyy Travel Agent - AI Travel Assistant"
 ✅ Components: جميع المكونات محملة
 ✅ Telegram WebApp SDK: متكامل
 ```
@@ -147,7 +147,7 @@ curl -X POST http://localhost:5000/api/ai/chat \
 
 ## 🎉 **الخلاصة:**
 
-**Maya Trips AI** جاهز للاستخدام! 
+**Amrikyy Travel Agent AI** جاهز للاستخدام! 
 
 ### **✅ ما يعمل:**
 - Web App كامل مع واجهة حديثة

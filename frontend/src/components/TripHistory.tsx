@@ -1,16 +1,16 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { 
-  Calendar, 
-  MapPin, 
-  Star, 
+import {
+  Calendar,
+  MapPin,
+  Star,
   DollarSign,
   Clock,
   Users,
   Camera,
   Share2,
   Download,
-  Filter
+  Filter,
 } from 'lucide-react';
 
 interface Trip {
@@ -39,7 +39,9 @@ const TripHistory: React.FC<TripHistoryProps> = ({ trips }) => {
   const sortedTrips = [...filteredTrips].sort((a, b) => {
     switch (sortBy) {
       case 'date':
-        return new Date(b.startDate).getTime() - new Date(a.startDate).getTime();
+        return (
+          new Date(b.startDate).getTime() - new Date(a.startDate).getTime()
+        );
       case 'destination':
         return a.destination.localeCompare(b.destination);
       case 'budget':
@@ -51,19 +53,27 @@ const TripHistory: React.FC<TripHistoryProps> = ({ trips }) => {
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'planned': return 'bg-yellow-100 text-yellow-800 border-yellow-200';
-      case 'ongoing': return 'bg-green-100 text-green-800 border-green-200';
-      case 'completed': return 'bg-blue-100 text-blue-800 border-blue-200';
-      default: return 'bg-gray-100 text-gray-800 border-gray-200';
+      case 'planned':
+        return 'bg-yellow-100 text-yellow-800 border-yellow-200';
+      case 'ongoing':
+        return 'bg-green-100 text-green-800 border-green-200';
+      case 'completed':
+        return 'bg-blue-100 text-blue-800 border-blue-200';
+      default:
+        return 'bg-gray-100 text-gray-800 border-gray-200';
     }
   };
 
   const getStatusIcon = (status: string) => {
     switch (status) {
-      case 'planned': return <Clock className="w-4 h-4" />;
-      case 'ongoing': return <Calendar className="w-4 h-4" />;
-      case 'completed': return <Star className="w-4 h-4" />;
-      default: return <Calendar className="w-4 h-4" />;
+      case 'planned':
+        return <Clock className="w-4 h-4" />;
+      case 'ongoing':
+        return <Calendar className="w-4 h-4" />;
+      case 'completed':
+        return <Star className="w-4 h-4" />;
+      default:
+        return <Calendar className="w-4 h-4" />;
     }
   };
 
@@ -80,17 +90,21 @@ const TripHistory: React.FC<TripHistoryProps> = ({ trips }) => {
       {/* Header */}
       <div>
         <h2 className="text-3xl font-bold text-gray-800">Trip History</h2>
-        <p className="text-gray-600 mt-1">View and manage your travel history</p>
+        <p className="text-gray-600 mt-1">
+          View and manage your travel history
+        </p>
       </div>
 
       {/* Filters and Sorting */}
       <div className="bg-white rounded-2xl p-6 shadow-lg">
         <div className="flex flex-col md:flex-row gap-4">
           <div className="flex-1">
-            <label className="block text-sm font-medium text-gray-700 mb-2">Filter by Status</label>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Filter by Status
+            </label>
             <select
               value={filterStatus}
-              onChange={(e) => setFilterStatus(e.target.value)}
+              onChange={e => setFilterStatus(e.target.value)}
               className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             >
               <option value="all">All Trips</option>
@@ -100,10 +114,12 @@ const TripHistory: React.FC<TripHistoryProps> = ({ trips }) => {
             </select>
           </div>
           <div className="flex-1">
-            <label className="block text-sm font-medium text-gray-700 mb-2">Sort by</label>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Sort by
+            </label>
             <select
               value={sortBy}
-              onChange={(e) => setSortBy(e.target.value)}
+              onChange={e => setSortBy(e.target.value)}
               className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             >
               <option value="date">Date</option>
@@ -168,7 +184,8 @@ const TripHistory: React.FC<TripHistoryProps> = ({ trips }) => {
             <DollarSign className="w-6 h-6 text-purple-600" />
           </div>
           <p className="text-2xl font-bold text-gray-800">
-            ${trips.reduce((sum, trip) => sum + trip.budget, 0).toLocaleString()}
+            $
+            {trips.reduce((sum, trip) => sum + trip.budget, 0).toLocaleString()}
           </p>
           <p className="text-sm text-gray-600">Total Budget</p>
         </motion.div>
@@ -192,25 +209,35 @@ const TripHistory: React.FC<TripHistoryProps> = ({ trips }) => {
                   className="w-full h-full object-cover"
                 />
               </div>
-              
+
               <div className="flex-1 p-6">
                 <div className="flex items-start justify-between mb-4">
                   <div>
-                    <h3 className="text-2xl font-bold text-gray-800 mb-2">{trip.destination}</h3>
+                    <h3 className="text-2xl font-bold text-gray-800 mb-2">
+                      {trip.destination}
+                    </h3>
                     <div className="flex items-center space-x-4 text-gray-600">
                       <div className="flex items-center space-x-1">
                         <Calendar className="w-4 h-4" />
-                        <span className="text-sm">{trip.startDate} - {trip.endDate}</span>
+                        <span className="text-sm">
+                          {trip.startDate} - {trip.endDate}
+                        </span>
                       </div>
                       <div className="flex items-center space-x-1">
                         <Clock className="w-4 h-4" />
-                        <span className="text-sm">{getTripDuration(trip.startDate, trip.endDate)} days</span>
+                        <span className="text-sm">
+                          {getTripDuration(trip.startDate, trip.endDate)} days
+                        </span>
                       </div>
                     </div>
                   </div>
-                  
+
                   <div className="flex items-center space-x-2">
-                    <span className={`px-3 py-1 rounded-full text-sm font-medium border ${getStatusColor(trip.status)}`}>
+                    <span
+                      className={`px-3 py-1 rounded-full text-sm font-medium border ${getStatusColor(
+                        trip.status
+                      )}`}
+                    >
                       <div className="flex items-center space-x-1">
                         {getStatusIcon(trip.status)}
                         <span className="capitalize">{trip.status}</span>
@@ -218,19 +245,21 @@ const TripHistory: React.FC<TripHistoryProps> = ({ trips }) => {
                     </span>
                   </div>
                 </div>
-                
+
                 <div className="flex items-center justify-between mb-4">
                   <div className="flex items-center space-x-6">
                     <div className="flex items-center space-x-2">
                       <DollarSign className="w-5 h-5 text-green-500" />
-                      <span className="text-lg font-semibold text-gray-800">${trip.budget.toLocaleString()}</span>
+                      <span className="text-lg font-semibold text-gray-800">
+                        ${trip.budget.toLocaleString()}
+                      </span>
                     </div>
                     <div className="flex items-center space-x-1">
                       <Star className="w-5 h-5 text-yellow-400 fill-current" />
                       <span className="text-sm text-gray-600">4.8</span>
                     </div>
                   </div>
-                  
+
                   <div className="flex items-center space-x-2">
                     <motion.button
                       className="p-2 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
@@ -255,7 +284,7 @@ const TripHistory: React.FC<TripHistoryProps> = ({ trips }) => {
                     </motion.button>
                   </div>
                 </div>
-                
+
                 <div className="flex space-x-3">
                   <motion.button
                     className="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors font-medium"
@@ -285,8 +314,12 @@ const TripHistory: React.FC<TripHistoryProps> = ({ trips }) => {
           className="text-center py-12"
         >
           <Calendar className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-          <h3 className="text-xl font-semibold text-gray-600 mb-2">No trips found</h3>
-          <p className="text-gray-500">Try adjusting your filters or add a new trip</p>
+          <h3 className="text-xl font-semibold text-gray-600 mb-2">
+            No trips found
+          </h3>
+          <p className="text-gray-500">
+            Try adjusting your filters or add a new trip
+          </p>
         </motion.div>
       )}
     </div>

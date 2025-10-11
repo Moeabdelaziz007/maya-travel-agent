@@ -13,12 +13,12 @@ const HealthChecker = require('./src/monitoring/health-check');
 const {
   securityHeaders,
   configureCORS,
-  configureRateLimiting,
+  configureRateLimiting
 } = require('./src/middleware/security');
 const {
   validateAnalyticsEvent,
   createValidationMiddleware,
-  schemas,
+  schemas
 } = require('./src/middleware/validation');
 
 const app = express();
@@ -65,9 +65,9 @@ app.get('/', (req, res) => {
       'Flight & Hotel Price Prediction',
       'User Churn Prediction',
       'Arabic/English Support',
-      'Travel Services Module',
+      'Travel Services Module'
     ],
-    timestamp: new Date().toISOString(),
+    timestamp: new Date().toISOString()
   });
 });
 
@@ -93,7 +93,7 @@ app.get('/api/health', (req, res) => {
     timestamp: new Date().toISOString(),
     uptime: process.uptime(),
     memory: process.memoryUsage(),
-    version: '2.0.0',
+    version: '2.0.0'
   });
 });
 
@@ -114,8 +114,8 @@ app.get('/api/health/detailed', async (req, res) => {
       healthReport.overall_status === 'healthy'
         ? 200
         : healthReport.overall_status === 'degraded'
-        ? 200
-        : 503;
+          ? 200
+          : 503;
 
     res.status(statusCode).json(healthReport);
   } catch (error) {
@@ -124,7 +124,7 @@ app.get('/api/health/detailed', async (req, res) => {
     res.status(503).json({
       overall_status: 'unhealthy',
       error: error.message,
-      timestamp: new Date().toISOString(),
+      timestamp: new Date().toISOString()
     });
   }
 });
@@ -147,7 +147,7 @@ app.get('/api/trips', (req, res) => {
     trips: [],
     message:
       'Trips endpoint ready - Use /api/orchestration/plan-trip for enhanced planning',
-    legacy: true,
+    legacy: true
   });
 });
 
@@ -163,7 +163,7 @@ app.get('/api/destinations', (req, res) => {
           'https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?w=400',
         rating: 4.8,
         priceRange: '$$$',
-        bestTime: 'Mar-May, Sep-Nov',
+        bestTime: 'Mar-May, Sep-Nov'
       },
       {
         id: 2,
@@ -173,7 +173,7 @@ app.get('/api/destinations', (req, res) => {
           'https://images.unsplash.com/photo-1502602898536-47ad22581b52?w=400',
         rating: 4.9,
         priceRange: '$$$$',
-        bestTime: 'Apr-Jun, Sep-Oct',
+        bestTime: 'Apr-Jun, Sep-Oct'
       },
       {
         id: 3,
@@ -183,9 +183,9 @@ app.get('/api/destinations', (req, res) => {
           'https://images.unsplash.com/photo-1512453979798-5ea266f8880c?w=400',
         rating: 4.7,
         priceRange: '$$$',
-        bestTime: 'Nov-Mar',
-      },
-    ],
+        bestTime: 'Nov-Mar'
+      }
+    ]
   });
 });
 
@@ -198,7 +198,7 @@ app.post('/api/analytics/events', validateAnalyticsEvent, (req, res) => {
     userId: userId || null,
     payload: payload || {},
     ts: Date.now(),
-    ua: req.headers['user-agent'] || '',
+    ua: req.headers['user-agent'] || ''
   });
   res.json({ success: true });
 });
@@ -216,9 +216,9 @@ app.get('/api/analytics/summary', (req, res) => {
 const paymentRoutes = require('./routes/payment');
 app.use('/api/payment', paymentRoutes);
 
-// Stripe webhook route
+// Stripe webhook route - mount specifically to webhook endpoint
 const stripeWebhook = require('./routes/stripe-webhook');
-app.use('/api/payment', stripeWebhook);
+app.use('/api/payment/webhook', stripeWebhook);
 
 // Mini App routes
 const miniappRoutes = require('./routes/miniapp');
@@ -244,25 +244,27 @@ app.use('/api/dataiku', dataikuRoutes);
 if (process.env.TELEGRAM_BOT_TOKEN && process.env.NODE_ENV !== 'test') {
   // Check if token is a placeholder
   if (process.env.TELEGRAM_BOT_TOKEN.includes('your_telegram_bot_token_here')) {
-    console.log('⚠️ Telegram Bot token not configured - skipping bot initialization');
+    console.log(
+      '⚠️ Telegram Bot token not configured - skipping bot initialization'
+    );
   } else {
     try {
       const advancedTelegramBot = require('./advanced-telegram-bot');
-    console.log('🤖 Advanced Amrikyy Telegram Bot integration enabled');
-    console.log(
-      '🧠 AI Persona: Amrikyy - Professional AI Assistant with Emotional Intelligence'
-    );
-    console.log('🎯 Boss Agent: Enhanced orchestration with skill plugins');
-    console.log('💰 Price Monitoring: Real-time alerts and optimization');
-    console.log(
-      '🔮 Dataiku ML: Flight & Hotel Price Prediction, User Churn Analysis'
-    );
-    console.log(
-      '🛠️ MCP Tools: Weather, Flights, Hotels, Halal Restaurants, Prayer Times'
-    );
-    console.log(
-      '👤 User Profiling: Advanced personalization and data collection'
-    );
+      console.log('🤖 Advanced Amrikyy Telegram Bot integration enabled');
+      console.log(
+        '🧠 AI Persona: Amrikyy - Professional AI Assistant with Emotional Intelligence'
+      );
+      console.log('🎯 Boss Agent: Enhanced orchestration with skill plugins');
+      console.log('💰 Price Monitoring: Real-time alerts and optimization');
+      console.log(
+        '🔮 Dataiku ML: Flight & Hotel Price Prediction, User Churn Analysis'
+      );
+      console.log(
+        '🛠️ MCP Tools: Weather, Flights, Hotels, Halal Restaurants, Prayer Times'
+      );
+      console.log(
+        '👤 User Profiling: Advanced personalization and data collection'
+      );
     } catch (error) {
       console.log('⚠️ Failed to initialize Telegram Bot:', error.message);
       console.log('📊 Monitoring setup will continue without Telegram Bot');
@@ -280,7 +282,7 @@ app.use((err, req, res, next) => {
   res.status(500).json({
     error: 'Something went wrong!',
     message: err.message,
-    timestamp: new Date().toISOString(),
+    timestamp: new Date().toISOString()
   });
 });
 
@@ -293,6 +295,8 @@ app.use('*', (req, res) => {
       'GET /',
       'GET /api/public/ping',
       'GET /api/health',
+      'GET /api/health/detailed',
+      'GET /metrics',
       'GET /api/openapi.json',
       'GET /api/destinations',
       'GET /api/trips',
@@ -300,6 +304,14 @@ app.use('*', (req, res) => {
       'GET /api/analytics/summary',
       'POST /api/ai/chat',
       'POST /api/ai/travel-recommendations',
+      'POST /api/ai/budget-analysis',
+      'POST /api/ai/destination-insights',
+      'POST /api/ai/payment-recommendations',
+      'POST /api/ai/multimodal/analyze',
+      'GET /api/ai/health',
+      'GET /api/ai/models',
+      'POST /api/ai/predict-intent',
+      'POST /api/ai/intent-feedback',
       'POST /api/orchestration/plan-trip',
       'POST /api/orchestration/chat',
       'GET /api/orchestration/health',
@@ -331,7 +343,15 @@ app.use('*', (req, res) => {
       'POST /api/dataiku/retention-insights',
       'GET /api/dataiku/model-metrics/:modelName',
       'GET /api/dataiku/health',
-    ],
+      'POST /api/payment/stripe/create-payment-intent',
+      'POST /api/payment/stripe/confirm-payment',
+      'GET /api/payment/stripe/payment-methods',
+      'POST /api/payment/webhook',
+      'GET /api/telegram/webhook',
+      'POST /api/telegram/webhook',
+      'GET /api/telegram/user/:userId',
+      'POST /api/telegram/send-message'
+    ]
   });
 });
 

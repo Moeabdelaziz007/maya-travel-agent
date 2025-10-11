@@ -1,5 +1,5 @@
-import { supabase } from './supabase'
-import { User, Session, AuthError } from '@supabase/supabase-js'
+import { supabase } from './supabase';
+import { User, Session, AuthError } from '@supabase/supabase-js';
 
 // Auth service for Maya Trips
 export class AuthService {
@@ -15,12 +15,12 @@ export class AuthService {
             full_name: fullName,
           },
         },
-      })
-      
-      if (error) throw error
-      return { data, error: null }
+      });
+
+      if (error) throw error;
+      return { data, error: null };
     } catch (error) {
-      return { data: null, error: error as AuthError }
+      return { data: null, error: error as AuthError };
     }
   }
 
@@ -30,12 +30,12 @@ export class AuthService {
       const { data, error } = await supabase.auth.signInWithPassword({
         email,
         password,
-      })
-      
-      if (error) throw error
-      return { data, error: null }
+      });
+
+      if (error) throw error;
+      return { data, error: null };
     } catch (error) {
-      return { data: null, error: error as AuthError }
+      return { data: null, error: error as AuthError };
     }
   }
 
@@ -47,12 +47,12 @@ export class AuthService {
         options: {
           redirectTo: `${window.location.origin}/auth/callback`,
         },
-      })
-      
-      if (error) throw error
-      return { data, error: null }
+      });
+
+      if (error) throw error;
+      return { data, error: null };
     } catch (error) {
-      return { data: null, error: error as AuthError }
+      return { data: null, error: error as AuthError };
     }
   }
 
@@ -64,45 +64,51 @@ export class AuthService {
         options: {
           redirectTo: `${window.location.origin}/auth/callback`,
         },
-      })
-      
-      if (error) throw error
-      return { data, error: null }
+      });
+
+      if (error) throw error;
+      return { data, error: null };
     } catch (error) {
-      return { data: null, error: error as AuthError }
+      return { data: null, error: error as AuthError };
     }
   }
 
   // Sign out
   static async signOut() {
     try {
-      const { error } = await supabase.auth.signOut()
-      if (error) throw error
-      return { error: null }
+      const { error } = await supabase.auth.signOut();
+      if (error) throw error;
+      return { error: null };
     } catch (error) {
-      return { error: error as AuthError }
+      return { error: error as AuthError };
     }
   }
 
   // Get current user
   static async getCurrentUser() {
     try {
-      const { data: { user }, error } = await supabase.auth.getUser()
-      if (error) throw error
-      return { user, error: null }
+      const {
+        data: { user },
+        error,
+      } = await supabase.auth.getUser();
+      if (error) throw error;
+      return { user, error: null };
     } catch (error) {
-      return { user: null, error: error as AuthError }
+      return { user: null, error: error as AuthError };
     }
   }
 
   // Get current session
   static async getCurrentSession() {
     try {
-      const { data: { session }, error } = await supabase.auth.getSession()
-      if (error) throw error
-      return { session, error: null }
+      const {
+        data: { session },
+        error,
+      } = await supabase.auth.getSession();
+      if (error) throw error;
+      return { session, error: null };
     } catch (error) {
-      return { session: null, error: error as AuthError }
+      return { session: null, error: error as AuthError };
     }
   }
 
@@ -111,12 +117,12 @@ export class AuthService {
     try {
       const { data, error } = await supabase.auth.resetPasswordForEmail(email, {
         redirectTo: `${window.location.origin}/auth/callback`,
-      })
-      
-      if (error) throw error
-      return { data, error: null }
+      });
+
+      if (error) throw error;
+      return { data, error: null };
     } catch (error) {
-      return { data: null, error: error as AuthError }
+      return { data: null, error: error as AuthError };
     }
   }
 
@@ -125,31 +131,36 @@ export class AuthService {
     try {
       const { data, error } = await supabase.auth.updateUser({
         password: newPassword,
-      })
-      
-      if (error) throw error
-      return { data, error: null }
+      });
+
+      if (error) throw error;
+      return { data, error: null };
     } catch (error) {
-      return { data: null, error: error as AuthError }
+      return { data: null, error: error as AuthError };
     }
   }
 
   // Update user profile
-  static async updateProfile(updates: { full_name?: string; avatar_url?: string }) {
+  static async updateProfile(updates: {
+    full_name?: string;
+    avatar_url?: string;
+  }) {
     try {
       const { data, error } = await supabase.auth.updateUser({
         data: updates,
-      })
-      
-      if (error) throw error
-      return { data, error: null }
+      });
+
+      if (error) throw error;
+      return { data, error: null };
     } catch (error) {
-      return { data: null, error: error as AuthError }
+      return { data: null, error: error as AuthError };
     }
   }
 
   // Listen to auth state changes
-  static onAuthStateChange(callback: (event: string, session: Session | null) => void) {
-    return supabase.auth.onAuthStateChange(callback)
+  static onAuthStateChange(
+    callback: (event: string, session: Session | null) => void
+  ) {
+    return supabase.auth.onAuthStateChange(callback);
   }
 }

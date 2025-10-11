@@ -1,7 +1,7 @@
-# 🌍 Maya Trips AI - Complete Project Summary
+# 🌍 Amrikyy Travel Agent - Complete Project Summary
 
 ## 🎯 Project Overview
-**Maya Trips AI** is a comprehensive travel assistance platform that combines AI-powered trip planning with Telegram Bot integration and payment processing. The project features a modern web application, Telegram Mini App, and intelligent AI assistant powered by Z.ai GLM-4.6.
+**Amrikyy Travel Agent** is a comprehensive travel assistance platform that combines AI-powered trip planning with Telegram Bot integration and payment processing. The project features a modern web application, Telegram Mini App, and intelligent AI assistant powered by Z.ai GLM-4.6.
 
 ## 🚀 Key Features Implemented
 
@@ -67,7 +67,7 @@ ZAI_API_BASE_URL=https://api.z.ai/api/paas/v4
 ZAI_MODEL=glm-4.6
 
 # Telegram Bot
-TELEGRAM_BOT_TOKEN=8406534524:AAH_abP6ca9o7IMyU1lqL5ImtzEWtOzhNDM
+TELEGRAM_BOT_TOKEN=your_telegram_bot_token_here
 
 # Payment Integration
 STRIPE_SECRET_KEY=your_stripe_secret_key
@@ -243,7 +243,7 @@ The bot includes a "🌐 فتح التطبيق" button that opens the web applic
 
 ## 🎉 Project Status: COMPLETE ✅
 
-**Maya Trips AI** is now fully functional with:
+**Amrikyy Travel Agent** is now fully functional with:
 - ✅ Working AI Assistant (Z.ai GLM-4.6)
 - ✅ Telegram Bot (@maya_trips_bot)
 - ✅ Payment Integration (Stripe)

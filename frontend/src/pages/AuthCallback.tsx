@@ -6,7 +6,9 @@ import { supabase } from '../lib/supabase';
 
 const AuthCallback: React.FC = () => {
   const navigate = useNavigate();
-  const [status, setStatus] = useState<'loading' | 'success' | 'error'>('loading');
+  const [status, setStatus] = useState<'loading' | 'success' | 'error'>(
+    'loading'
+  );
   const [message, setMessage] = useState('');
   const [user, setUser] = useState<any>(null);
 
@@ -19,16 +21,20 @@ const AuthCallback: React.FC = () => {
       // Get the URL hash and search params
       const hashParams = new URLSearchParams(window.location.hash.substring(1));
       const searchParams = new URLSearchParams(window.location.search);
-      
+
       // Check for auth callback parameters
       const accessToken = hashParams.get('access_token');
       const refreshToken = hashParams.get('refresh_token');
       const error = hashParams.get('error') || searchParams.get('error');
-      const errorDescription = hashParams.get('error_description') || searchParams.get('error_description');
+      const errorDescription =
+        hashParams.get('error_description') ||
+        searchParams.get('error_description');
 
       if (error) {
         setStatus('error');
-        setMessage(errorDescription || 'An error occurred during authentication');
+        setMessage(
+          errorDescription || 'An error occurred during authentication'
+        );
         return;
       }
 
@@ -49,7 +55,7 @@ const AuthCallback: React.FC = () => {
           setStatus('success');
           setMessage('Email confirmed successfully! Welcome to Maya Trips!');
           setUser(data.user);
-          
+
           // Redirect to dashboard after 3 seconds
           setTimeout(() => {
             navigate('/', { replace: true });
@@ -60,8 +66,11 @@ const AuthCallback: React.FC = () => {
         }
       } else {
         // Check if user is already authenticated
-        const { data: { session }, error: sessionError } = await supabase.auth.getSession();
-        
+        const {
+          data: { session },
+          error: sessionError,
+        } = await supabase.auth.getSession();
+
         if (sessionError) {
           setStatus('error');
           setMessage(sessionError.message);
@@ -72,7 +81,7 @@ const AuthCallback: React.FC = () => {
           setStatus('success');
           setMessage('You are already signed in!');
           setUser(session.user);
-          
+
           setTimeout(() => {
             navigate('/', { replace: true });
           }, 2000);
@@ -107,7 +116,7 @@ const AuthCallback: React.FC = () => {
           <>
             <motion.div
               animate={{ rotate: 360 }}
-              transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
+              transition={{ duration: 2, repeat: Infinity, ease: 'linear' }}
               className="w-16 h-16 mx-auto mb-6 text-blue-500"
             >
               <Loader2 className="w-16 h-16" />
@@ -126,7 +135,7 @@ const AuthCallback: React.FC = () => {
             <motion.div
               initial={{ scale: 0 }}
               animate={{ scale: 1 }}
-              transition={{ type: "spring", duration: 0.5 }}
+              transition={{ type: 'spring', duration: 0.5 }}
               className="w-16 h-16 mx-auto mb-6 text-green-500"
             >
               <CheckCircle className="w-16 h-16" />
@@ -134,9 +143,7 @@ const AuthCallback: React.FC = () => {
             <h1 className="text-2xl font-bold text-gray-800 mb-4">
               Email Confirmed!
             </h1>
-            <p className="text-gray-600 mb-6">
-              {message}
-            </p>
+            <p className="text-gray-600 mb-6">{message}</p>
             {user && (
               <div className="bg-green-50 border border-green-200 rounded-lg p-4 mb-6">
                 <div className="flex items-center space-x-2">
@@ -172,7 +179,7 @@ const AuthCallback: React.FC = () => {
             <motion.div
               initial={{ scale: 0 }}
               animate={{ scale: 1 }}
-              transition={{ type: "spring", duration: 0.5 }}
+              transition={{ type: 'spring', duration: 0.5 }}
               className="w-16 h-16 mx-auto mb-6 text-red-500"
             >
               <XCircle className="w-16 h-16" />
@@ -180,11 +187,11 @@ const AuthCallback: React.FC = () => {
             <h1 className="text-2xl font-bold text-gray-800 mb-4">
               Confirmation Failed
             </h1>
-            <p className="text-gray-600 mb-6">
-              {message}
-            </p>
+            <p className="text-gray-600 mb-6">{message}</p>
             <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-6">
-              <h3 className="text-red-800 font-medium mb-2">Possible reasons:</h3>
+              <h3 className="text-red-800 font-medium mb-2">
+                Possible reasons:
+              </h3>
               <ul className="text-red-700 text-sm space-y-1 text-left">
                 <li>• The confirmation link has expired</li>
                 <li>• The link has already been used</li>
@@ -218,8 +225,8 @@ const AuthCallback: React.FC = () => {
         <div className="mt-8 pt-6 border-t border-gray-200">
           <p className="text-sm text-gray-500">
             Need help? Contact us at{' '}
-            <a 
-              href="mailto:support@mayatrips.com" 
+            <a
+              href="mailto:support@mayatrips.com"
               className="text-blue-600 hover:underline"
             >
               support@mayatrips.com

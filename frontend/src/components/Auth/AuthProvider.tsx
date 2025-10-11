@@ -6,8 +6,15 @@ interface AuthContextType {
   user: User | null;
   session: Session | null;
   loading: boolean;
-  signIn: (email: string, password: string) => Promise<{ data: any; error: any }>;
-  signUp: (email: string, password: string, fullName?: string) => Promise<{ data: any; error: any }>;
+  signIn: (
+    email: string,
+    password: string
+  ) => Promise<{ data: any; error: any }>;
+  signUp: (
+    email: string,
+    password: string,
+    fullName?: string
+  ) => Promise<{ data: any; error: any }>;
   signOut: () => Promise<{ error: any }>;
   signInWithGoogle: () => Promise<{ data: any; error: any }>;
   signInWithGitHub: () => Promise<{ data: any; error: any }>;
@@ -44,25 +51,25 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     getInitialSession();
 
     // Listen for auth changes
-    const { data: { subscription } } = AuthService.onAuthStateChange(
-      async (event, session) => {
-        console.log('Auth state change:', event, session?.user?.email);
-        
-        setSession(session);
-        setUser(session?.user ?? null);
-        setLoading(false);
-        
-        // Handle email confirmation
-        if (event === 'SIGNED_IN' && session?.user) {
-          console.log('User signed in successfully:', session.user.email);
-        }
-        
-        // Handle email confirmation
-        if (event === 'TOKEN_REFRESHED' && session?.user) {
-          console.log('Token refreshed for user:', session.user.email);
-        }
+    const {
+      data: { subscription },
+    } = AuthService.onAuthStateChange(async (event, session) => {
+      console.log('Auth state change:', event, session?.user?.email);
+
+      setSession(session);
+      setUser(session?.user ?? null);
+      setLoading(false);
+
+      // Handle email confirmation
+      if (event === 'SIGNED_IN' && session?.user) {
+        console.log('User signed in successfully:', session.user.email);
       }
-    );
+
+      // Handle email confirmation
+      if (event === 'TOKEN_REFRESHED' && session?.user) {
+        console.log('Token refreshed for user:', session.user.email);
+      }
+    });
 
     return () => subscription.unsubscribe();
   }, []);
@@ -98,9 +105,5 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     signInWithGitHub,
   };
 
-  return (
-    <AuthContext.Provider value={value}>
-      {children}
-    </AuthContext.Provider>
-  );
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };

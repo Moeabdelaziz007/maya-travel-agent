@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "vercel": {
+      "url": "https://mcp.vercel.com",
+      "description": "General Vercel access - manage all projects and deployments"
+    },
+    "vercel-amrikyy": {
+      "url": "https://mcp.vercel.com/YOUR_TEAM_SLUG/maya-travel-agent",
+      "description": "Project-specific access for Amrikyy Travel Agent - automatic context"
+    }
+  }
+}
