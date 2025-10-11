@@ -1,0 +1,43 @@
+{
+  "version": "2.0.0",
+  "projectName": "Maya AI Travel Assistant",
+  "projectType": "nodejs",
+  "description": "Advanced Telegram Bot with AI Integration for Travel Planning",
+  "language": "typescript",
+  "runtime": {
+    "type": "node",
+    "version": "18.x"
+  },
+  "build": {
+    "type": "npm",
+    "scripts": {
+      "dev": "npm run dev",
+      "build": "npm run build",
+      "start": "npm start"
+    }
+  },
+  "debug": {
+    "type": "node",
+    "port": 9229
+  },
+  "extensions": {
+    "recommended": [
+      "ms-vscode.vscode-typescript-next",
+      "bradlc.vscode-tailwindcss",
+      "esbenp.prettier-vscode",
+      "ms-vscode.vscode-json"
+    ]
+  },
+  "workspace": {
+    "folders": [
+      {
+        "name": "Frontend",
+        "path": "./frontend"
+      },
+      {
+        "name": "Backend", 
+        "path": "./backend"
+      }
+    ]
+  }
+}
