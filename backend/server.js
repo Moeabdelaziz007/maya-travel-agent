@@ -13,6 +13,11 @@ const HealthChecker = require('./src/monitoring/health-check');
 const redisService = require('./src/services/redis-service');
 const RedisSessionStore = require('./src/services/redis-session-store');
 
+// Import Enhanced AI services
+const enhancedAIService = require('./src/services/enhanced-ai-service');
+const vllmService = require('./src/services/vllm-service');
+const quantumService = require('./src/services/quantum-service');
+
 // Import new security middleware
 const {
   securityHeaders,
@@ -252,6 +257,125 @@ app.use('/api/telegram', miniappRoutes);
 const aiRoutes = require('./routes/ai');
 app.use('/api/ai', aiRoutes);
 
+// Enhanced AI routes (vLLM + Quantum)
+app.post('/api/enhanced-ai/chat', async (req, res) => {
+  try {
+    const { query, userData, options } = req.body;
+    const response = await enhancedAIService.processTravelQuery(query, userData || {}, options || {});
+
+    res.json({
+      success: true,
+      ...response,
+      timestamp: Date.now()
+    });
+  } catch (error) {
+    console.error('Enhanced AI chat error:', error.message);
+    res.status(500).json({
+      success: false,
+      error: error.message,
+      timestamp: Date.now()
+    });
+  }
+});
+
+app.get('/api/enhanced-ai/stream/:sessionId', async (req, res) => {
+  try {
+    const { sessionId } = req.params;
+    const { query, userData } = req.query;
+
+    res.setHeader('Content-Type', 'text/event-stream');
+    res.setHeader('Cache-Control', 'no-cache');
+    res.setHeader('Connection', 'keep-alive');
+
+    await enhancedAIService.getStreamingResponse(query, userData || {}, (chunk) => {
+      res.write(`data: ${JSON.stringify(chunk)}\n\n`);
+    });
+
+    res.end();
+  } catch (error) {
+    console.error('Enhanced AI streaming error:', error.message);
+    res.status(500).end();
+  }
+});
+
+app.get('/api/enhanced-ai/health', async (req, res) => {
+  try {
+    const health = await enhancedAIService.getHealth();
+    res.json(health);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+app.post('/api/enhanced-ai/clear-cache', async (req, res) => {
+  try {
+    const cleared = await enhancedAIService.clearCache();
+    res.json({ success: true, cleared, timestamp: Date.now() });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Quantum service routes
+app.post('/api/quantum/encrypt', async (req, res) => {
+  try {
+    const { data } = req.body;
+    const encrypted = await quantumService.encryptData(data);
+    res.json({ success: true, encrypted, timestamp: Date.now() });
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
+app.post('/api/quantum/decrypt', async (req, res) => {
+  try {
+    const { encryptedData } = req.body;
+    const decrypted = await quantumService.decryptData(encryptedData);
+    res.json({ success: true, decrypted, timestamp: Date.now() });
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
+app.post('/api/quantum/sign', async (req, res) => {
+  try {
+    const { data } = req.body;
+    const signature = await quantumService.signData(data);
+    res.json({ success: true, signature, timestamp: Date.now() });
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
+app.get('/api/quantum/health', async (req, res) => {
+  try {
+    const health = await quantumService.getHealth();
+    res.json(health);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// vLLM service routes
+app.get('/api/vllm/health', async (req, res) => {
+  try {
+    const health = await vllmService.getHealth();
+    res.json(health);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+app.post('/api/vllm/generate', async (req, res) => {
+  try {
+    const { params } = req.body;
+    const result = await vllmService.generateTravelPlan(params);
+    res.json({ success: true, result, timestamp: Date.now() });
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
 // Enhanced Orchestration routes (NEW)
 const orchestrationRoutes = require('./routes/orchestration');
 app.use('/api/orchestration', orchestrationRoutes);
@@ -368,6 +492,19 @@ app.use('*', (req, res) => {
       'GET /api/ai/models',
       'POST /api/ai/predict-intent',
       'POST /api/ai/intent-feedback',
+      // Enhanced AI endpoints (vLLM + Quantum)
+      'POST /api/enhanced-ai/chat',
+      'GET /api/enhanced-ai/stream/:sessionId',
+      'GET /api/enhanced-ai/health',
+      'POST /api/enhanced-ai/clear-cache',
+      // Quantum service endpoints
+      'POST /api/quantum/encrypt',
+      'POST /api/quantum/decrypt',
+      'POST /api/quantum/sign',
+      'GET /api/quantum/health',
+      // vLLM service endpoints
+      'GET /api/vllm/health',
+      'POST /api/vllm/generate',
       'POST /api/orchestration/plan-trip',
       'POST /api/orchestration/chat',
       'GET /api/orchestration/health',

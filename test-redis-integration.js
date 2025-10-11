@@ -38,14 +38,26 @@ async function testRedisIntegration() {
     const retrievedData = await redisService.get(testKey);
     console.log(`   Get result: ${retrievedData ? '✅' : '❌'}`);
     if (retrievedData) {
-      console.log(`   Data matches: ${JSON.stringify(retrievedData) === JSON.stringify(testData) ? '✅' : '❌'}`);
+      console.log(
+        `   Data matches: ${
+          JSON.stringify(retrievedData) === JSON.stringify(testData)
+            ? '✅'
+            : '❌'
+        }`
+      );
     }
 
     // Test 3: Rate limiting simulation
     console.log('\n3️⃣ Testing rate limiting...');
     const rateLimitKey = 'test:ratelimit';
-    const rateLimitResult = await redisService.checkRateLimit(rateLimitKey, 60000, 5); // 1 min, 5 requests
-    console.log(`   Rate limit check: ${rateLimitResult.allowed ? '✅' : '❌'}`);
+    const rateLimitResult = await redisService.checkRateLimit(
+      rateLimitKey,
+      60000,
+      5
+    ); // 1 min, 5 requests
+    console.log(
+      `   Rate limit check: ${rateLimitResult.allowed ? '✅' : '❌'}`
+    );
     console.log(`   Remaining requests: ${rateLimitResult.remaining}`);
 
     // Test 4: Session management simulation
@@ -53,7 +65,11 @@ async function testRedisIntegration() {
     const sessionId = 'test-session-123';
     const sessionData = { userId: 123, loginTime: new Date().toISOString() };
 
-    const sessionSet = await redisService.setSession(sessionId, sessionData, 300); // 5 minutes
+    const sessionSet = await redisService.setSession(
+      sessionId,
+      sessionData,
+      300
+    ); // 5 minutes
     console.log(`   Session set: ${sessionSet ? '✅' : '❌'}`);
 
     const retrievedSession = await redisService.getSession(sessionId);
@@ -93,7 +109,6 @@ async function testRedisIntegration() {
       await redisService.disconnect();
       console.log('✅ Redis disconnected');
     }
-
   } catch (error) {
     console.error('❌ Test failed with error:', error.message);
     process.exit(1);
