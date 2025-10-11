@@ -18,7 +18,7 @@ class CollibraConfigManager {
     this.collibraUrl =
       config.collibraUrl ||
       process.env.COLLIBRA_URL ||
-      'https://maya.collibra.com';
+      'https://amrikyy.collibra.com';
     this.apiKey = config.apiKey || process.env.COLLIBRA_API_KEY;
     this.username = config.username || process.env.COLLIBRA_USERNAME;
     this.password = config.password || process.env.COLLIBRA_PASSWORD;
@@ -78,7 +78,7 @@ class CollibraConfigManager {
       logger.info('Fetching config from Collibra', { environment });
 
       // Step 1: Find the configuration asset
-      const assetName = `maya_${environment}_config`;
+      const assetName = `amrikyy_${environment}_config`;
       const asset = await this.findAsset(assetName, 'Configuration');
 
       if (!asset) {
@@ -197,7 +197,7 @@ class CollibraConfigManager {
 
     return {
       database: {
-        url: process.env.DATABASE_URL || 'postgresql://localhost:5432/maya',
+        url: process.env.DATABASE_URL || 'postgresql://localhost:5432/amrikyy',
         pool_size: parseInt(process.env.DB_POOL_SIZE || '10'),
         ssl: environment === 'production'
       },
@@ -242,7 +242,7 @@ class CollibraConfigManager {
    */
   async updateConfig(environment, section, key, value) {
     try {
-      const assetName = `maya_${environment}_config`;
+      const assetName = `amrikyy_${environment}_config`;
       const asset = await this.findAsset(assetName, 'Configuration');
 
       if (!asset) {
@@ -286,7 +286,7 @@ class CollibraConfigManager {
    */
   async getConfigMetadata(environment) {
     try {
-      const assetName = `maya_${environment}_config`;
+      const assetName = `amrikyy_${environment}_config`;
       const asset = await this.findAsset(assetName, 'Configuration');
 
       if (!asset) {

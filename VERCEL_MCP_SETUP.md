@@ -39,7 +39,7 @@ Edit `.cursor/mcp.json` and replace `YOUR_TEAM_SLUG` with your actual team slug:
 
 ```json
 "vercel-amrikyy": {
-  "url": "https://mcp.vercel.com/YOUR_TEAM_SLUG/maya-travel-agent"
+  "url": "https://mcp.vercel.com/YOUR_TEAM_SLUG/amrikyy-travel-agent"
 }
 ```
 
@@ -47,7 +47,7 @@ Edit `.cursor/mcp.json` and replace `YOUR_TEAM_SLUG` with your actual team slug:
 
 ```json
 "vercel-amrikyy": {
-  "url": "https://mcp.vercel.com/acme-corp/maya-travel-agent"
+  "url": "https://mcp.vercel.com/acme-corp/amrikyy-travel-agent"
 }
 ```
 
@@ -79,7 +79,7 @@ Once authorized, you can ask Cursor's AI:
 ### Project Operations
 
 - "List all my Vercel projects"
-- "Show project settings for maya-travel-agent"
+- "Show project settings for amrikyy-travel-agent"
 - "What are the current environment variables?"
 
 ### Analytics & Monitoring

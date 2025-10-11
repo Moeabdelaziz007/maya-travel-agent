@@ -1,25 +1,25 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: maya-backend
-  namespace: maya-travel
+  name: amrikyy-backend
+  namespace: amrikyy-travel
   labels:
-    app: maya-backend
+    app: amrikyy-backend
     component: api
 spec:
   replicas: 3
   selector:
     matchLabels:
-      app: maya-backend
+      app: amrikyy-backend
   template:
     metadata:
       labels:
-        app: maya-backend
+        app: amrikyy-backend
         component: api
     spec:
       containers:
       - name: backend
-        image: maya-travel/backend:latest
+        image: amrikyy-travel/backend:latest
         ports:
         - containerPort: 5000
           name: http
@@ -31,32 +31,32 @@ spec:
         - name: SUPABASE_URL
           valueFrom:
             secretKeyRef:
-              name: maya-secrets
+              name: amrikyy-secrets
               key: supabase-url
         - name: SUPABASE_ANON_KEY
           valueFrom:
             secretKeyRef:
-              name: maya-secrets
+              name: amrikyy-secrets
               key: supabase-anon-key
         - name: SUPABASE_SERVICE_ROLE_KEY
           valueFrom:
             secretKeyRef:
-              name: maya-secrets
+              name: amrikyy-secrets
               key: supabase-service-role-key
         - name: TELEGRAM_BOT_TOKEN
           valueFrom:
             secretKeyRef:
-              name: maya-secrets
+              name: amrikyy-secrets
               key: telegram-bot-token
         - name: STRIPE_SECRET_KEY
           valueFrom:
             secretKeyRef:
-              name: maya-secrets
+              name: amrikyy-secrets
               key: stripe-secret-key
         - name: ZAI_API_KEY
           valueFrom:
             secretKeyRef:
-              name: maya-secrets
+              name: amrikyy-secrets
               key: zai-api-key
         resources:
           requests:
@@ -87,20 +87,20 @@ spec:
                 - key: app
                   operator: In
                   values:
-                  - maya-backend
+                  - amrikyy-backend
               topologyKey: kubernetes.io/hostname
 
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: maya-backend-service
-  namespace: maya-travel
+  name: amrikyy-backend-service
+  namespace: amrikyy-travel
   labels:
-    app: maya-backend
+    app: amrikyy-backend
 spec:
   selector:
-    app: maya-backend
+    app: amrikyy-backend
   ports:
   - name: http
     port: 80
@@ -112,25 +112,25 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: maya-frontend
-  namespace: maya-travel
+  name: amrikyy-frontend
+  namespace: amrikyy-travel
   labels:
-    app: maya-frontend
+    app: amrikyy-frontend
     component: web
 spec:
   replicas: 2
   selector:
     matchLabels:
-      app: maya-frontend
+      app: amrikyy-frontend
   template:
     metadata:
       labels:
-        app: maya-frontend
+        app: amrikyy-frontend
         component: web
     spec:
       containers:
       - name: frontend
-        image: maya-travel/frontend:latest
+        image: amrikyy-travel/frontend:latest
         ports:
         - containerPort: 80
           name: http
@@ -138,17 +138,17 @@ spec:
         - name: VITE_SUPABASE_URL
           valueFrom:
             secretKeyRef:
-              name: maya-secrets
+              name: amrikyy-secrets
               key: supabase-url
         - name: VITE_SUPABASE_ANON_KEY
           valueFrom:
             secretKeyRef:
-              name: maya-secrets
+              name: amrikyy-secrets
               key: supabase-anon-key
         - name: VITE_STRIPE_PUBLISHABLE_KEY
           valueFrom:
             secretKeyRef:
-              name: maya-secrets
+              name: amrikyy-secrets
               key: stripe-publishable-key
         resources:
           requests:
@@ -174,13 +174,13 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: maya-frontend-service
-  namespace: maya-travel
+  name: amrikyy-frontend-service
+  namespace: amrikyy-travel
   labels:
-    app: maya-frontend
+    app: amrikyy-frontend
 spec:
   selector:
-    app: maya-frontend
+    app: amrikyy-frontend
   ports:
   - name: http
     port: 80
@@ -192,8 +192,8 @@ spec:
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: maya-ingress
-  namespace: maya-travel
+  name: amrikyy-ingress
+  namespace: amrikyy-travel
   annotations:
     nginx.ingress.kubernetes.io/rewrite-target: /
     cert-manager.io/cluster-issuer: "letsencrypt-prod"
@@ -201,28 +201,28 @@ spec:
   ingressClassName: nginx
   tls:
   - hosts:
-    - api.maya-travel-agent.com
-    - app.maya-travel-agent.com
-    secretName: maya-tls
+    - api.amrikyy-travel-agent.com
+    - app.amrikyy-travel-agent.com
+    secretName: amrikyy-tls
   rules:
-  - host: api.maya-travel-agent.com
+  - host: api.amrikyy-travel-agent.com
     http:
       paths:
       - path: /
         pathType: Prefix
         backend:
           service:
-            name: maya-backend-service
+            name: amrikyy-backend-service
             port:
               number: 80
-  - host: app.maya-travel-agent.com
+  - host: app.amrikyy-travel-agent.com
     http:
       paths:
       - path: /
         pathType: Prefix
         backend:
           service:
-            name: maya-frontend-service
+            name: amrikyy-frontend-service
             port:
               number: 80
 
@@ -230,8 +230,8 @@ spec:
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: maya-config
-  namespace: maya-travel
+  name: amrikyy-config
+  namespace: amrikyy-travel
 data:
   prometheus.yml: |
     global:
@@ -243,23 +243,23 @@ data:
       # - "second_rules.yml"
 
     scrape_configs:
-      - job_name: 'maya-backend'
+      - job_name: 'amrikyy-backend'
         static_configs:
-          - targets: ['maya-backend-service:80']
+          - targets: ['amrikyy-backend-service:80']
         metrics_path: '/metrics'
         scrape_interval: 5s
 
-      - job_name: 'maya-frontend'
+      - job_name: 'amrikyy-frontend'
         static_configs:
-          - targets: ['maya-frontend-service:80']
+          - targets: ['amrikyy-frontend-service:80']
         scrape_interval: 15s
 
 ---
 apiVersion: v1
 kind: Secret
 metadata:
-  name: maya-secrets
-  namespace: maya-travel
+  name: amrikyy-secrets
+  namespace: amrikyy-travel
 type: Opaque
 data:
   # Base64 encoded secrets - replace with actual values
@@ -275,8 +275,8 @@ data:
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: maya-storage
-  namespace: maya-travel
+  name: amrikyy-storage
+  namespace: amrikyy-travel
 spec:
   accessModes:
     - ReadWriteOnce
@@ -289,25 +289,25 @@ spec:
 apiVersion: policy/v1
 kind: PodDisruptionBudget
 metadata:
-  name: maya-backend-pdb
-  namespace: maya-travel
+  name: amrikyy-backend-pdb
+  namespace: amrikyy-travel
 spec:
   minAvailable: 2
   selector:
     matchLabels:
-      app: maya-backend
+      app: amrikyy-backend
 
 ---
 apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
-  name: maya-backend-hpa
-  namespace: maya-travel
+  name: amrikyy-backend-hpa
+  namespace: amrikyy-travel
 spec:
   scaleTargetRef:
     apiVersion: apps/v1
     kind: Deployment
-    name: maya-backend
+    name: amrikyy-backend
   minReplicas: 3
   maxReplicas: 10
   metrics:

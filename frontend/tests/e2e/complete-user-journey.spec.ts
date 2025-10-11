@@ -70,7 +70,7 @@ test.describe('Complete User Journey - New User Plans First Trip', () => {
 
   test('should complete full user journey: landing → trip planner → BossAgent → skills → AI chat → emotion detection → friendship progression', async ({ page }) => {
     // Step 1: Landing page and initial interaction
-    await expect(page.locator('h1')).toContainText(/maya|travel|رحل/i)
+    await expect(page.locator('h1')).toContainText(/amrikyy|travel|رحل/i)
 
     // Should show trip planner interface
     await expect(page.locator('[data-testid="trip-planner"]')).toBeVisible()
@@ -108,7 +108,7 @@ test.describe('Complete User Journey - New User Plans First Trip', () => {
     await expect(page.locator('[data-testid="activity-item"]')).toContainText('Senso-ji Temple')
 
     // Step 6: Navigate to AI chat for interaction
-    await page.click('button:has-text("Maya AI")')
+    await page.click('button:has-text("Amrikyy AI")')
 
     // Should show AI chat interface
     await expect(page.locator('[data-testid="ai-chat"]')).toBeVisible()
@@ -151,7 +151,7 @@ test.describe('Complete User Journey - New User Plans First Trip', () => {
     await expect(page.locator('[data-testid="trip-results"]')).toBeVisible()
 
     // Step 12: Test navigation back to chat and state persistence
-    await page.click('button:has-text("Maya AI")')
+    await page.click('button:has-text("Amrikyy AI")')
     await expect(page.locator('[data-testid="chat-message"]')).toHaveCount(3) // Should have 3 messages
 
     // Step 13: Final friendship progression check

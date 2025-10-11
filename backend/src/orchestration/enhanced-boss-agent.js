@@ -36,7 +36,7 @@ class EnhancedBossAgent extends BossAgent {
       bootstrapServers: config.confluentBootstrapServers,
       saslUsername: config.confluentSaslUsername,
       saslPassword: config.confluentSaslPassword,
-      groupId: config.confluentGroupId || 'maya-enhanced-boss-agent'
+      groupId: config.confluentGroupId || 'amrikyy-enhanced-boss-agent'
     });
 
     // Register core skills
@@ -109,8 +109,13 @@ class EnhancedBossAgent extends BossAgent {
    */
   registerMockAgents() {
     try {
+      // Use Amadeus Flight Agent for production flight search
+      const AmadeusFlightAgent = require('../agents/amadeus-flight-agent');
+      this.registerAgent('flight_search', new AmadeusFlightAgent());
+
+      // Keep mock flight agent as fallback
       const MockFlightAgent = require('../agents/mock-flight-agent');
-      this.registerAgent('flight_search', new MockFlightAgent());
+      this.registerAgent('mock_flight_search', new MockFlightAgent());
 
       // Register additional mock agents for testing
       this.registerAgent('hotel_search', {
@@ -553,7 +558,7 @@ class EnhancedBossAgent extends BossAgent {
           code: 'ENHANCED_ORCHESTRATION_FAILED',
           message: this.generateEmpatheticErrorMessage(empathyResult, friendshipResult),
           original_error: error.message,
-          support_contact: 'support@mayatravel.ai',
+          support_contact: 'support@amrikyytravel.ai',
           suggested_actions: [
             'Try rephrasing your request',
             'Contact our support team',
@@ -578,7 +583,7 @@ class EnhancedBossAgent extends BossAgent {
             en: 'We\'re experiencing technical difficulties. Please try again later.',
             ar: 'نواجه صعوبات فنية. يرجى المحاولة مرة أخرى لاحقاً.'
           },
-          support_contact: 'support@mayatravel.ai'
+          support_contact: 'support@amrikyytravel.ai'
         }
       };
     }

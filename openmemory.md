@@ -192,7 +192,7 @@ Define your project-specific namespaces below. The AI will use these description
 #### `/src/ai/` Module
 
 - **zaiClient.js**: Z.ai API client wrapper
-- **mayaPersona.js**: Amrikyy's personality, tone, and conversation style (file retains legacy name)
+- **amrikyyPersona.js**: Amrikyy's personality, tone, and conversation style (file retains legacy name)
 - **userProfiling.js**: Dynamic user preference extraction from conversations
 - **culture.js**: Saudi/Arabic cultural context and adaptations
 - **tools.js**: Tool definitions for AI function calling
@@ -315,6 +315,6 @@ _This section will be populated as user preferences are discovered._
 - [2025-10-10 Initial]: Performed initial codebase deep dive and created OpenMemory guide
 - [2025-10-10 Initial]: Documented complete project architecture, tech stack, and component structure
 - [2025-10-10 Initial]: Added Gitpod workspace configuration for cloud-based development
-- [2025-10-10 Rebrand]: Rebranded from Maya to Amrikyy - AI Automation Platform positioning
+- [2025-10-10 Rebrand]: Rebranded from Amrikyy to Amrikyy - AI Automation Platform positioning
 - [2025-10-10 Rebrand]: Restructured routing - Landing at /, Travel app at /app
 - [2025-10-10 Rebrand]: Updated all project documentation and configuration files

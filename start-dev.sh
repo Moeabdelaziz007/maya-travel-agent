@@ -1,6 +1,6 @@
 #!/bin/bash
 
-echo "🚀 Starting Maya Trips Development Environment"
+echo "🚀 Starting Amrikyy Trips Development Environment"
 echo "=============================================="
 
 # Check if Node.js is installed

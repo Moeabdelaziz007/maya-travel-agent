@@ -1,4 +1,4 @@
--- Maya Trips Database Schema
+-- Amrikyy Trips Database Schema
 -- Run this in your Supabase SQL Editor
 
 -- Create users table (extends auth.users)

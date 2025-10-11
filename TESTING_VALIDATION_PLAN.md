@@ -18,8 +18,8 @@ This document outlines the testing strategy for validating the Phase 1 critical 
 #### Test Cases:
 - [ ] **CORS Origin Validation**
   - ✅ Allow localhost:3000, localhost:3001
-  - ✅ Allow maya-travel-agent.vercel.app
-  - ✅ Allow maya-travel-agent.com and www.maya-travel-agent.com
+  - ✅ Allow amrikyy-travel-agent.vercel.app
+  - ✅ Allow amrikyy-travel-agent.com and www.amrikyy-travel-agent.com
   - ✅ Allow Vercel preview deployments (regex pattern)
   - ❌ Block malicious origins
 
@@ -88,7 +88,7 @@ This document outlines the testing strategy for validating the Phase 1 critical 
 ### Manual Testing Commands:
 ```bash
 # Test CORS from different origins
-curl -H "Origin: https://maya-travel-agent.vercel.app" -I http://localhost:5000/api/health
+curl -H "Origin: https://amrikyy-travel-agent.vercel.app" -I http://localhost:5000/api/health
 curl -H "Origin: https://malicious-site.com" -I http://localhost:5000/api/health
 
 # Test rate limiting

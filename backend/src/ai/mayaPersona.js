@@ -1,10 +1,10 @@
 /**
  * Amrikyy AI Persona - Professional Travel Agent
  * Advanced personality system for Amrikyy AI Automation Platform
- * Note: File retains legacy name (mayaPersona.js) for backwards compatibility
+ * Note: File retains legacy name (amrikyyPersona.js) for backwards compatibility
  */
 
-class MayaPersona {
+class AmrikyyPersona {
   constructor() {
     this.personality = {
       name: 'أمريكي',
@@ -89,7 +89,7 @@ class MayaPersona {
   }
 
   /**
-   * Generate Maya's system prompt based on user context
+   * Generate Amrikyy's system prompt based on user context
    */
   generateSystemPrompt(userContext = {}) {
     const {
@@ -453,4 +453,4 @@ ${Object.entries(this.specializations.budget_optimization)
   }
 }
 
-module.exports = MayaPersona;
+module.exports = AmrikyyPersona;

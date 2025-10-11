@@ -2,7 +2,7 @@
 
 ## Overview
 
-This document explains how to integrate the Maya Travel Agent dbt analytics models with Dataiku for advanced analytics, machine learning, and dashboard creation.
+This document explains how to integrate the Amrikyy Travel Agent dbt analytics models with Dataiku for advanced analytics, machine learning, and dashboard creation.
 
 ## Integration Architecture
 
@@ -25,7 +25,7 @@ This document explains how to integrate the Maya Travel Agent dbt analytics mode
 
 1. **Create New Project**:
    - Open Dataiku DSS
-   - Create a new project: "Maya Travel Analytics"
+   - Create a new project: "Amrikyy Travel Analytics"
    - Select appropriate project permissions
 
 2. **Configure Database Connection**:
@@ -66,7 +66,7 @@ This document explains how to integrate the Maya Travel Agent dbt analytics mode
 #### Option B: Export to Files (Alternative)
 ```bash
 # Export dbt models to CSV for Dataiku import
-cd analytics/dbt/maya_travel_analytics
+cd analytics/dbt/amrikyy_travel_analytics
 
 # Generate CSV exports
 dbt run --target prod
@@ -81,7 +81,7 @@ psql $DATABASE_URL -c "
 ### 3. Create Dataiku Flow
 
 1. **Build Analytics Flow**:
-   - Create new Flow: "Maya Travel Analytics"
+   - Create new Flow: "Amrikyy Travel Analytics"
    - Add imported datasets to the flow
    - Connect related datasets (e.g., fact tables to dimension tables)
 
@@ -266,7 +266,7 @@ forecast_dataset.write_with_schema(forecast)
 ### Git Integration
 ```bash
 # Initialize git repository
-cd analytics/dbt/maya_travel_analytics
+cd analytics/dbt/amrikyy_travel_analytics
 git init
 
 # Add Dataiku project files to .gitignore

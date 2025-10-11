@@ -5,8 +5,57 @@
       "description": "General Vercel access - manage all projects and deployments"
     },
     "vercel-amrikyy": {
-      "url": "https://mcp.vercel.com/YOUR_TEAM_SLUG/maya-travel-agent",
+      "url": "https://mcp.vercel.com/YOUR_TEAM_SLUG/amrikyy-travel-agent",
       "description": "Project-specific access for Amrikyy Travel Agent - automatic context"
+    },
+    "railway": {
+      "url": "https://mcp.railway.app",
+      "description": "Railway deployment and database management"
+    },
+    "supabase": {
+      "url": "https://mcp.supabase.com",
+      "description": "Supabase database and authentication management"
+    },
+    "github": {
+      "url": "https://mcp.github.com",
+      "description": "GitHub repository management and CI/CD"
+    },
+    "stripe": {
+      "url": "https://mcp.stripe.com",
+      "description": "Stripe payment processing and subscription management"
+    },
+    "telegram": {
+      "url": "https://mcp.telegram.org",
+      "description": "Telegram bot and mini app management"
+    },
+    "filesystem": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-filesystem",
+        "/Users/Shared/maya-travel-agent"
+      ],
+      "description": "Local filesystem access for project files"
+    },
+    "git": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-git",
+        "--repository",
+        "/Users/Shared/maya-travel-agent"
+      ],
+      "description": "Git repository management and version control"
+    },
+    "sqlite": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-sqlite",
+        "--db-path",
+        "/Users/Shared/maya-travel-agent/database.db"
+      ],
+      "description": "SQLite database for local development data"
     }
   }
 }

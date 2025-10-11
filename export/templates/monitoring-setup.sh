@@ -1,11 +1,11 @@
 #!/bin/bash
 
-# Maya Travel Agent - Monitoring Setup Script
+# Amrikyy Travel Agent - Monitoring Setup Script
 # This script sets up comprehensive monitoring infrastructure
 
 set -e
 
-echo "🚀 Setting up Maya Travel Agent monitoring infrastructure..."
+echo "🚀 Setting up Amrikyy Travel Agent monitoring infrastructure..."
 
 # Colors for output
 RED='\033[0;31m'
@@ -40,15 +40,15 @@ scrape_configs:
     static_configs:
       - targets: ['localhost:9090']
 
-  - job_name: 'maya-backend'
+  - job_name: 'amrikyy-backend'
     static_configs:
-      - targets: ['maya-backend:5000']
+      - targets: ['amrikyy-backend:5000']
     metrics_path: '/metrics'
     scrape_interval: 5s
 
-  - job_name: 'maya-frontend'
+  - job_name: 'amrikyy-frontend'
     static_configs:
-      - targets: ['maya-frontend:80']
+      - targets: ['amrikyy-frontend:80']
     scrape_interval: 15s
 
   - job_name: 'node-exporter'
@@ -67,47 +67,47 @@ EOF
 
 # Setup Prometheus alerting rules
 echo -e "${YELLOW}Setting up Prometheus alerting rules...${NC}"
-cat > monitoring/prometheus/rules/maya-alerts.yml << EOF
+cat > monitoring/prometheus/rules/amrikyy-alerts.yml << EOF
 groups:
-  - name: maya-backend
+  - name: amrikyy-backend
     rules:
-      - alert: MayaBackendDown
-        expr: up{job="maya-backend"} == 0
+      - alert: AmrikyyBackendDown
+        expr: up{job="amrikyy-backend"} == 0
         for: 5m
         labels:
           severity: critical
         annotations:
-          summary: "Maya Backend is down"
-          description: "Maya Backend has been down for more than 5 minutes."
+          summary: "Amrikyy Backend is down"
+          description: "Amrikyy Backend has been down for more than 5 minutes."
 
-      - alert: MayaBackendHighErrorRate
-        expr: rate(http_requests_total{job="maya-backend", code=~"5.."}[5m]) / rate(http_requests_total{job="maya-backend"}[5m]) > 0.05
+      - alert: AmrikyyBackendHighErrorRate
+        expr: rate(http_requests_total{job="amrikyy-backend", code=~"5.."}[5m]) / rate(http_requests_total{job="amrikyy-backend"}[5m]) > 0.05
         for: 5m
         labels:
           severity: warning
         annotations:
-          summary: "High error rate on Maya Backend"
+          summary: "High error rate on Amrikyy Backend"
           description: "Error rate is {{ \$value }}% which is above 5%."
 
-      - alert: MayaBackendHighLatency
-        expr: histogram_quantile(0.95, rate(http_request_duration_seconds_bucket{job="maya-backend"}[5m])) > 2
+      - alert: AmrikyyBackendHighLatency
+        expr: histogram_quantile(0.95, rate(http_request_duration_seconds_bucket{job="amrikyy-backend"}[5m])) > 2
         for: 5m
         labels:
           severity: warning
         annotations:
-          summary: "High latency on Maya Backend"
+          summary: "High latency on Amrikyy Backend"
           description: "95th percentile latency is {{ \$value }}s which is above 2s."
 
-  - name: maya-frontend
+  - name: amrikyy-frontend
     rules:
-      - alert: MayaFrontendDown
-        expr: up{job="maya-frontend"} == 0
+      - alert: AmrikyyFrontendDown
+        expr: up{job="amrikyy-frontend"} == 0
         for: 5m
         labels:
           severity: critical
         annotations:
-          summary: "Maya Frontend is down"
-          description: "Maya Frontend has been down for more than 5 minutes."
+          summary: "Amrikyy Frontend is down"
+          description: "Amrikyy Frontend has been down for more than 5 minutes."
 
   - name: system
     rules:
@@ -164,8 +164,8 @@ echo -e "${YELLOW}Setting up Alertmanager configuration...${NC}"
 cat > monitoring/alertmanager/alertmanager.yml << EOF
 global:
   smtp_smarthost: 'smtp.gmail.com:587'
-  smtp_from: 'alerts@maya-travel-agent.com'
-  smtp_auth_username: 'alerts@maya-travel-agent.com'
+  smtp_from: 'alerts@amrikyy-travel-agent.com'
+  smtp_auth_username: 'alerts@amrikyy-travel-agent.com'
   smtp_auth_password: 'your-smtp-password'
 
 route:
@@ -173,21 +173,21 @@ route:
   group_wait: 10s
   group_interval: 10s
   repeat_interval: 1h
-  receiver: 'maya-team'
+  receiver: 'amrikyy-team'
   routes:
   - match:
       severity: critical
-    receiver: 'maya-critical'
+    receiver: 'amrikyy-critical'
 
 receivers:
-- name: 'maya-team'
+- name: 'amrikyy-team'
   email_configs:
-  - to: 'team@maya-travel-agent.com'
+  - to: 'team@amrikyy-travel-agent.com'
     send_resolved: true
 
-- name: 'maya-critical'
+- name: 'amrikyy-critical'
   email_configs:
-  - to: 'oncall@maya-travel-agent.com'
+  - to: 'oncall@amrikyy-travel-agent.com'
     send_resolved: true
   slack_configs:
   - api_url: 'https://hooks.slack.com/services/YOUR/SLACK/WEBHOOK'
@@ -212,11 +212,11 @@ datasources:
 EOF
 
 # Grafana dashboard provisioning
-cat > monitoring/grafana/provisioning/dashboards/maya.yml << EOF
+cat > monitoring/grafana/provisioning/dashboards/amrikyy.yml << EOF
 apiVersion: 1
 
 providers:
-  - name: 'maya-dashboards'
+  - name: 'amrikyy-dashboards'
     type: file
     disableDeletion: false
     updateIntervalSeconds: 10
@@ -225,8 +225,8 @@ providers:
       path: /var/lib/grafana/dashboards
 EOF
 
-# Copy Maya dashboard to Grafana
-cp grafana/maya-dashboard.json monitoring/grafana/dashboards/
+# Copy Amrikyy dashboard to Grafana
+cp grafana/amrikyy-dashboard.json monitoring/grafana/dashboards/
 
 # Setup docker-compose for monitoring stack
 echo -e "${YELLOW}Creating monitoring docker-compose file...${NC}"
@@ -304,7 +304,7 @@ echo -e "${YELLOW}Creating monitoring startup script...${NC}"
 cat > monitoring/start-monitoring.sh << 'EOF'
 #!/bin/bash
 
-echo "🚀 Starting Maya Travel Agent monitoring stack..."
+echo "🚀 Starting Amrikyy Travel Agent monitoring stack..."
 
 # Start monitoring services
 docker-compose -f docker-compose.monitoring.yml up -d
@@ -330,7 +330,7 @@ echo -e "${YELLOW}Creating monitoring health check script...${NC}"
 cat > monitoring/health-check.sh << 'EOF'
 #!/bin/bash
 
-echo "🔍 Checking Maya Travel Agent monitoring health..."
+echo "🔍 Checking Amrikyy Travel Agent monitoring health..."
 
 # Check Prometheus
 if curl -f http://localhost:9090/-/healthy > /dev/null 2>&1; then

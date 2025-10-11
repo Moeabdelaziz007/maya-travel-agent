@@ -1,4 +1,4 @@
-# 🎉 Maya Travel Agent - Deployment System Status
+# 🎉 Amrikyy Travel Agent - Deployment System Status
 
 **Status**: ✅ **READY FOR DEPLOYMENT**  
 **Date**: October 10, 2025  
@@ -35,7 +35,7 @@
 ### 3. **Monitoring & Observability** ✅
 
 - **Prometheus**: `prometheus.yml`
-- **Grafana Dashboard**: `grafana/maya-dashboard.json`
+- **Grafana Dashboard**: `grafana/amrikyy-dashboard.json`
 - **Alert Rules**: `alerts.yml`
 - **Features**:
   - HTTP request metrics
@@ -115,7 +115,7 @@ Run this command:
 ./scripts/setup-secrets.sh
 ```
 
-Or manually add at: https://github.com/Moeabdelaziz007/maya-travel-agent/settings/secrets/actions
+Or manually add at: https://github.com/Moeabdelaziz007/amrikyy-travel-agent/settings/secrets/actions
 
 **Required secrets:**
 
@@ -288,7 +288,7 @@ git push  # GitHub Actions deploys automatically!
 
 ## 🎉 Summary
 
-Your Maya Travel Agent deployment system is **production-ready**!
+Your Amrikyy Travel Agent deployment system is **production-ready**!
 
 **What you have:**
 

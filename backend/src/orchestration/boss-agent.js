@@ -756,7 +756,7 @@ class BossAgent extends EventEmitter {
             en: 'We\'re having trouble right now. Our team has been notified.',
             ar: 'نواجه مشكلة الآن. تم إخطار فريقنا.'
           },
-          support_contact: 'support@mayatravel.ai'
+          support_contact: 'support@amrikyytravel.ai'
         }
       };
     }

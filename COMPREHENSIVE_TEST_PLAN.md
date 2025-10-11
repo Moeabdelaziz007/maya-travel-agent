@@ -1,16 +1,16 @@
-# 🧪 Comprehensive Test Plan - Maya Travel Agent Application
+# 🧪 Comprehensive Test Plan - Amrikyy Travel Agent Application
 
 **Version**: 2.1.0
 **Date**: October 11, 2025
 **Author**: QA Engineering Team
-**Application**: Maya Travel Agent (Amrikyy Travel Agent)
+**Application**: Amrikyy Travel Agent (Amrikyy Travel Agent)
 **Environment**: Production Ready
 
 ---
 
 ## 📋 Executive Summary
 
-This comprehensive test plan covers the complete testing strategy for the Maya Travel Agent application, including frontend, backend, and system integration testing. The plan ensures quality assurance across all components including the AI assistant, payment systems, Telegram integration, and quantum AI features.
+This comprehensive test plan covers the complete testing strategy for the Amrikyy Travel Agent application, including frontend, backend, and system integration testing. The plan ensures quality assurance across all components including the AI assistant, payment systems, Telegram integration, and quantum AI features.
 
 ### 🎯 Test Objectives
 - Validate all features work correctly in production
@@ -40,8 +40,8 @@ Redis (optional)
 Git >= 2.30.0
 
 # Environment Setup
-git clone https://github.com/Moeabdelaziz007/maya-travel-agent.git
-cd maya-travel-agent
+git clone https://github.com/Moeabdelaziz007/amrikyy-travel-agent.git
+cd amrikyy-travel-agent
 npm run install:all
 
 # Environment Variables
@@ -88,16 +88,16 @@ frontend/src/
 describe('AIAssistant Component', () => {
   test('renders chat interface correctly', () => {
     render(<AIAssistant />);
-    expect(screen.getByText('Maya AI Assistant')).toBeInTheDocument();
+    expect(screen.getByText('Amrikyy AI Assistant')).toBeInTheDocument();
   });
 
   test('handles user message input', async () => {
     render(<AIAssistant />);
-    const input = screen.getByPlaceholderText('Ask Maya anything...');
-    fireEvent.change(input, { target: { value: 'Hello Maya' } });
+    const input = screen.getByPlaceholderText('Ask Amrikyy anything...');
+    fireEvent.change(input, { target: { value: 'Hello Amrikyy' } });
     fireEvent.click(screen.getByRole('button', { name: /send/i }));
     await waitFor(() => {
-      expect(mockApiService.sendMessage).toHaveBeenCalledWith('Hello Maya');
+      expect(mockApiService.sendMessage).toHaveBeenCalledWith('Hello Amrikyy');
     });
   });
 
@@ -809,7 +809,7 @@ describe('System Performance Benchmarks', () => {
 #!/bin/bash
 # scripts/run-all-tests.sh
 
-echo "🧪 Running Complete Test Suite for Maya Travel Agent"
+echo "🧪 Running Complete Test Suite for Amrikyy Travel Agent"
 echo "=================================================="
 
 # Colors
@@ -942,7 +942,7 @@ jobs:
 
 #### Test Report Template
 ```markdown
-# Test Execution Report - Maya Travel Agent
+# Test Execution Report - Amrikyy Travel Agent
 
 ## Execution Details
 - **Date**: YYYY-MM-DD
@@ -1102,7 +1102,7 @@ jobs:
 
 ## 🎉 Conclusion
 
-This comprehensive test plan ensures the Maya Travel Agent application meets the highest quality standards for production deployment. The plan covers all aspects of testing from unit tests to system integration, with automated scripts and clear success criteria.
+This comprehensive test plan ensures the Amrikyy Travel Agent application meets the highest quality standards for production deployment. The plan covers all aspects of testing from unit tests to system integration, with automated scripts and clear success criteria.
 
 **Key Success Factors:**
 - ✅ Complete test coverage across all layers

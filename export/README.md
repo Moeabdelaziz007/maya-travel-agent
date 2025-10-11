@@ -1,6 +1,6 @@
-# Maya Travel Agent - Export Package
+# Amrikyy Travel Agent - Export Package
 
-This export package contains all the essential components, configurations, documentation, and deployment materials for the Maya Travel Agent platform.
+This export package contains all the essential components, configurations, documentation, and deployment materials for the Amrikyy Travel Agent platform.
 
 ## 📦 Package Contents
 
@@ -52,7 +52,7 @@ This export package contains all the essential components, configurations, docum
 ```bash
 # Clone the repository
 git clone <repository-url>
-cd maya-travel-agent
+cd amrikyy-travel-agent
 
 # Install dependencies
 npm install
@@ -238,7 +238,7 @@ curl http://localhost:80
 ```bash
 # Fork and clone
 git clone <your-fork-url>
-cd maya-travel-agent
+cd amrikyy-travel-agent
 
 # Create feature branch
 git checkout -b feature/your-feature
@@ -259,6 +259,6 @@ npm test
 
 **Export Generated**: `new Date().toISOString()`
 **Package Version**: 1.0.0
-**System**: Maya Travel Agent Production Export
+**System**: Amrikyy Travel Agent Production Export
 
 For additional support or questions, please refer to the operational documentation or contact the development team.

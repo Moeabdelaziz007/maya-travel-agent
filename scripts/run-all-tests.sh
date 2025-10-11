@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Maya Travel Agent - Comprehensive Test Runner
+# Amrikyy Travel Agent - Comprehensive Test Runner
 # Runs all tests and validations before deployment
 # Version: 2.1.0
 
@@ -54,7 +54,7 @@ log_section() {
 
 # Banner
 echo ""
-echo "🧪 Maya Travel Agent - Comprehensive Test Suite v2.1.0"
+echo "🧪 Amrikyy Travel Agent - Comprehensive Test Suite v2.1.0"
 echo "======================================================"
 echo "Testing Environment: $(hostname)"
 echo "Test Start Time: $(date)"

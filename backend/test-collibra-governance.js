@@ -1,6 +1,6 @@
 /**
  * Test Collibra Data Governance Service
- * Comprehensive test for Maya Travel Agent data governance setup
+ * Comprehensive test for Amrikyy Travel Agent data governance setup
  */
 
 const CollibraService = require('./src/services/collibra-service');
@@ -27,9 +27,9 @@ async function testCollibraGovernance() {
   console.log('');
 
   // Test 2: Initialize Complete Governance
-  console.log('2️⃣ Initializing Maya Travel Agent Data Governance...');
+  console.log('2️⃣ Initializing Amrikyy Travel Agent Data Governance...');
   try {
-    const result = await collibra.initializeMayaGovernance();
+    const result = await collibra.initializeAmrikyyGovernance();
 
     console.log('✅ Data governance initialization completed!');
     console.log(`   Root Domain: ${result.domains.rootDomain.name}`);
@@ -107,7 +107,7 @@ async function testCollibraGovernance() {
   console.log('   1. Configure Collibra connection in environment variables');
   console.log('   2. Set up Collibra credentials (COLLIBRA_URL, COLLIBRA_API_KEY)');
   console.log('   3. Run this test again to verify full functionality');
-  console.log('   4. Integrate with existing Maya Travel Agent services');
+  console.log('   4. Integrate with existing Amrikyy Travel Agent services');
 }
 
 // Run tests

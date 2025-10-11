@@ -32,7 +32,7 @@ const PaymentModal: React.FC<PaymentModalProps> = ({
   onClose,
   amount,
   currency = 'USD',
-  description = 'Maya Trips Payment',
+  description = 'Amrikyy Trips Payment',
   onSuccess,
 }) => {
   const [selectedMethod, setSelectedMethod] = useState<string>('');

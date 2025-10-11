@@ -1,8 +1,8 @@
-# Maya Trips - Kombai AI Improvements Summary
+# Amrikyy Trips - Kombai AI Improvements Summary
 
 ## 🎯 Executive Summary
 
-Successfully implemented comprehensive improvements to the Maya Trips application following the Kombai AI execution prompt. The project now has a robust testing framework, CI/CD pipeline, error handling, accessibility improvements, and comprehensive documentation.
+Successfully implemented comprehensive improvements to the Amrikyy Trips application following the Kombai AI execution prompt. The project now has a robust testing framework, CI/CD pipeline, error handling, accessibility improvements, and comprehensive documentation.
 
 ## 📋 What Was Changed
 

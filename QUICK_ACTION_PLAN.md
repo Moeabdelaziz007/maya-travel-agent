@@ -16,7 +16,7 @@
 **Impact**: Blocking linting, pre-commit hooks
 
 ```bash
-cd /Users/Shared/maya-travel-agent/frontend
+cd /Users/Shared/amrikyy-travel-agent/frontend
 
 # Fix: Rename to .cjs for CommonJS
 mv .eslintrc.js .eslintrc.cjs
@@ -65,7 +65,7 @@ npm run test -- TripPlanner.test.tsx
 
 ```bash
 # Root directory
-cd /Users/Shared/maya-travel-agent
+cd /Users/Shared/amrikyy-travel-agent
 
 # Check vulnerabilities
 npm audit
@@ -212,21 +212,21 @@ console.log('🚦 Enhanced rate limiting configured');
 
 ```bash
 # 1. Backend AI Persona (already uses "أمريكي")
-# File: backend/src/ai/mayaPersona.js
+# File: backend/src/ai/amrikyyPersona.js
 # Line 3-5: Verify displays "Amrikyy" in responses
 
 # 2. Analytics Project Name
-# File: analytics/dbt/maya_travel_analytics/dbt_project.yml
-# Line 1: Change "name: maya_travel_analytics" to "name: amrikyy_analytics"
+# File: analytics/dbt/amrikyy_travel_analytics/dbt_project.yml
+# Line 1: Change "name: amrikyy_travel_analytics" to "name: amrikyy_analytics"
 
 # 3. Collibra Assets (if using)
 # Update Collibra configuration asset names:
-# - maya_production_config → amrikyy_production_config
-# - maya_staging_config → amrikyy_staging_config
+# - amrikyy_production_config → amrikyy_production_config
+# - amrikyy_staging_config → amrikyy_staging_config
 
 # 4. Monitoring Dashboard
-# File: grafana/maya-dashboard.json
-# Update "title" fields containing "Maya" to "Amrikyy"
+# File: grafana/amrikyy-dashboard.json
+# Update "title" fields containing "Amrikyy" to "Amrikyy"
 ```
 
 ---
@@ -266,7 +266,7 @@ cd .. && npm audit --production
 ## 🚀 Commit & Deploy
 
 ```bash
-cd /Users/Shared/maya-travel-agent
+cd /Users/Shared/amrikyy-travel-agent
 
 # Stage changes
 git add -A

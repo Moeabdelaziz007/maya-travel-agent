@@ -26,12 +26,12 @@ class ConfigurationExporter {
         metadata: {
           exportDate: new Date().toISOString(),
           version: '1.0.0',
-          description: 'Maya Travel Agent Collibra Data Governance Configuration'
+          description: 'Amrikyy Travel Agent Collibra Data Governance Configuration'
         },
         domains: [
           {
-            name: 'Maya Travel Agent',
-            description: 'Data governance domain for Maya Travel Agent platform',
+            name: 'Amrikyy Travel Agent',
+            description: 'Data governance domain for Amrikyy Travel Agent platform',
             subDomains: [
               {
                 name: 'Users',
@@ -245,7 +245,7 @@ class ConfigurationExporter {
           variables: {
             NODE_ENV: 'development',
             PORT: 5000,
-            DATABASE_URL: 'postgresql://localhost:5432/maya_dev',
+            DATABASE_URL: 'postgresql://localhost:5432/amrikyy_dev',
             LOG_LEVEL: 'debug',
             CACHE_TTL: 300,
             RATE_LIMIT_WINDOW_MS: 900000,
@@ -269,7 +269,7 @@ class ConfigurationExporter {
           variables: {
             NODE_ENV: 'staging',
             PORT: 5000,
-            DATABASE_URL: 'postgresql://staging-db:5432/maya_staging',
+            DATABASE_URL: 'postgresql://staging-db:5432/amrikyy_staging',
             LOG_LEVEL: 'info',
             CACHE_TTL: 600,
             RATE_LIMIT_WINDOW_MS: 900000,
@@ -293,7 +293,7 @@ class ConfigurationExporter {
           variables: {
             NODE_ENV: 'production',
             PORT: 5000,
-            DATABASE_URL: 'postgresql://prod-db:5432/maya_prod',
+            DATABASE_URL: 'postgresql://prod-db:5432/amrikyy_prod',
             LOG_LEVEL: 'warn',
             CACHE_TTL: 1800,
             RATE_LIMIT_WINDOW_MS: 900000,

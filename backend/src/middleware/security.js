@@ -1,5 +1,5 @@
 /**
- * Security middleware for Maya Travel Agent
+ * Security middleware for Amrikyy Travel Agent
  */
 
 const helmet = require('helmet');
@@ -51,10 +51,10 @@ function configureCORS(app) {
       const allowedOrigins = [
         'http://localhost:3000',
         'http://localhost:3001',
-        'https://maya-travel-agent.vercel.app',
-        'https://maya-travel-agent.com',
-        'https://www.maya-travel-agent.com',
-        /^https:\/\/maya-travel-agent-.*\.vercel\.app$/ // Vercel preview deployments
+        'https://amrikyy-travel-agent.vercel.app',
+        'https://amrikyy-travel-agent.com',
+        'https://www.amrikyy-travel-agent.com',
+        /^https:\/\/amrikyy-travel-agent-.*\.vercel\.app$/ // Vercel preview deployments
       ];
 
       // Check if origin matches allowed patterns
@@ -93,8 +93,23 @@ function configureCORS(app) {
   app.use(cors(corsOptions));
 }
 
-// Rate limiting configuration
+// Rate limiting configuration with Redis support
 function configureRateLimiting(app) {
+  try {
+    // Try to use Redis-based rate limiting
+    const { configureRedisRateLimiting } = require('./redis-rate-limit');
+
+    if (process.env.REDIS_HOST || process.env.REDIS_URL) {
+      console.log('🔴 Using Redis-based rate limiting...');
+      configureRedisRateLimiting(app);
+      return;
+    }
+  } catch (error) {
+    console.warn('⚠️  Redis rate limiting not available, falling back to memory store:', error.message);
+  }
+
+  // Fallback to memory-based rate limiting
+  console.log('💾 Using memory-based rate limiting (Redis not configured)...');
   const rateLimit = require('express-rate-limit');
 
   // General rate limiter - more permissive for production
@@ -109,7 +124,7 @@ function configureRateLimiting(app) {
     legacyHeaders: false,
     skip: (req) => {
       // Skip rate limiting for health checks
-      return req.path === '/api/health' || req.path === '/api/public/ping';
+      return req.path === '/api/health' || req.path === '/health' || req.path === '/api/public/ping';
     }
   });
 
@@ -125,7 +140,7 @@ function configureRateLimiting(app) {
     legacyHeaders: false,
     skip: (req) => {
       // Skip rate limiting for health checks
-      return req.path === '/api/health' || req.path === '/api/public/ping';
+      return req.path === '/api/health' || req.path === '/health' || req.path === '/api/public/ping';
     }
   });
 

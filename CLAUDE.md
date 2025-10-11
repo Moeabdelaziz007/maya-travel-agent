@@ -10,7 +10,7 @@ This document establishes principles for intelligent memory management during de
 
 ## Project Identification
 
-**project_id:** maya-travel-agent
+**project_id:** amrikyy-travel-agent
 
 *Note: This value should be used as the `project_id` parameter when storing project-related memories via the add-memory tool.*
 
@@ -117,27 +117,27 @@ When generating search queries, first classify the intent then create specific q
   
 - User: "How does the auth system work?"
   Query: "Explain the complete authentication flow, components, and implementation details"
-  Parameters: `is_user_preference: false, project_id: "maya-travel-agent"` (project facts only)
+  Parameters: `is_user_preference: false, project_id: "amrikyy-travel-agent"` (project facts only)
   
 - User: "What are my preferences for this project?"
   Query: "Retrieve all coding preferences and customizations relevant to current project"
-  Parameters: `is_user_preference: true, project_id: "maya-travel-agent"` (all relevant preferences)
+  Parameters: `is_user_preference: true, project_id: "amrikyy-travel-agent"` (all relevant preferences)
   
 - User: "Have we seen this error before?" (with error context available)
   Query: "Find debugging memories containing error patterns similar to: [actual error message]"
-  Parameters: `is_user_preference: false, project_id: "maya-travel-agent"` (debugging is project fact)
+  Parameters: `is_user_preference: false, project_id: "amrikyy-travel-agent"` (debugging is project fact)
 
 - User: "What did we do yesterday?"
   Query: "Retrieve all recent implementation and debugging memories from the last few sessions"
-  Parameters: `is_user_preference: false, project_id: "maya-travel-agent"` (work history is factual)
+  Parameters: `is_user_preference: false, project_id: "amrikyy-travel-agent"` (work history is factual)
 
 - User: "How do I like to test?"
   Query: "Find all testing preferences, methodologies, and commands used for testing"
-  Parameters: `is_user_preference: true, project_id: "maya-travel-agent"` (could have both global and project prefs)
+  Parameters: `is_user_preference: true, project_id: "amrikyy-travel-agent"` (could have both global and project prefs)
 
 - User: "What's in this file?" (while looking at UserService.ts)
   Query: "Retrieve component documentation and implementation details for UserService.ts including its methods, dependencies, and purpose"
-  Parameters: `is_user_preference: false, project_id: "maya-travel-agent"` (file contents are facts)
+  Parameters: `is_user_preference: false, project_id: "amrikyy-travel-agent"` (file contents are facts)
 
 **Query Writing Best Practices:**
 - **Never use single words**: "auth" → "authentication system architecture and implementation"
@@ -184,7 +184,7 @@ If you see the same correction twice, it's definitely a pattern worth storing. B
 
 When you ask questions about how systems work in this codebase (e.g., "how does X work?", "explain the Y system", "what does Z do?"), the assistant will automatically:
 
-1. **Search existing memories** for relevant documentation using `is_user_preference: false, project_id: "maya-travel-agent"` (system explanations are project facts)
+1. **Search existing memories** for relevant documentation using `is_user_preference: false, project_id: "amrikyy-travel-agent"` (system explanations are project facts)
 2. **Explore the codebase** if no existing documentation is found
 3. **Generate a comprehensive explanation** with code references
 4. **Auto-store substantial explanations** that meet these criteria:
@@ -388,12 +388,12 @@ The search-memory tool uses `is_user_preference` (required) and `project_id` (op
 - Use when: Asking about general coding style, habits, or preferences
 
 **Pattern 2: All Relevant User Preferences**
-- Parameters: `is_user_preference: true, project_id: "maya-travel-agent"`
+- Parameters: `is_user_preference: true, project_id: "amrikyy-travel-agent"`
 - Returns: Both global preferences AND project-specific preferences
 - Use when: You want all preferences that could apply to current work
 
 **Pattern 3: Project Facts Only**
-- Parameters: `is_user_preference: false, project_id: "maya-travel-agent"`
+- Parameters: `is_user_preference: false, project_id: "amrikyy-travel-agent"`
 - Returns: Only objective project information (no preferences)
 - Use when: Asking about architecture, implementations, or debugging history
 
@@ -426,8 +426,8 @@ Always make tool calls in proper JSON format as specified by the MCP protocol. T
 
 **Step 2: What scope do I need?**
 - Just global preferences → `is_user_preference: true` (no project_id)
-- All relevant preferences → `is_user_preference: true, project_id: "maya-travel-agent"`
-- Project facts/code → `is_user_preference: false, project_id: "maya-travel-agent"`
+- All relevant preferences → `is_user_preference: true, project_id: "amrikyy-travel-agent"`
+- Project facts/code → `is_user_preference: false, project_id: "amrikyy-travel-agent"`
 
 **Common Queries:**
 - "What are my coding preferences?" → Pattern 1 (global prefs only)
@@ -477,7 +477,7 @@ The openmemory.md file serves as your project's living index and is automaticall
 
 First action in any new project workspace: Check if openmemory.md is empty (0 bytes). If empty, perform a thorough codebase analysis:
 
-1. **Search existing memories** for any relevant project context using search-memory tool with `is_user_preference: false, project_id: "maya-travel-agent"` for project facts
+1. **Search existing memories** for any relevant project context using search-memory tool with `is_user_preference: false, project_id: "amrikyy-travel-agent"` for project facts
 2. **Analyze the codebase structure** systematically:
    - Examine directory structure and file organization
    - Identify key configuration files (package.json, requirements.txt, etc.)

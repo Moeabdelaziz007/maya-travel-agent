@@ -26,7 +26,7 @@ const PaymentLinkModal: React.FC<PaymentLinkModalProps> = ({
   onClose,
   amount,
   currency = 'USD',
-  description = 'Maya Trips Payment',
+  description = 'Amrikyy Trips Payment',
   customerEmail,
 }) => {
   const [isCreating, setIsCreating] = useState(false);
@@ -71,7 +71,7 @@ const PaymentLinkModal: React.FC<PaymentLinkModalProps> = ({
     if (navigator.share) {
       try {
         await navigator.share({
-          title: 'Maya Trips Payment',
+          title: 'Amrikyy Trips Payment',
           text: `Complete your payment of $${amount} for ${description}`,
           url: paymentLink,
         });

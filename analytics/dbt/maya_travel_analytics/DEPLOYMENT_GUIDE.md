@@ -1,13 +1,13 @@
-# Maya Travel Agent dbt Analytics - Deployment Guide
+# Amrikyy Travel Agent dbt Analytics - Deployment Guide
 
 ## Summary of Implementation
 
-I have successfully implemented a comprehensive dbt analytics solution for the Maya Travel Agent platform. Here's what was delivered:
+I have successfully implemented a comprehensive dbt analytics solution for the Amrikyy Travel Agent platform. Here's what was delivered:
 
 ### ✅ Completed Components
 
 #### 1. **dbt Project Setup**
-- ✅ Initialized dbt project structure (`maya_travel_analytics`)
+- ✅ Initialized dbt project structure (`amrikyy_travel_analytics`)
 - ✅ Configured Supabase PostgreSQL connection via `profiles.yml`
 - ✅ Set up environment configuration with `.env` file
 - ✅ Organized models into logical layers (staging, intermediate, marts)
@@ -63,7 +63,7 @@ I have successfully implemented a comprehensive dbt analytics solution for the M
 ## Project Structure
 
 ```
-analytics/dbt/maya_travel_analytics/
+analytics/dbt/amrikyy_travel_analytics/
 ├── models/
 │   ├── staging/                    # Raw data staging (5 models)
 │   ├── intermediate/               # Data transformations (3 models)
@@ -128,7 +128,7 @@ pip install dbt-core dbt-postgres
 
 ### 3. **Project Setup**
 ```bash
-cd analytics/dbt/maya_travel_analytics
+cd analytics/dbt/amrikyy_travel_analytics
 dbt deps
 dbt debug  # Test connection
 ```
@@ -150,7 +150,7 @@ dbt test
 ## Integration with Dataiku
 
 ### **Setup Steps:**
-1. Create new Dataiku project: "Maya Travel Analytics"
+1. Create new Dataiku project: "Amrikyy Travel Analytics"
 2. Configure PostgreSQL connection to your Supabase database
 3. Import the fact and dimension tables as datasets
 4. Create flows to join related datasets
@@ -287,4 +287,4 @@ docker-compose up -d dbt_scheduler
 3. **Custom Dashboards**: Build specialized dashboards for different user roles
 4. **API Endpoints**: Expose analytics data via REST APIs for external consumption
 
-This implementation provides a solid foundation for data-driven decision making at Maya Travel Agent, with comprehensive analytics capabilities, robust monitoring, and seamless integration with advanced analytics platforms like Dataiku.
+This implementation provides a solid foundation for data-driven decision making at Amrikyy Travel Agent, with comprehensive analytics capabilities, robust monitoring, and seamless integration with advanced analytics platforms like Dataiku.

@@ -233,7 +233,7 @@ vercel --prod
 ### Option 3: Vercel Dashboard
 
 1. Go to your Vercel dashboard
-2. Find the Maya Travel Agent project
+2. Find the Amrikyy Travel Agent project
 3. Click "Redeploy" on the latest commit
 4. Select "Production" deployment
 

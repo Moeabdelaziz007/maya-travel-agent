@@ -169,7 +169,7 @@ Features:
 - Real-time workflow preview
 - Visual n8n JSON display
 - Download workflow button
-- Integration with Maya AI chat
+- Integration with Amrikyy AI chat
 
 Component Structure:
 
@@ -178,9 +178,9 @@ Component Structure:
 - Success view with workflow visualization
 - Error handling with retry button
 
-### Phase 5: Maya AI Integration
+### Phase 5: Amrikyy AI Integration
 
-Enhance Maya's chat system to recognize workflow requests.
+Enhance Amrikyy's chat system to recognize workflow requests.
 
 **File: `backend/src/ai/zaiClient.js` or `backend/advanced-telegram-bot.js`**
 
@@ -246,7 +246,7 @@ Monitor CPU/memory usage and auto-restart if thresholds exceeded.
                                                                                                                                                                                                 - Implement workflow preview
                                                                                                                                                                                                 - Add download functionality
 
-5. **Integrate with Maya AI** (15 minutes)
+5. **Integrate with Amrikyy AI** (15 minutes)
 
                                                                                                                                                                                                 - Add workflow detection logic
                                                                                                                                                                                                 - Format AI responses
@@ -343,7 +343,7 @@ Monitor CPU/memory usage and auto-restart if thresholds exceeded.
 - Backend server runs without crashes
 - N8n workflow generation works end-to-end
 - Frontend UI is responsive and user-friendly
-- Maya AI can generate workflows from chat
+- Amrikyy AI can generate workflows from chat
 - Performance improved (CPU usage < 30%)
 - All tests passing
 
@@ -362,6 +362,6 @@ If integration fails:
 - [ ] Create N8nWorkflowGenerator service class with webhook integration
 - [ ] Add POST /api/ai/generate-workflow endpoint to routes/ai.js
 - [ ] Create WorkflowGenerator React component with form and preview
-- [ ] Add workflow detection logic to Maya's chat system
+- [ ] Add workflow detection logic to Amrikyy's chat system
 - [ ] Kill resource-heavy processes and add monitoring
 - [ ] Write unit, integration, and E2E tests for workflow generation

@@ -1,7 +1,7 @@
 import { supabase } from './supabase';
 import { User, Session, AuthError } from '@supabase/supabase-js';
 
-// Auth service for Maya Trips
+// Auth service for Amrikyy Trips
 export class AuthService {
   // Sign up with email and password
   static async signUp(email: string, password: string, fullName?: string) {

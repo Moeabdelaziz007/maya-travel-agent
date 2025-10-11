@@ -2,7 +2,7 @@
 
 /**
  * Documentation Export Script
- * Generates comprehensive PDF documentation for the entire Maya Travel Agent system
+ * Generates comprehensive PDF documentation for the entire Amrikyy Travel Agent system
  */
 
 const fs = require('fs');
@@ -23,17 +23,17 @@ class DocumentationExporter {
       logger.info('Generating system overview documentation...');
 
       const overview = {
-        title: 'Maya Travel Agent - System Overview',
+        title: 'Amrikyy Travel Agent - System Overview',
         version: '1.0.0',
         exportDate: new Date().toISOString(),
         sections: [
           {
             title: 'Executive Summary',
             content: `
-# Maya Travel Agent - Executive Summary
+# Amrikyy Travel Agent - Executive Summary
 
 ## System Overview
-Maya Travel Agent is a comprehensive AI-powered travel planning and booking platform that leverages machine learning, data governance, and intelligent automation to provide personalized travel recommendations and seamless booking experiences.
+Amrikyy Travel Agent is a comprehensive AI-powered travel planning and booking platform that leverages machine learning, data governance, and intelligent automation to provide personalized travel recommendations and seamless booking experiences.
 
 ## Key Features
 - **AI-Powered Trip Planning**: Intelligent trip recommendations based on user preferences and historical data
@@ -59,7 +59,7 @@ Maya Travel Agent is a comprehensive AI-powered travel planning and booking plat
 # System Architecture
 
 ## High-Level Architecture
-Maya Travel Agent follows a modern microservices architecture with clear separation of concerns:
+Amrikyy Travel Agent follows a modern microservices architecture with clear separation of concerns:
 
 ### Core Components
 1. **API Gateway & Load Balancer**
@@ -182,9 +182,9 @@ graph TD
       logger.info('Generating API documentation...');
 
       const apiDocs = {
-        title: 'Maya Travel Agent - API Documentation',
+        title: 'Amrikyy Travel Agent - API Documentation',
         version: '1.0.0',
-        baseUrl: 'https://api.maya-travel-agent.com',
+        baseUrl: 'https://api.amrikyy-travel-agent.com',
         exportDate: new Date().toISOString(),
         endpoints: [
           {
@@ -351,7 +351,7 @@ graph TD
       logger.info('Generating deployment guide...');
 
       const deploymentGuide = {
-        title: 'Maya Travel Agent - Deployment Guide',
+        title: 'Amrikyy Travel Agent - Deployment Guide',
         version: '1.0.0',
         exportDate: new Date().toISOString(),
         sections: [
@@ -389,8 +389,8 @@ graph TD
 
 ## 1. Clone Repository
 \`\`\`bash
-git clone https://github.com/your-org/maya-travel-agent.git
-cd maya-travel-agent
+git clone https://github.com/your-org/amrikyy-travel-agent.git
+cd amrikyy-travel-agent
 \`\`\`
 
 ## 2. Install Dependencies
@@ -519,17 +519,17 @@ curl http://localhost:5000/api/test-apis
       logger.info('Generating user guide...');
 
       const userGuide = {
-        title: 'Maya Travel Agent - User Guide',
+        title: 'Amrikyy Travel Agent - User Guide',
         version: '1.0.0',
         exportDate: new Date().toISOString(),
         sections: [
           {
             title: 'Getting Started',
             content: `
-# Getting Started with Maya Travel Agent
+# Getting Started with Amrikyy Travel Agent
 
 ## Welcome
-Maya Travel Agent is your AI-powered travel companion that helps you plan perfect trips, find the best deals, and book seamlessly.
+Amrikyy Travel Agent is your AI-powered travel companion that helps you plan perfect trips, find the best deals, and book seamlessly.
 
 ## Key Features
 - **Smart Trip Planning**: AI analyzes your preferences to suggest personalized itineraries
@@ -545,19 +545,19 @@ Maya Travel Agent is your AI-powered travel companion that helps you plan perfec
 # Planning Your Trip
 
 ## Basic Trip Planning
-1. **Set Your Destination**: Tell Maya where you want to go
+1. **Set Your Destination**: Tell Amrikyy where you want to go
 2. **Choose Dates**: Specify your travel dates
 3. **Set Budget**: Define your spending limits
 4. **Add Preferences**: Specify accommodation type, activities, dietary requirements
 
 ## Advanced Features
 - **Price Optimization**: Get recommendations for the best booking times
-- **Personalization**: Maya learns from your past trips and preferences
+- **Personalization**: Amrikyy learns from your past trips and preferences
 - **Group Planning**: Coordinate trips with friends and family
 - **Real-time Adjustments**: Modify plans as circumstances change
 
 ## AI Chat Interface
-Maya's conversational AI helps you:
+Amrikyy's conversational AI helps you:
 - Answer questions about destinations
 - Provide local insights and tips
 - Suggest activities and attractions
@@ -571,7 +571,7 @@ Maya's conversational AI helps you:
 # Booking and Payments
 
 ## Secure Booking Process
-1. **Review Recommendations**: Maya presents personalized options
+1. **Review Recommendations**: Amrikyy presents personalized options
 2. **Compare Options**: View detailed comparisons of flights, hotels, and activities
 3. **Select and Customize**: Choose your preferred options and make modifications
 4. **Secure Payment**: Complete booking with integrated payment processing
@@ -595,12 +595,12 @@ Maya's conversational AI helps you:
 # Telegram Bot Features
 
 ## Getting Started
-1. **Find the Bot**: Search for @MayaTravelAgentBot on Telegram
+1. **Find the Bot**: Search for @AmrikyyTravelAgentBot on Telegram
 2. **Start Conversation**: Send /start to begin
-3. **Link Account**: Connect your Maya account for personalized service
+3. **Link Account**: Connect your Amrikyy account for personalized service
 
 ## Available Commands
-- **/start**: Initialize your Maya experience
+- **/start**: Initialize your Amrikyy experience
 - **/plan**: Start planning a new trip
 - **/bookings**: View your current bookings
 - **/help**: Get assistance and command list
@@ -636,7 +636,7 @@ Maya's conversational AI helps you:
       logger.info('Generating operational procedures...');
 
       const procedures = {
-        title: 'Maya Travel Agent - Operational Procedures',
+        title: 'Amrikyy Travel Agent - Operational Procedures',
         version: '1.0.0',
         exportDate: new Date().toISOString(),
         procedures: [

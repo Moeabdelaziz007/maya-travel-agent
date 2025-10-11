@@ -1,6 +1,6 @@
 /**
  * Collibra Data Governance Service
- * Comprehensive data governance platform for Maya Travel Agent
+ * Comprehensive data governance platform for Amrikyy Travel Agent
  */
 
 const axios = require('axios');
@@ -8,7 +8,7 @@ const logger = require('../utils/logger');
 
 class CollibraService {
   constructor(config = {}) {
-    this.collibraUrl = config.collibraUrl || process.env.COLLIBRA_URL || 'https://maya.collibra.com';
+    this.collibraUrl = config.collibraUrl || process.env.COLLIBRA_URL || 'https://amrikyy.collibra.com';
     this.apiKey = config.apiKey || process.env.COLLIBRA_API_KEY;
     this.username = config.username || process.env.COLLIBRA_USERNAME;
     this.password = config.password || process.env.COLLIBRA_PASSWORD;
@@ -64,7 +64,7 @@ class CollibraService {
   }
 
   /**
-   * Create data domain for Maya Travel Agent
+   * Create data domain for Amrikyy Travel Agent
    */
   async createDataDomain(name, description, parentDomainId = null) {
     try {
@@ -128,16 +128,16 @@ class CollibraService {
   }
 
   /**
-   * Set up Maya Travel Agent data domains
+   * Set up Amrikyy Travel Agent data domains
    */
-  async setupMayaDataDomains() {
+  async setupAmrikyyDataDomains() {
     try {
-      logger.info('Setting up Maya Travel Agent data domains...');
+      logger.info('Setting up Amrikyy Travel Agent data domains...');
 
-      // Create root domain for Maya Travel Agent
-      const mayaDomain = await this.createDataDomain(
-        'Maya Travel Agent',
-        'Data governance domain for Maya Travel Agent platform'
+      // Create root domain for Amrikyy Travel Agent
+      const amrikyyDomain = await this.createDataDomain(
+        'Amrikyy Travel Agent',
+        'Data governance domain for Amrikyy Travel Agent platform'
       );
 
       // Create sub-domains
@@ -145,22 +145,22 @@ class CollibraService {
         {
           name: 'Users',
           description: 'User profiles, authentication, and engagement data',
-          parentId: mayaDomain.id
+          parentId: amrikyyDomain.id
         },
         {
           name: 'Trips',
           description: 'Trip planning, bookings, and travel history data',
-          parentId: mayaDomain.id
+          parentId: amrikyyDomain.id
         },
         {
           name: 'Payments',
           description: 'Payment processing, transactions, and financial data',
-          parentId: mayaDomain.id
+          parentId: amrikyyDomain.id
         },
         {
           name: 'Analytics',
           description: 'Business intelligence, reporting, and analytics data',
-          parentId: mayaDomain.id
+          parentId: amrikyyDomain.id
         }
       ];
 
@@ -174,23 +174,23 @@ class CollibraService {
         createdDomains.push(created);
       }
 
-      logger.info('Maya Travel Agent data domains created successfully', {
+      logger.info('Amrikyy Travel Agent data domains created successfully', {
         count: createdDomains.length
       });
 
-      return { rootDomain: mayaDomain, subDomains: createdDomains };
+      return { rootDomain: amrikyyDomain, subDomains: createdDomains };
     } catch (error) {
-      logger.error('Failed to setup Maya data domains', { error: error.message });
+      logger.error('Failed to setup Amrikyy data domains', { error: error.message });
       throw error;
     }
   }
 
   /**
-   * Set up key data assets for Maya Travel Agent
+   * Set up key data assets for Amrikyy Travel Agent
    */
-  async setupMayaDataAssets(domainMap) {
+  async setupAmrikyyDataAssets(domainMap) {
     try {
-      logger.info('Setting up Maya Travel Agent data assets...');
+      logger.info('Setting up Amrikyy Travel Agent data assets...');
 
       const assets = [
         // User domain assets
@@ -307,13 +307,13 @@ class CollibraService {
         createdAssets.push(created);
       }
 
-      logger.info('Maya Travel Agent data assets created successfully', {
+      logger.info('Amrikyy Travel Agent data assets created successfully', {
         count: createdAssets.length
       });
 
       return createdAssets;
     } catch (error) {
-      logger.error('Failed to setup Maya data assets', { error: error.message });
+      logger.error('Failed to setup Amrikyy data assets', { error: error.message });
       throw error;
     }
   }
@@ -615,7 +615,7 @@ class CollibraService {
 
       for (const env of environments) {
         const configAsset = await this.createDataAsset(
-          `Maya ${env} Configuration`,
+          `Amrikyy ${env} Configuration`,
           `Configuration settings for ${env} environment`,
           configDomain.id,
           'Configuration',
@@ -650,11 +650,11 @@ class CollibraService {
   }
 
   /**
-   * Initialize complete Maya Travel Agent data governance
+   * Initialize complete Amrikyy Travel Agent data governance
    */
-  async initializeMayaGovernance() {
+  async initializeAmrikyyGovernance() {
     try {
-      logger.info('Initializing complete Maya Travel Agent data governance...');
+      logger.info('Initializing complete Amrikyy Travel Agent data governance...');
 
       // Step 1: Health check
       const health = await this.healthCheck();
@@ -663,7 +663,7 @@ class CollibraService {
       }
 
       // Step 2: Setup data domains
-      const domains = await this.setupMayaDataDomains();
+      const domains = await this.setupAmrikyyDataDomains();
       const domainMap = {
         users: domains.subDomains.find(d => d.name === 'Users').id,
         trips: domains.subDomains.find(d => d.name === 'Trips').id,
@@ -672,7 +672,7 @@ class CollibraService {
       };
 
       // Step 3: Setup data assets
-      const assets = await this.setupMayaDataAssets(domainMap);
+      const assets = await this.setupAmrikyyDataAssets(domainMap);
       const assetMap = {};
       assets.forEach(asset => {
         assetMap[asset.name] = asset;
@@ -690,7 +690,7 @@ class CollibraService {
       // Step 7: Setup configuration management
       await this.setupConfigurationManagement();
 
-      logger.info('Maya Travel Agent data governance initialization completed successfully');
+      logger.info('Amrikyy Travel Agent data governance initialization completed successfully');
 
       return {
         domains,
@@ -699,7 +699,7 @@ class CollibraService {
         health
       };
     } catch (error) {
-      logger.error('Failed to initialize Maya governance', { error: error.message });
+      logger.error('Failed to initialize Amrikyy governance', { error: error.message });
       throw error;
     }
   }

@@ -92,7 +92,7 @@
     }
   },
   "dataiku": {
-    "project_key": "MAYA_TRAVEL_AGENT",
+    "project_key": "AMRIKYY_TRAVEL_AGENT",
     "model_name": "user_churn_prediction",
     "dataset_name": "churn_training_data",
     "managed_folder": "churn_model_artifacts",

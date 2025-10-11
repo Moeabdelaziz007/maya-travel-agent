@@ -1,5 +1,5 @@
 /**
- * AI Routes for Maya Trips
+ * AI Routes for Amrikyy Trips
  * Z.ai GLM-4.6 Integration
  */
 
@@ -29,7 +29,7 @@ router.use(validateApiKey);
 
 /**
  * POST /api/ai/chat
- * General chat with Maya AI
+ * General chat with Amrikyy AI
  */
 router.post('/chat', async (req, res) => {
   try {
@@ -42,7 +42,7 @@ router.post('/chat', async (req, res) => {
       });
     }
 
-    console.log(`🤖 Maya AI Chat - User: ${userId}, Message: ${message.substring(0, 50)}...`);
+    console.log(`🤖 Amrikyy AI Chat - User: ${userId}, Message: ${message.substring(0, 50)}...`);
 
     // QICS: Quantum-Inspired Intent Classification
     const intentResult = await qicsService.predictIntent(message, {
@@ -59,7 +59,7 @@ router.post('/chat', async (req, res) => {
 
     // Build enhanced system prompt based on QICS intent
     if (intentResult.intent !== 'unclear') {
-      enhancedPrompt = `You are Maya, an intelligent travel assistant. The user intent is: ${intentResult.intent}.
+      enhancedPrompt = `You are Amrikyy, an intelligent travel assistant. The user intent is: ${intentResult.intent}.
 
 Intent Details:
 - Confidence: ${(intentResult.confidence * 100).toFixed(1)}%
@@ -93,7 +93,7 @@ Provide a helpful, context-aware response that addresses the user's intent. If t
       ];
 
       const first = await zaiClient.chatCompletion([
-        { role: 'system', content: 'You are Maya, a helpful travel assistant.' },
+        { role: 'system', content: 'You are Amrikyy, a helpful travel assistant.' },
         { role: 'system', content: buildCulturalSystemPrompt(region) },
         ...toolAwareHistory,
         { role: 'user', content: message }
@@ -126,7 +126,7 @@ Provide a helpful, context-aware response that addresses the user's intent. If t
 
           // Feed tool result back to the model for final answer
           const second = await zaiClient.chatCompletion([
-            { role: 'system', content: 'You are Maya, a helpful travel assistant.' },
+            { role: 'system', content: 'You are Amrikyy, a helpful travel assistant.' },
             { role: 'system', content: buildCulturalSystemPrompt(region) },
             ...toolAwareHistory,
             { role: 'user', content: message },

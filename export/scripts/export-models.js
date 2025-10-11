@@ -103,7 +103,7 @@ class ModelExporter {
           }
         },
         dataiku: {
-          project_key: 'MAYA_TRAVEL_AGENT',
+          project_key: 'AMRIKYY_TRAVEL_AGENT',
           model_name: 'flight_price_prediction',
           dataset_name: 'flight_training_data',
           managed_folder: 'flight_model_artifacts',
@@ -212,7 +212,7 @@ class ModelExporter {
           }
         },
         dataiku: {
-          project_key: 'MAYA_TRAVEL_AGENT',
+          project_key: 'AMRIKYY_TRAVEL_AGENT',
           model_name: 'hotel_price_prediction',
           dataset_name: 'hotel_training_data',
           managed_folder: 'hotel_model_artifacts',
@@ -327,7 +327,7 @@ class ModelExporter {
           }
         },
         dataiku: {
-          project_key: 'MAYA_TRAVEL_AGENT',
+          project_key: 'AMRIKYY_TRAVEL_AGENT',
           model_name: 'user_churn_prediction',
           dataset_name: 'churn_training_data',
           managed_folder: 'churn_model_artifacts',
@@ -376,7 +376,7 @@ class ModelExporter {
               latency_ms: 145,
               throughput_rps: 200
             },
-            dataiku_project: 'MAYA_TRAVEL_AGENT',
+            dataiku_project: 'AMRIKYY_TRAVEL_AGENT',
             api_endpoint: '/api/models/flight-price/predict',
             tags: ['pricing', 'travel', 'regression', 'production']
           },
@@ -395,7 +395,7 @@ class ModelExporter {
               latency_ms: 115,
               throughput_rps: 250
             },
-            dataiku_project: 'MAYA_TRAVEL_AGENT',
+            dataiku_project: 'AMRIKYY_TRAVEL_AGENT',
             api_endpoint: '/api/models/hotel-price/predict',
             tags: ['pricing', 'hospitality', 'regression', 'production']
           },
@@ -414,7 +414,7 @@ class ModelExporter {
               latency_ms: 95,
               throughput_rps: 300
             },
-            dataiku_project: 'MAYA_TRAVEL_AGENT',
+            dataiku_project: 'AMRIKYY_TRAVEL_AGENT',
             api_endpoint: '/api/models/churn/predict',
             tags: ['churn', 'classification', 'retention', 'production']
           }

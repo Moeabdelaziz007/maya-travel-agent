@@ -19,7 +19,7 @@ export default {
           800: '#1e40af',
           900: '#1e3a8a',
         },
-        maya: {
+        amrikyy: {
           sky: '#0ea5e9',
           ocean: '#06b6d4',
           sunset: '#f59e0b',

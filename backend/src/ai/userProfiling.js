@@ -1,5 +1,5 @@
 /**
- * Advanced User Profiling System for Maya AI
+ * Advanced User Profiling System for Amrikyy AI
  * Comprehensive user data collection and personalization
  */
 

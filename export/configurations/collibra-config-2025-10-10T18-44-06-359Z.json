@@ -2,12 +2,12 @@
   "metadata": {
     "exportDate": "2025-10-10T18:44:06.403Z",
     "version": "1.0.0",
-    "description": "Maya Travel Agent Collibra Data Governance Configuration"
+    "description": "Amrikyy Travel Agent Collibra Data Governance Configuration"
   },
   "domains": [
     {
-      "name": "Maya Travel Agent",
-      "description": "Data governance domain for Maya Travel Agent platform",
+      "name": "Amrikyy Travel Agent",
+      "description": "Data governance domain for Amrikyy Travel Agent platform",
       "subDomains": [
         {
           "name": "Users",

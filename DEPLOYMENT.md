@@ -1,6 +1,6 @@
-# 🚀 Maya Travel Agent - Deployment Guide
+# 🚀 Amrikyy Travel Agent - Deployment Guide
 
-Complete guide for deploying Maya Travel Agent to production with Collibra config management, Prometheus monitoring, and CI/CD automation.
+Complete guide for deploying Amrikyy Travel Agent to production with Collibra config management, Prometheus monitoring, and CI/CD automation.
 
 ---
 
@@ -62,7 +62,7 @@ NODE_ENV=production
 PORT=3001
 
 # Collibra Configuration Management
-COLLIBRA_URL=https://maya.collibra.com
+COLLIBRA_URL=https://amrikyy.collibra.com
 COLLIBRA_API_KEY=your_collibra_api_key_here
 COLLIBRA_USERNAME=your_username
 COLLIBRA_PASSWORD=your_password
@@ -105,7 +105,7 @@ PROMETHEUS_ENABLED=true
 **Frontend `.env` file:**
 
 ```bash
-VITE_API_URL=https://api.mayatravel.ai
+VITE_API_URL=https://api.amrikyytravel.ai
 VITE_SUPABASE_URL=https://your-project.supabase.co
 VITE_SUPABASE_ANON_KEY=your_anon_key
 VITE_TELEGRAM_BOT_USERNAME=@YourBotUsername
@@ -138,7 +138,7 @@ Settings → Secrets and variables → Actions → New repository secret
 
 ### 1. Create Configuration Assets
 
-1. **Login to Collibra**: https://maya.collibra.com
+1. **Login to Collibra**: https://amrikyy.collibra.com
 
 2. **Create Configuration Domain**:
    - Navigate to: Data Assets → Create Domain
@@ -149,21 +149,21 @@ Settings → Secrets and variables → Actions → New repository secret
 
    **Development Config:**
    ```
-   Name: maya_development_config
+   Name: amrikyy_development_config
    Type: Configuration
    Domain: Configuration
    ```
 
    **Staging Config:**
    ```
-   Name: maya_staging_config
+   Name: amrikyy_staging_config
    Type: Configuration
    Domain: Configuration
    ```
 
    **Production Config:**
    ```
-   Name: maya_production_config
+   Name: amrikyy_production_config
    Type: Configuration
    Domain: Configuration
    ```
@@ -300,7 +300,7 @@ tar xvfz prometheus-*.tar.gz
 cd prometheus-*
 
 # Copy config
-cp /path/to/maya-travel-agent/prometheus.yml .
+cp /path/to/amrikyy-travel-agent/prometheus.yml .
 
 # Start Prometheus
 ./prometheus --config.file=prometheus.yml
@@ -333,9 +333,9 @@ sudo systemctl enable grafana-server
    - URL: http://localhost:9090
    - Save & Test
 
-4. Import Maya Dashboard:
+4. Import Amrikyy Dashboard:
    - Dashboards → Import
-   - Upload: `grafana/maya-dashboard.json`
+   - Upload: `grafana/amrikyy-dashboard.json`
    - Select Prometheus datasource
    - Import
 
@@ -345,7 +345,7 @@ Create `alerts.yml`:
 
 ```yaml
 groups:
-  - name: maya_alerts
+  - name: amrikyy_alerts
     interval: 30s
     rules:
       - alert: HighErrorRate
@@ -419,7 +419,7 @@ TEST_URL=http://localhost:3001 npm run smoke-test
 **Run against staging:**
 
 ```bash
-TEST_URL=https://staging-api.mayatravel.ai \
+TEST_URL=https://staging-api.amrikyytravel.ai \
 TEST_API_KEY=your_staging_key \
 npm run smoke-test
 ```
@@ -427,8 +427,8 @@ npm run smoke-test
 **Expected Output:**
 
 ```
-🚀 Starting Maya Travel Agent Smoke Tests
-Target URL: https://api.mayatravel.ai
+🚀 Starting Amrikyy Travel Agent Smoke Tests
+Target URL: https://api.amrikyytravel.ai
 ────────────────────────────────────────────────────────────
 ✓ [2024-01-10T12:00:00.000Z] Health Check: PASSED
 ✓ [2024-01-10T12:00:01.000Z] Metrics Endpoint: PASSED
@@ -452,7 +452,7 @@ Target URL: https://api.mayatravel.ai
 # See: https://k6.io/docs/getting-started/installation/
 
 # Run load test
-K6_TARGET_URL=https://api.mayatravel.ai \
+K6_TARGET_URL=https://api.amrikyytravel.ai \
 K6_API_KEY=your_api_key \
 k6 run k6/load-test.js
 
@@ -493,10 +493,10 @@ npm audit
 npm audit fix
 
 # SSL/TLS check
-curl -I https://api.mayatravel.ai
+curl -I https://api.amrikyytravel.ai
 
 # CORS check
-curl -H "Origin: https://malicious-site.com" -I https://api.mayatravel.ai
+curl -H "Origin: https://malicious-site.com" -I https://api.amrikyytravel.ai
 ```
 
 ---
@@ -540,7 +540,7 @@ curl -H "Origin: https://malicious-site.com" -I https://api.mayatravel.ai
 
 ```bash
 # Test connection
-curl -X GET "https://maya.collibra.com/rest/2.0/version" \
+curl -X GET "https://amrikyy.collibra.com/rest/2.0/version" \
   -H "Authorization: Bearer YOUR_API_KEY"
 
 # Check credentials in .env
@@ -564,7 +564,7 @@ vercel logs
 DEBUG=* npm run smoke-test
 
 # Test individual endpoints
-curl https://api.mayatravel.ai/health
+curl https://api.amrikyytravel.ai/health
 ```
 
 ---
@@ -603,5 +603,5 @@ npm run deploy:monitor
 
 **🎉 Happy Deploying!**
 
-For support, contact: support@mayatravel.ai
+For support, contact: support@amrikyytravel.ai
 

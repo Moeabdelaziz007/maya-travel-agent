@@ -16,7 +16,7 @@
 - **اقتراحات تلقائية** للمستخدمين
 - **معالجة الأخطاء** الشاملة
 
-### ✅ 2. Telegram Bot (@maya_trips_bot)
+### ✅ 2. Telegram Bot (@amrikyy_trips_bot)
 - **إعداد احترافي** مع رسائل ترحيب محسنة
 - **تكامل Mini App** مع Telegram WebApp SDK
 - **معالجة الدفع** المدمجة
@@ -153,7 +153,7 @@ Personal.Trips.Assistnce/
 
 ### Features Completed
 - ✅ **AI Assistant** (Z.ai GLM-4.6)
-- ✅ **Telegram Bot** (@maya_trips_bot)
+- ✅ **Telegram Bot** (@amrikyy_trips_bot)
 - ✅ **Payment System** (Stripe)
 - ✅ **Web Application** (React)
 - ✅ **Testing Framework** (Jest, Playwright)
@@ -168,7 +168,7 @@ Personal.Trips.Assistnce/
 ### ✅ Working Systems
 1. **Web App**: يعمل على http://localhost:3000
 2. **Backend API**: يعمل على http://localhost:5000
-3. **Telegram Bot**: @maya_trips_bot نشط
+3. **Telegram Bot**: @amrikyy_trips_bot نشط
 4. **AI Assistant**: Z.ai GLM-4.6 متصل
 5. **Payment System**: Stripe جاهز
 6. **Testing**: جميع الاختبارات تمر
@@ -226,7 +226,7 @@ Personal.Trips.Assistnce/
 **Amrikyy Travel Agent** هو الآن نظام سفر ذكي متكامل يشمل:
 
 1. **🤖 مساعد AI ذكي** (Z.ai GLM-4.6)
-2. **📱 بوت Telegram احترافي** (@maya_trips_bot)
+2. **📱 بوت Telegram احترافي** (@amrikyy_trips_bot)
 3. **💳 نظام دفع آمن** (Stripe)
 4. **🌐 تطبيق ويب متقدم** (React)
 5. **📱 Telegram Mini App** (مدمج)

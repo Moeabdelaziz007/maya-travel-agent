@@ -88,7 +88,7 @@
     }
   },
   "dataiku": {
-    "project_key": "MAYA_TRAVEL_AGENT",
+    "project_key": "AMRIKYY_TRAVEL_AGENT",
     "model_name": "hotel_price_prediction",
     "dataset_name": "hotel_training_data",
     "managed_folder": "hotel_model_artifacts",

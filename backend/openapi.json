@@ -1,7 +1,7 @@
 {
   "openapi": "3.0.3",
   "info": {
-    "title": "Maya Trips Public API",
+    "title": "Amrikyy Trips Public API",
     "version": "1.0.0",
     "description": "Open APIs for local developers to integrate travel planning, AI chat, and analytics."
   },
@@ -15,7 +15,7 @@
     },
     "/ai/chat": {
       "post": {
-        "summary": "Chat with Maya AI",
+        "summary": "Chat with Amrikyy AI",
         "requestBody": { "required": true },
         "responses": { "200": { "description": "AI reply" } }
       }

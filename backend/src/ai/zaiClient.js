@@ -1,6 +1,6 @@
 /**
  * Z.ai GLM-4.6 API Client
- * Professional integration for Maya Trips AI Assistant
+ * Professional integration for Amrikyy Trips AI Assistant
  */
 
 const fetch = require('node-fetch');
@@ -87,7 +87,7 @@ class ZaiClient {
    */
   async analyzeMedia({ prompt, imageUrls = [], videoUrl = null }, options = {}) {
     // Compose a robust instruction so text-only fallback is still useful
-    const systemPrompt = `You are Maya, an expert travel assistant with strong visual understanding.
+    const systemPrompt = `You are Amrikyy, an expert travel assistant with strong visual understanding.
     When images or video are provided, carefully describe relevant travel context (landmarks, conditions, activities, safety, accessibility) and extract actionable trip-planning insights.
     Be concise and practical. Prefer Arabic unless explicitly asked for English.`;
 
@@ -127,7 +127,7 @@ class ZaiClient {
    * @returns {Promise<Object>} Travel recommendations
    */
   async generateTravelRecommendations(destination, budget, duration, preferences = []) {
-    const systemPrompt = `You are Maya, an expert AI travel assistant specializing in Arabic and English travel planning. 
+    const systemPrompt = `You are Amrikyy, an expert AI travel assistant specializing in Arabic and English travel planning. 
     Provide detailed, practical travel recommendations with:
     - 3-5 must-visit attractions
     - Local food recommendations
@@ -159,7 +159,7 @@ class ZaiClient {
    * @returns {Promise<Object>} Budget analysis
    */
   async generateBudgetAnalysis(tripData, totalBudget) {
-    const systemPrompt = `You are Maya, a financial travel advisor. Analyze trip costs and provide:
+    const systemPrompt = `You are Amrikyy, a financial travel advisor. Analyze trip costs and provide:
     - Detailed budget breakdown
     - Cost-saving recommendations
     - Alternative options
@@ -192,7 +192,7 @@ class ZaiClient {
    * @returns {Promise<Object>} AI response
    */
   async generateChatResponse(userMessage, conversationHistory = []) {
-    const systemPrompt = `You are Maya, a friendly and knowledgeable AI travel assistant. 
+    const systemPrompt = `You are Amrikyy, a friendly and knowledgeable AI travel assistant. 
     You help users with:
     - Travel planning and recommendations
     - Budget analysis
@@ -222,7 +222,7 @@ class ZaiClient {
    * @returns {Promise<Object>} Destination insights
    */
   async generateDestinationInsights(destination, travelType = 'leisure') {
-    const systemPrompt = `You are Maya, a travel destination expert. Provide comprehensive insights about destinations including:
+    const systemPrompt = `You are Amrikyy, a travel destination expert. Provide comprehensive insights about destinations including:
     - Best time to visit
     - Weather conditions
     - Cultural highlights
@@ -253,7 +253,7 @@ class ZaiClient {
    * @returns {Promise<Object>} Payment recommendations
    */
   async generatePaymentRecommendations(tripDetails, paymentMethod = 'credit_card') {
-    const systemPrompt = `You are Maya, a travel financial advisor. Provide payment and booking advice including:
+    const systemPrompt = `You are Amrikyy, a travel financial advisor. Provide payment and booking advice including:
     - Best payment methods for travel
     - Currency exchange strategies
     - Travel insurance recommendations

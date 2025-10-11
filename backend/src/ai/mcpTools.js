@@ -1,5 +1,5 @@
 /**
- * MCP (Model Context Protocol) Tools for Maya AI
+ * MCP (Model Context Protocol) Tools for Amrikyy AI
  * Advanced tools for enhanced travel assistant capabilities
  */
 

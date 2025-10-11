@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Maya Travel Agent dbt Models Deployment Script
+# Amrikyy Travel Agent dbt Models Deployment Script
 # This script automates the deployment of analytics models
 
 set -e  # Exit on any error
@@ -130,7 +130,7 @@ generate_docs() {
 
 # Main deployment process
 main() {
-    log "Starting Maya Travel Agent dbt models deployment..."
+    log "Starting Amrikyy Travel Agent dbt models deployment..."
 
     # Pre-deployment checks
     check_env_file

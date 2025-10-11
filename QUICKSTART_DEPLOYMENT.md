@@ -1,6 +1,6 @@
-# ⚡ Maya Travel Agent - Quick Start Deployment
+# ⚡ Amrikyy Travel Agent - Quick Start Deployment
 
-**Fast track guide to get Maya Travel Agent deployed in 30 minutes!**
+**Fast track guide to get Amrikyy Travel Agent deployed in 30 minutes!**
 
 ---
 
@@ -129,7 +129,7 @@ curl http://localhost:3001/metrics
 **For production:**
 
 - Set up Prometheus (see `prometheus.yml`)
-- Import Grafana dashboard (see `grafana/maya-dashboard.json`)
+- Import Grafana dashboard (see `grafana/amrikyy-dashboard.json`)
 - Or use Railway/Vercel built-in monitoring
 
 ---
@@ -264,7 +264,7 @@ curl http://localhost:3001/metrics  # Prometheus metrics
 
 ## 🎉 You're Ready!
 
-Your Maya Travel Agent is production-ready with:
+Your Amrikyy Travel Agent is production-ready with:
 
 - ✅ Intelligent configuration management
 - ✅ Automated CI/CD pipeline

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Maya Travel Agent - Quick Deploy Script
+# Amrikyy Travel Agent - Quick Deploy Script
 # Deploys to staging or production with validation
 
 set -e  # Exit on error
@@ -31,7 +31,7 @@ log_error() {
 
 # Banner
 echo ""
-echo "🚀 Maya Travel Agent - Quick Deploy"
+echo "🚀 Amrikyy Travel Agent - Quick Deploy"
 echo "===================================="
 echo ""
 
@@ -188,9 +188,9 @@ echo ""
 log_info "Step 7/7: Running smoke tests..."
 
 if [ "$ENVIRONMENT" = "staging" ]; then
-    TEST_URL=${STAGING_URL:-"https://staging-api.mayatravel.ai"}
+    TEST_URL=${STAGING_URL:-"https://staging-api.amrikyytravel.ai"}
 elif [ "$ENVIRONMENT" = "production" ]; then
-    TEST_URL=${PRODUCTION_URL:-"https://api.mayatravel.ai"}
+    TEST_URL=${PRODUCTION_URL:-"https://api.amrikyytravel.ai"}
 fi
 
 log_info "Testing against: $TEST_URL"

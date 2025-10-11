@@ -53,7 +53,7 @@ const AuthCallback: React.FC = () => {
 
         if (data.session && data.user) {
           setStatus('success');
-          setMessage('Email confirmed successfully! Welcome to Maya Trips!');
+          setMessage('Email confirmed successfully! Welcome to Amrikyy Trips!');
           setUser(data.user);
 
           // Redirect to dashboard after 3 seconds
@@ -226,10 +226,10 @@ const AuthCallback: React.FC = () => {
           <p className="text-sm text-gray-500">
             Need help? Contact us at{' '}
             <a
-              href="mailto:support@mayatrips.com"
+              href="mailto:support@amrikyytrips.com"
               className="text-blue-600 hover:underline"
             >
-              support@mayatrips.com
+              support@amrikyytrips.com
             </a>
           </p>
         </div>

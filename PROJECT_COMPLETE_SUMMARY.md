@@ -13,7 +13,7 @@
 - **Smart Suggestions**: Contextual suggestions for user queries
 
 ### 📱 Telegram Bot Integration
-- **Bot Username**: @maya_trips_bot
+- **Bot Username**: @amrikyy_trips_bot
 - **Mini App Support**: Direct integration with Telegram WebApp
 - **Payment Integration**: Secure payment processing through Telegram
 - **Professional Setup**: Optimized welcome messages and descriptions
@@ -82,8 +82,8 @@ SUPABASE_ANON_KEY=your_supabase_anon_key
 
 ### 1. Clone the Repository
 ```bash
-git clone https://github.com/yourusername/maya-trips-ai.git
-cd maya-trips-ai
+git clone https://github.com/yourusername/amrikyy-trips-ai.git
+cd amrikyy-trips-ai
 ```
 
 ### 2. Install Dependencies
@@ -245,7 +245,7 @@ The bot includes a "🌐 فتح التطبيق" button that opens the web applic
 
 **Amrikyy Travel Agent** is now fully functional with:
 - ✅ Working AI Assistant (Z.ai GLM-4.6)
-- ✅ Telegram Bot (@maya_trips_bot)
+- ✅ Telegram Bot (@amrikyy_trips_bot)
 - ✅ Payment Integration (Stripe)
 - ✅ Web Application
 - ✅ Telegram Mini App

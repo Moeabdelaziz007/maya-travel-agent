@@ -1,4 +1,4 @@
-// Payment Service for Maya Trips
+// Payment Service for Amrikyy Trips
 export interface PaymentRequest {
   amount: number;
   currency: string;

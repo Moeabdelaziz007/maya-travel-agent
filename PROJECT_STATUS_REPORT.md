@@ -28,7 +28,7 @@
 ### **3. Telegram Bot - ✅ يعمل**
 ```bash
 ✅ Bot Token: صحيح ومفعل
-✅ Bot Username: @maya_trips_bot
+✅ Bot Username: @amrikyy_trips_bot
 ✅ Bot Name: "Personal Ai Travel Agent"
 ✅ Web App Support: جاهز
 ```
@@ -46,7 +46,7 @@
 
 ## 🚀 **الميزات المتاحة:**
 
-### **AI Assistant (Maya)**
+### **AI Assistant (Amrikyy)**
 - ✅ محادثة ذكية بالعربية والإنجليزية
 - ✅ تخطيط الرحلات
 - ✅ تحليل الميزانية
@@ -100,7 +100,7 @@
 
 ### **الأولوية العالية:**
 1. **اختبار Telegram Mini App** - فتح البوت واختبار Web App button
-2. **تحسين AI Responses** - تحسين جودة ردود Maya AI
+2. **تحسين AI Responses** - تحسين جودة ردود Amrikyy AI
 3. **إضافة المزيد من الوجهات** - قاعدة بيانات وجهات شاملة
 
 ### **الأولوية المتوسطة:**
@@ -128,7 +128,7 @@ npm run dev
 # 3. الوصول للتطبيق
 # Frontend: http://localhost:3000
 # Backend: http://localhost:5000
-# Telegram Bot: @maya_trips_bot
+# Telegram Bot: @amrikyy_trips_bot
 ```
 
 ### **اختبار الميزات:**
@@ -139,7 +139,7 @@ curl -X POST http://localhost:5000/api/ai/chat \
   -d '{"message":"أريد تخطيط رحلة إلى اليابان","userId":"test"}'
 
 # اختبار Telegram Bot
-# افتح Telegram وابحث عن @maya_trips_bot
+# افتح Telegram وابحث عن @amrikyy_trips_bot
 # اضغط /start ثم "🌐 فتح التطبيق"
 ```
 
@@ -178,7 +178,7 @@ curl -X POST http://localhost:5000/api/ai/chat \
 3. راجع `TELEGRAM_MINI_APP_INTEGRATION.md`
 4. اختبر endpoints فردياً
 
-**Maya AI جاهز لخدمتك!** 🤖✨
+**Amrikyy AI جاهز لخدمتك!** 🤖✨
 
 ---
 

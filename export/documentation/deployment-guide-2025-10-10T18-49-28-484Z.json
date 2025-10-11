@@ -1,5 +1,5 @@
 {
-  "title": "Maya Travel Agent - Deployment Guide",
+  "title": "Amrikyy Travel Agent - Deployment Guide",
   "version": "1.0.0",
   "exportDate": "2025-10-10T18:49:28.809Z",
   "sections": [
@@ -9,7 +9,7 @@
     },
     {
       "title": "Environment Setup",
-      "content": "\n# Environment Setup\n\n## 1. Clone Repository\n```bash\ngit clone https://github.com/your-org/maya-travel-agent.git\ncd maya-travel-agent\n```\n\n## 2. Install Dependencies\n```bash\n# Backend dependencies\ncd backend\nnpm install\n\n# Frontend dependencies\ncd ../frontend\nnpm install\n\n# Return to root\ncd ..\n```\n\n## 3. Environment Configuration\nCopy environment templates and configure:\n\n```bash\n# Backend environment\ncp backend/env.example backend/.env\n# Edit backend/.env with your configuration\n\n# Frontend environment\ncp frontend/env.example frontend/.env\n# Edit frontend/.env with your configuration\n```\n\n## 4. Database Setup\n```bash\n# Initialize Supabase project\nsupabase init\nsupabase start\n\n# Run database migrations\nsupabase db push\n```\n            "
+      "content": "\n# Environment Setup\n\n## 1. Clone Repository\n```bash\ngit clone https://github.com/your-org/amrikyy-travel-agent.git\ncd amrikyy-travel-agent\n```\n\n## 2. Install Dependencies\n```bash\n# Backend dependencies\ncd backend\nnpm install\n\n# Frontend dependencies\ncd ../frontend\nnpm install\n\n# Return to root\ncd ..\n```\n\n## 3. Environment Configuration\nCopy environment templates and configure:\n\n```bash\n# Backend environment\ncp backend/env.example backend/.env\n# Edit backend/.env with your configuration\n\n# Frontend environment\ncp frontend/env.example frontend/.env\n# Edit frontend/.env with your configuration\n```\n\n## 4. Database Setup\n```bash\n# Initialize Supabase project\nsupabase init\nsupabase start\n\n# Run database migrations\nsupabase db push\n```\n            "
     },
     {
       "title": "Deployment Options",

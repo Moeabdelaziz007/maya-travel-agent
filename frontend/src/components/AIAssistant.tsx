@@ -309,11 +309,11 @@ const AIAssistant: React.FC = () => {
     <div className="space-y-6">
       {/* Header */}
       <div className="flex items-center space-x-4">
-        <div className="p-3 maya-gradient rounded-xl">
+        <div className="p-3 amrikyy-gradient rounded-xl">
           <Bot className="w-8 h-8 text-white" />
         </div>
         <div>
-          <h2 className="text-3xl font-bold maya-text">Maya AI Assistant</h2>
+          <h2 className="text-3xl font-bold amrikyy-text">Amrikyy AI Assistant</h2>
           <p className="text-gray-600 mt-1">
             Your intelligent travel companion
           </p>
@@ -547,7 +547,7 @@ const AIAssistant: React.FC = () => {
                       style={{ animationDelay: '0.2s' }}
                     ></div>
                   </div>
-                  <span className="text-sm">Maya is typing...</span>
+                  <span className="text-sm">Amrikyy is typing...</span>
                 </div>
               </div>
             </motion.div>
@@ -579,14 +579,14 @@ const AIAssistant: React.FC = () => {
               value={inputMessage}
               onChange={e => setInputMessage(e.target.value)}
               onKeyPress={e => e.key === 'Enter' && handleSendMessage()}
-              placeholder="Ask Maya anything about your travel..."
+              placeholder="Ask Amrikyy anything about your travel..."
               className="flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             />
 
             <motion.button
               onClick={handleSendMessage}
               disabled={!inputMessage.trim()}
-              className="p-3 maya-gradient text-white rounded-lg hover:shadow-lg transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="p-3 amrikyy-gradient text-white rounded-lg hover:shadow-lg transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
             >

@@ -136,10 +136,10 @@ const PaymentSuccess: React.FC = () => {
           <p>
             Need help? Contact us at{' '}
             <a
-              href="mailto:support@mayatrips.com"
+              href="mailto:support@amrikyytrips.com"
               className="text-blue-600 hover:underline"
             >
-              support@mayatrips.com
+              support@amrikyytrips.com
             </a>
           </p>
         </motion.div>

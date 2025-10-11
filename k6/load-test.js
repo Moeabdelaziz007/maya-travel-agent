@@ -1,5 +1,5 @@
 /**
- * k6 Load Test for Maya Travel Agent
+ * k6 Load Test for Amrikyy Travel Agent
  * Tests system performance under load
  * 
  * Run with: k6 run k6/load-test.js

@@ -1,4 +1,4 @@
--- Enhanced Database Schema for Maya AI Travel Assistant
+-- Enhanced Database Schema for Amrikyy AI Travel Assistant
 -- Advanced user profiling, conversation tracking, and personalization
 
 -- Create enhanced users table with comprehensive profiling

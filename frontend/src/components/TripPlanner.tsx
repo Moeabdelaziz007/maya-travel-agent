@@ -110,7 +110,7 @@ const TripPlanner: React.FC<TripPlannerProps> = ({ trips, setTrips }) => {
         </div>
         <motion.button
           onClick={() => setShowAddForm(!showAddForm)}
-          className="flex items-center space-x-2 maya-gradient text-white px-6 py-3 rounded-xl shadow-lg hover:shadow-xl transition-all duration-200"
+          className="flex items-center space-x-2 amrikyy-gradient text-white px-6 py-3 rounded-xl shadow-lg hover:shadow-xl transition-all duration-200"
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
         >

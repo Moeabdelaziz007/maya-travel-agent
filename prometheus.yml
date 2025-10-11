@@ -1,11 +1,11 @@
-# Prometheus Configuration for Maya Travel Agent
+# Prometheus Configuration for Amrikyy Travel Agent
 # Scrapes metrics from backend and frontend services
 
 global:
   scrape_interval: 15s # Scrape every 15 seconds
   evaluation_interval: 15s # Evaluate rules every 15 seconds
   external_labels:
-    monitor: 'maya-travel-agent'
+    monitor: 'amrikyy-travel-agent'
     environment: 'production'
 
 # Alertmanager configuration
@@ -22,7 +22,7 @@ rule_files:
 # Scrape configurations
 scrape_configs:
   # Backend API metrics
-  - job_name: 'maya-backend'
+  - job_name: 'amrikyy-backend'
     static_configs:
       - targets: ['localhost:3001']
         labels:
@@ -33,7 +33,7 @@ scrape_configs:
     scrape_timeout: 5s
 
   # Frontend metrics (if applicable)
-  - job_name: 'maya-frontend'
+  - job_name: 'amrikyy-frontend'
     static_configs:
       - targets: ['localhost:3000']
         labels:

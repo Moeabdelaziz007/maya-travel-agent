@@ -143,7 +143,7 @@ const AppContent: React.FC = () => {
       <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto mb-4"></div>
-          <h1 className="text-2xl font-bold maya-text">Amrikyy</h1>
+          <h1 className="text-2xl font-bold amrikyy-text">Amrikyy</h1>
           <p className="text-gray-600 mt-2">Loading your AI platform...</p>
         </div>
       </div>
@@ -188,11 +188,11 @@ const AppContent: React.FC = () => {
             className="flex items-center space-x-3"
             whileHover={{ scale: 1.05 }}
           >
-            <div className="p-3 maya-gradient rounded-xl">
+            <div className="p-3 amrikyy-gradient rounded-xl">
               <Plane className="w-8 h-8 text-white" />
             </div>
             <div>
-              <h1 className="text-2xl font-bold maya-text">Amrikyy</h1>
+              <h1 className="text-2xl font-bold amrikyy-text">Amrikyy</h1>
               <p className="text-gray-600 text-sm">
                 Your AI Automation Platform
               </p>

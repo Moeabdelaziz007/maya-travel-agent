@@ -21,7 +21,7 @@ class SkillSystem {
       bootstrapServers: config.confluentBootstrapServers || process.env.CONFLUENT_BOOTSTRAP_SERVERS,
       saslUsername: config.confluentSaslUsername || process.env.CONFLUENT_SASL_USERNAME,
       saslPassword: config.confluentSaslPassword || process.env.CONFLUENT_SASL_PASSWORD,
-      groupId: config.confluentGroupId || process.env.CONFLUENT_GROUP_ID || 'maya-skill-system'
+      groupId: config.confluentGroupId || process.env.CONFLUENT_GROUP_ID || 'amrikyy-skill-system'
     });
 
     // Skill execution metrics

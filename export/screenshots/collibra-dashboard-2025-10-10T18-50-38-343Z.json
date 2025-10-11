@@ -1,12 +1,12 @@
 {
   "metadata": {
     "exportDate": "2025-10-10T18:50:38.452Z",
-    "instance": "maya.collibra.com",
+    "instance": "amrikyy.collibra.com",
     "sections": [
       {
         "name": "Data Domains",
         "screenshot": "collibra-domains.png",
-        "description": "Hierarchical view of Maya Travel Agent data domains"
+        "description": "Hierarchical view of Amrikyy Travel Agent data domains"
       },
       {
         "name": "Data Assets",

@@ -252,7 +252,7 @@ const Destinations: React.FC = () => {
               </div>
 
               <motion.button
-                className="w-full py-3 maya-gradient text-white rounded-lg hover:shadow-lg transition-all duration-200 font-medium"
+                className="w-full py-3 amrikyy-gradient text-white rounded-lg hover:shadow-lg transition-all duration-200 font-medium"
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
               >

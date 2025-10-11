@@ -1,4 +1,4 @@
-# Gitpod Configuration for Maya Travel Agent
+# Gitpod Configuration for Amrikyy Travel Agent
 # This configuration sets up a complete development environment in the cloud
 
 # Docker image configuration
@@ -10,7 +10,7 @@ tasks:
   # Task 1: Install all dependencies
   - name: Install Dependencies
     init: |
-      echo "🚀 Installing dependencies for Maya Travel Agent..."
+      echo "🚀 Installing dependencies for Amrikyy Travel Agent..."
 
       # Install root dependencies
       npm install
@@ -29,7 +29,7 @@ tasks:
 
     # Run on every workspace start
     command: |
-      echo "🎉 Welcome to Maya Travel Agent Development Environment!"
+      echo "🎉 Welcome to Amrikyy Travel Agent Development Environment!"
       echo "📝 Workspace is ready. Use the commands below to start development."
       echo ""
       echo "Available commands:"

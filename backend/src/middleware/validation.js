@@ -1,5 +1,5 @@
 /**
- * Input validation middleware for Maya Travel Agent
+ * Input validation middleware for Amrikyy Travel Agent
  */
 
 const Joi = require('joi');

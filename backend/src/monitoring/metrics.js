@@ -11,8 +11,8 @@ const register = new promClient.Registry();
 
 // Add a default label which is added to all metrics
 register.setDefaultLabels({
-  app: 'maya-travel-agent',
-  environment: process.env.NODE_ENV || 'development'
+  app: 'amrikyy-travel-agent',
+  environment: process.env.NODE_ENV || 'development',
 });
 
 // Enable the collection of default metrics
@@ -23,7 +23,7 @@ const httpRequestsTotal = new promClient.Counter({
   name: 'http_requests_total',
   help: 'Total number of HTTP requests',
   labelNames: ['method', 'route', 'status_code'],
-  registers: [register]
+  registers: [register],
 });
 
 const httpRequestDuration = new promClient.Histogram({
@@ -31,7 +31,7 @@ const httpRequestDuration = new promClient.Histogram({
   help: 'Duration of HTTP requests in seconds',
   labelNames: ['method', 'route'],
   buckets: [0.1, 0.5, 1, 2, 5, 10],
-  registers: [register]
+  registers: [register],
 });
 
 // Boss Agent orchestration metrics
@@ -39,7 +39,7 @@ const bossAgentOrchestrationTotal = new promClient.Counter({
   name: 'boss_agent_orchestration_total',
   help: 'Total number of Boss Agent orchestrations',
   labelNames: ['status', 'intent'],
-  registers: [register]
+  registers: [register],
 });
 
 const bossAgentOrchestrationDuration = new promClient.Histogram({
@@ -47,7 +47,7 @@ const bossAgentOrchestrationDuration = new promClient.Histogram({
   help: 'Duration of Boss Agent orchestrations',
   labelNames: ['intent'],
   buckets: [1, 5, 10, 30, 60, 120],
-  registers: [register]
+  registers: [register],
 });
 
 // Skill execution metrics
@@ -55,7 +55,7 @@ const skillExecutionTotal = new promClient.Counter({
   name: 'skill_execution_total',
   help: 'Total number of skill executions',
   labelNames: ['skill_name', 'status'],
-  registers: [register]
+  registers: [register],
 });
 
 const skillExecutionDuration = new promClient.Histogram({
@@ -63,7 +63,7 @@ const skillExecutionDuration = new promClient.Histogram({
   help: 'Duration of skill executions',
   labelNames: ['skill_name'],
   buckets: [0.1, 0.5, 1, 2, 5, 10],
-  registers: [register]
+  registers: [register],
 });
 
 // Cache metrics
@@ -71,14 +71,14 @@ const cacheHits = new promClient.Counter({
   name: 'cache_hits_total',
   help: 'Total number of cache hits',
   labelNames: ['cache_type'],
-  registers: [register]
+  registers: [register],
 });
 
 const cacheMisses = new promClient.Counter({
   name: 'cache_misses_total',
   help: 'Total number of cache misses',
   labelNames: ['cache_type'],
-  registers: [register]
+  registers: [register],
 });
 
 // Error metrics
@@ -86,21 +86,21 @@ const errorsTotal = new promClient.Counter({
   name: 'errors_total',
   help: 'Total number of errors',
   labelNames: ['error_type', 'component'],
-  registers: [register]
+  registers: [register],
 });
 
 // Business metrics
 const activeUsers = new promClient.Gauge({
   name: 'active_users',
   help: 'Number of currently active users',
-  registers: [register]
+  registers: [register],
 });
 
 const friendshipLevels = new promClient.Gauge({
   name: 'friendship_levels',
   help: 'Current friendship levels distribution',
   labelNames: ['level'],
-  registers: [register]
+  registers: [register],
 });
 
 // External API metrics
@@ -108,7 +108,7 @@ const externalApiCallsTotal = new promClient.Counter({
   name: 'external_api_calls_total',
   help: 'Total number of external API calls',
   labelNames: ['api_name', 'status'],
-  registers: [register]
+  registers: [register],
 });
 
 const externalApiCallDuration = new promClient.Histogram({
@@ -116,21 +116,21 @@ const externalApiCallDuration = new promClient.Histogram({
   help: 'Duration of external API calls',
   labelNames: ['api_name'],
   buckets: [0.1, 0.5, 1, 2, 5, 10],
-  registers: [register]
+  registers: [register],
 });
 
 // System health metrics
 const systemHealthStatus = new promClient.Gauge({
   name: 'system_health_status',
   help: 'Overall system health status (0=unhealthy, 1=degraded, 2=healthy)',
-  registers: [register]
+  registers: [register],
 });
 
 const dependencyHealthStatus = new promClient.Gauge({
   name: 'dependency_health_status',
   help: 'Dependency health status (0=unhealthy, 1=degraded, 2=healthy)',
   labelNames: ['dependency'],
-  registers: [register]
+  registers: [register],
 });
 
 /**
@@ -146,13 +146,16 @@ function httpMetricsMiddleware(req, res, next) {
     httpRequestsTotal.inc({
       method: req.method,
       route: route,
-      status_code: res.statusCode.toString()
+      status_code: res.statusCode.toString(),
     });
 
-    httpRequestDuration.observe({
-      method: req.method,
-      route: route
-    }, duration);
+    httpRequestDuration.observe(
+      {
+        method: req.method,
+        route: route,
+      },
+      duration
+    );
 
     // Log slow requests
     if (duration > 5) {
@@ -160,7 +163,7 @@ function httpMetricsMiddleware(req, res, next) {
         method: req.method,
         route: route,
         duration: duration,
-        statusCode: res.statusCode
+        statusCode: res.statusCode,
       });
     }
   });
@@ -174,12 +177,15 @@ function httpMetricsMiddleware(req, res, next) {
 function recordBossAgentOrchestration(intent, duration, success = true) {
   bossAgentOrchestrationTotal.inc({
     status: success ? 'success' : 'failure',
-    intent: intent || 'unknown'
+    intent: intent || 'unknown',
   });
 
-  bossAgentOrchestrationDuration.observe({
-    intent: intent || 'unknown'
-  }, duration / 1000);
+  bossAgentOrchestrationDuration.observe(
+    {
+      intent: intent || 'unknown',
+    },
+    duration / 1000
+  );
 }
 
 /**
@@ -188,12 +194,15 @@ function recordBossAgentOrchestration(intent, duration, success = true) {
 function recordSkillExecution(skillName, duration, success = true) {
   skillExecutionTotal.inc({
     skill_name: skillName,
-    status: success ? 'success' : 'failure'
+    status: success ? 'success' : 'failure',
   });
 
-  skillExecutionDuration.observe({
-    skill_name: skillName
-  }, duration / 1000);
+  skillExecutionDuration.observe(
+    {
+      skill_name: skillName,
+    },
+    duration / 1000
+  );
 }
 
 /**
@@ -213,7 +222,7 @@ function recordCacheMiss(cacheType = 'default') {
 function recordError(errorType, component = 'unknown') {
   errorsTotal.inc({
     error_type: errorType,
-    component: component
+    component: component,
   });
 }
 
@@ -223,12 +232,15 @@ function recordError(errorType, component = 'unknown') {
 function recordExternalApiCall(apiName, duration, success = true) {
   externalApiCallsTotal.inc({
     api_name: apiName,
-    status: success ? 'success' : 'failure'
+    status: success ? 'success' : 'failure',
   });
 
-  externalApiCallDuration.observe({
-    api_name: apiName
-  }, duration / 1000);
+  externalApiCallDuration.observe(
+    {
+      api_name: apiName,
+    },
+    duration / 1000
+  );
 }
 
 /**
@@ -268,6 +280,71 @@ function updateDependencyHealth(dependency, status) {
 }
 
 /**
+ * Update Redis cache metrics
+ */
+function updateRedisCache(hit = false) {
+  if (hit) {
+    redisCacheHits.inc();
+  } else {
+    redisCacheMisses.inc();
+  }
+}
+
+/**
+ * Record Redis operation
+ */
+function recordRedisOperation(operation, responseTime = null) {
+  redisOperations.inc({ operation });
+
+  if (responseTime !== null) {
+    redisResponseTime.observe({ operation }, responseTime / 1000); // Convert to seconds
+  }
+}
+
+/**
+ * Record Redis error
+ */
+function recordRedisError() {
+  redisErrors.inc();
+}
+
+/**
+ * Update Redis connection metrics
+ */
+function updateRedisConnections(count) {
+  redisConnections.set(count);
+}
+
+/**
+ * Update Redis memory metrics
+ */
+function updateRedisMemory(bytes) {
+  redisMemoryUsed.set(bytes);
+}
+
+/**
+ * Update Redis uptime
+ */
+function updateRedisUptime(seconds) {
+  redisUptime.set(seconds);
+}
+
+/**
+ * Get Redis metrics summary
+ */
+function getRedisMetrics() {
+  return {
+    cache_hits: redisCacheHits.hashMap?.['']?.value || 0,
+    cache_misses: redisCacheMisses.hashMap?.['']?.value || 0,
+    operations: redisOperations.hashMap?.['']?.value || 0,
+    errors: redisErrors.hashMap?.['']?.value || 0,
+    connections: redisConnections.hashMap?.['']?.value || 0,
+    memory_used: redisMemoryUsed.hashMap?.['']?.value || 0,
+    uptime: redisUptime.hashMap?.['']?.value || 0,
+  };
+}
+
+/**
  * Get metrics in Prometheus format
  */
 function getMetrics() {
@@ -293,7 +370,14 @@ module.exports = {
   updateFriendshipLevels,
   updateSystemHealth,
   updateDependencyHealth,
+  updateRedisCache,
+  recordRedisOperation,
+  recordRedisError,
+  updateRedisConnections,
+  updateRedisMemory,
+  updateRedisUptime,
+  getRedisMetrics,
   getMetrics,
   getRegistry,
-  register
+  register,
 };

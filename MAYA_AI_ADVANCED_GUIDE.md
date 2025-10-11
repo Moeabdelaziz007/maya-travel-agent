@@ -294,16 +294,16 @@
 ## 📞 الدعم والمساعدة
 
 ### 🆘 الدعم الفني
-- **البريد الإلكتروني**: support@mayatrips.com
-- **التليجرام**: @MayaTripsSupport
+- **البريد الإلكتروني**: support@amrikyytrips.com
+- **التليجرام**: @AmrikyyTripsSupport
 - **الهاتف**: +966 XX XXX XXXX
 - **ساعات العمل**: 24/7
 
 ### 📚 الموارد
-- **الدليل الكامل**: mayatrips.com/guide
-- **الأسئلة الشائعة**: mayatrips.com/faq
-- **فيديوهات تعليمية**: mayatrips.com/tutorials
-- **المجتمع**: mayatrips.com/community
+- **الدليل الكامل**: amrikyytrips.com/guide
+- **الأسئلة الشائعة**: amrikyytrips.com/faq
+- **فيديوهات تعليمية**: amrikyytrips.com/tutorials
+- **المجتمع**: amrikyytrips.com/community
 
 ---
 

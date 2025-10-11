@@ -9,7 +9,7 @@ class DataikuService {
   constructor() {
     this.baseURL = process.env.DATAIKU_BASE_URL;
     this.apiKey = process.env.DATAIKU_API_KEY;
-    this.projectKey = process.env.DATAIKU_PROJECT_KEY || 'MAYA_TRAVEL_AGENT';
+    this.projectKey = process.env.DATAIKU_PROJECT_KEY || 'AMRIKYY_TRAVEL_AGENT';
 
     // Initialize axios instance with authentication
     this.client = axios.create({

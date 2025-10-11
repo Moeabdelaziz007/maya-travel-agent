@@ -33,7 +33,7 @@ test.describe('Navigation', () => {
     await page.click('button:has-text("History")');
     await expect(page.locator('text=History')).toBeVisible();
 
-    // Test Amrikyy AI tab (UPDATED FROM "Maya AI")
+    // Test Amrikyy AI tab (UPDATED FROM "Amrikyy AI")
     await page.click('button:has-text("Amrikyy AI")');
     await expect(page.locator('text=Amrikyy AI')).toBeVisible();
   });

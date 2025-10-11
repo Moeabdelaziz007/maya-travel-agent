@@ -200,7 +200,7 @@ The build shows a warning about chunk size (513 KB), which is acceptable for now
 
 The errors occurred because:
 
-1. **Rebrand refactoring** - When rebranding from Maya to Amrikyy, some API response handling was updated but type definitions weren't kept in sync
+1. **Rebrand refactoring** - When rebranding from Amrikyy to Amrikyy, some API response handling was updated but type definitions weren't kept in sync
 
 2. **Component removal** - Auth components (LoginForm/SignupForm) were previously deleted or moved, but App.tsx still referenced them
 

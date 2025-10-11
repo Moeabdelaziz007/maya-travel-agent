@@ -1,9 +1,9 @@
 #!/bin/bash
 
-# Maya Travel Agent - GitHub Secrets Setup Helper
+# Amrikyy Travel Agent - GitHub Secrets Setup Helper
 # This script helps you set up GitHub secrets for CI/CD
 
-echo "🔐 Maya Travel Agent - GitHub Secrets Setup"
+echo "🔐 Amrikyy Travel Agent - GitHub Secrets Setup"
 echo "==========================================="
 echo ""
 

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-echo "🚀 Maya Trips - Verification Script"
+echo "🚀 Amrikyy Trips - Verification Script"
 echo "===================================="
 echo ""
 
@@ -84,4 +84,4 @@ echo "- ✅ E2E tests"
 echo "- ✅ Accessibility tests"
 echo "- ✅ Security audit"
 echo ""
-echo "🚀 Maya Trips is ready for production!"
+echo "🚀 Amrikyy Trips is ready for production!"

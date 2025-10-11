@@ -1,8 +1,8 @@
-# Alerting Rules for Maya Travel Agent
+# Alerting Rules for Amrikyy Travel Agent
 # Defines alerting conditions and notification rules
 
 groups:
-  - name: maya-travel-agent-alerts
+  - name: amrikyy-travel-agent-alerts
     rules:
       # System Health Alerts
       - alert: SystemUnhealthy
@@ -12,7 +12,7 @@ groups:
           severity: critical
           service: backend
         annotations:
-          summary: "Maya Travel Agent system is unhealthy"
+          summary: "Amrikyy Travel Agent system is unhealthy"
           description: "System health status is unhealthy for more than 5 minutes"
 
       - alert: SystemDegraded
@@ -22,7 +22,7 @@ groups:
           severity: warning
           service: backend
         annotations:
-          summary: "Maya Travel Agent system is degraded"
+          summary: "Amrikyy Travel Agent system is degraded"
           description: "System health status is degraded for more than 10 minutes"
 
       # High Error Rate Alerts

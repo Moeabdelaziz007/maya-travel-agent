@@ -1,11 +1,11 @@
 /**
- * Advanced Telegram Bot with Maya AI Integration
+ * Advanced Telegram Bot with Amrikyy AI Integration
  * Professional travel agent bot with powerful LLM and MCP tools
  */
 
 const TelegramBot = require('node-telegram-bot-api');
 const ZaiClient = require('./src/ai/zaiClient');
-const MayaPersona = require('./src/ai/mayaPersona');
+const AmrikyyPersona = require('./src/ai/amrikyyPersona');
 const MCPTools = require('./src/ai/mcpTools');
 const UserProfilingSystem = require('./src/ai/userProfiling');
 require('dotenv').config();
@@ -24,7 +24,7 @@ class AdvancedTelegramBot {
 
     // Initialize AI components
     this.zaiClient = new ZaiClient();
-    this.mayaPersona = new MayaPersona();
+    this.amrikyyPersona = new AmrikyyPersona();
     this.mcpTools = new MCPTools();
     this.userProfiling = new UserProfilingSystem();
 
@@ -44,7 +44,7 @@ class AdvancedTelegramBot {
     this.setupBotHandlers();
     this.startPeriodicTasks();
     
-    console.log('🤖 Advanced Maya Telegram Bot initialized successfully!');
+    console.log('🤖 Advanced Amrikyy Telegram Bot initialized successfully!');
   }
 
   /**
@@ -215,8 +215,8 @@ class AdvancedTelegramBot {
         messages: [{ content: message, timestamp: new Date().toISOString() }]
       });
 
-      // Generate Maya's system prompt with user context
-      const systemPrompt = this.mayaPersona.generateSystemPrompt({
+      // Generate Amrikyy's system prompt with user context
+      const systemPrompt = this.amrikyyPersona.generateSystemPrompt({
         user_name: userProfile.basicInfo.name,
         user_preferences: userProfile.preferences,
         conversation_history: conversationHistory,
@@ -499,7 +499,7 @@ class AdvancedTelegramBot {
     const userProfile = this.userProfiling.getProfile(userId);
     
     // Generate personalized response using AI
-    const systemPrompt = this.mayaPersona.generateSystemPrompt({
+    const systemPrompt = this.amrikyyPersona.generateSystemPrompt({
       user_preferences: userProfile?.preferences || {},
       current_goal: 'destination_info'
     });
@@ -938,6 +938,6 @@ module.exports = AdvancedTelegramBot;
 
 // Keep the process alive
 process.on('SIGINT', () => {
-  console.log('🤖 Shutting down Advanced Maya Telegram Bot...');
+  console.log('🤖 Shutting down Advanced Amrikyy Telegram Bot...');
   process.exit(0);
 });

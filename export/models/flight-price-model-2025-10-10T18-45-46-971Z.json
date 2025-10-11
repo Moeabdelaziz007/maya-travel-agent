@@ -84,7 +84,7 @@
     }
   },
   "dataiku": {
-    "project_key": "MAYA_TRAVEL_AGENT",
+    "project_key": "AMRIKYY_TRAVEL_AGENT",
     "model_name": "flight_price_prediction",
     "dataset_name": "flight_training_data",
     "managed_folder": "flight_model_artifacts",

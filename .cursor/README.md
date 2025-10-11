@@ -11,7 +11,7 @@ We've configured two Vercel MCP connections:
 - **Use**: Access all Vercel projects, search documentation, manage deployments across teams
 
 ### 2. Project-Specific Access (`vercel-amrikyy`)
-- **URL**: `https://mcp.vercel.com/YOUR_TEAM_SLUG/maya-travel-agent`
+- **URL**: `https://mcp.vercel.com/YOUR_TEAM_SLUG/amrikyy-travel-agent`
 - **Use**: Direct access to the Amrikyy Travel Agent project with automatic context
 - **Benefits**:
   - No need to manually specify project/team slugs
@@ -32,7 +32,7 @@ We've configured two Vercel MCP connections:
 2. **Update mcp.json**:
    - Replace `YOUR_TEAM_SLUG` with your actual team slug in `mcp.json`
    - Example: If your team is "acme-corp", change to:
-     `https://mcp.vercel.com/acme-corp/maya-travel-agent`
+     `https://mcp.vercel.com/acme-corp/amrikyy-travel-agent`
 
 3. **Authorize in Cursor**:
    - Cursor will show "Needs login" prompt for Vercel MCP

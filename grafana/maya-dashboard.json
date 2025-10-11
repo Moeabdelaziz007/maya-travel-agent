@@ -470,7 +470,7 @@
   "refresh": "30s",
   "schemaVersion": 27,
   "style": "dark",
-  "tags": ["maya", "travel-agent", "production"],
+  "tags": ["amrikyy", "travel-agent", "production"],
   "templating": {
     "list": []
   },
@@ -480,7 +480,7 @@
   },
   "timepicker": {},
   "timezone": "",
-  "title": "Maya Travel Agent - Production Dashboard",
-  "uid": "maya-travel-agent",
+  "title": "Amrikyy Travel Agent - Production Dashboard",
+  "uid": "amrikyy-travel-agent",
   "version": 1
 }

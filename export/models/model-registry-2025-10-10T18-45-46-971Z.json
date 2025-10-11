@@ -20,7 +20,7 @@
         "latency_ms": 145,
         "throughput_rps": 200
       },
-      "dataiku_project": "MAYA_TRAVEL_AGENT",
+      "dataiku_project": "AMRIKYY_TRAVEL_AGENT",
       "api_endpoint": "/api/models/flight-price/predict",
       "tags": [
         "pricing",
@@ -44,7 +44,7 @@
         "latency_ms": 115,
         "throughput_rps": 250
       },
-      "dataiku_project": "MAYA_TRAVEL_AGENT",
+      "dataiku_project": "AMRIKYY_TRAVEL_AGENT",
       "api_endpoint": "/api/models/hotel-price/predict",
       "tags": [
         "pricing",
@@ -68,7 +68,7 @@
         "latency_ms": 95,
         "throughput_rps": 300
       },
-      "dataiku_project": "MAYA_TRAVEL_AGENT",
+      "dataiku_project": "AMRIKYY_TRAVEL_AGENT",
       "api_endpoint": "/api/models/churn/predict",
       "tags": [
         "churn",

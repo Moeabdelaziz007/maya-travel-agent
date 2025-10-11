@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Maya Travel Agent dbt Analytics Monitoring Setup
+# Amrikyy Travel Agent dbt Analytics Monitoring Setup
 # This script sets up monitoring and alerting for the analytics pipeline
 
 set -e
@@ -48,7 +48,7 @@ create_alerts_config() {
     log "Creating alerts configuration..."
 
     cat > "$ALERTS_FILE" << 'EOF'
-# Maya Travel Agent Analytics Alerts Configuration
+# Amrikyy Travel Agent Analytics Alerts Configuration
 
 global:
   smtp_smtp:
@@ -59,13 +59,13 @@ global:
 
 # Alert Rules
 groups:
-  - name: maya_analytics.alerts
+  - name: amrikyy_analytics.alerts
     interval: 60s
     rules:
 
     # dbt Model Failures
     - alert: DbtModelFailure
-      expr: up{job="maya_dbt"} == 0
+      expr: up{job="amrikyy_dbt"} == 0
       for: 5m
       labels:
         severity: critical
@@ -143,8 +143,8 @@ create_dashboard_config() {
     cat > "$DASHBOARD_FILE" << 'EOF'
 {
   "dashboard": {
-    "title": "Maya Travel Agent Analytics",
-    "tags": ["maya", "analytics", "dbt"],
+    "title": "Amrikyy Travel Agent Analytics",
+    "tags": ["amrikyy", "analytics", "dbt"],
     "timezone": "browser",
     "panels": [
       {
@@ -152,7 +152,7 @@ create_dashboard_config() {
         "type": "stat",
         "targets": [
           {
-            "expr": "up{job=\"maya_dbt\"}",
+            "expr": "up{job=\"amrikyy_dbt\"}",
             "legendFormat": "Status"
           }
         ],
@@ -275,7 +275,7 @@ create_metrics_exporter() {
     cat > "$METRICS_SCRIPT" << 'EOF'
 #!/usr/bin/env python3
 """
-Prometheus Metrics Exporter for Maya Travel Agent Analytics
+Prometheus Metrics Exporter for Amrikyy Travel Agent Analytics
 Exports dbt model metrics and business KPIs to Prometheus format
 """
 
@@ -413,12 +413,12 @@ EOF
 create_log_rotation() {
     log "Creating log rotation configuration..."
 
-    LOGROTATE_FILE="/etc/logrotate.d/maya_analytics"
+    LOGROTATE_FILE="/etc/logrotate.d/amrikyy_analytics"
 
     # Check if running as root (needed for system-wide logrotate)
     if [[ $EUID -eq 0 ]]; then
         cat > "$LOGROTATE_FILE" << 'EOF'
-/opt/dbt/maya_travel_analytics/logs/*.log {
+/opt/dbt/amrikyy_travel_analytics/logs/*.log {
     daily
     rotate 30
     compress
@@ -428,7 +428,7 @@ create_log_rotation() {
     create 644 dbt dbt
     postrotate
         # Signal dbt to reopen log files if needed
-        kill -HUP $(pgrep -f "maya_travel_analytics") 2>/dev/null || true
+        kill -HUP $(pgrep -f "amrikyy_travel_analytics") 2>/dev/null || true
     endscript
 }
 EOF
@@ -448,12 +448,12 @@ create_startup_script() {
     cat > "$STARTUP_SCRIPT" << 'EOF'
 #!/bin/bash
 
-# Maya Travel Agent Analytics Monitoring Startup Script
+# Amrikyy Travel Agent Analytics Monitoring Startup Script
 
 PROJECT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 METRICS_SCRIPT="$PROJECT_DIR/monitoring/export_metrics.py"
 
-echo "Starting Maya Travel Agent Analytics monitoring..."
+echo "Starting Amrikyy Travel Agent Analytics monitoring..."
 
 # Check if Python virtual environment exists
 if [[ -d "$PROJECT_DIR/venv" ]]; then
@@ -478,7 +478,7 @@ EOF
 
 # Main setup function
 main() {
-    log "Setting up Maya Travel Agent Analytics monitoring..."
+    log "Setting up Amrikyy Travel Agent Analytics monitoring..."
 
     setup_log_directory
     create_alerts_config

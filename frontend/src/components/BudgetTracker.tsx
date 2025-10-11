@@ -269,7 +269,7 @@ const BudgetTracker: React.FC<BudgetTrackerProps> = ({ trips }) => {
                     initial={{ width: 0 }}
                     animate={{ width: `${item.percentage}%` }}
                     transition={{ delay: index * 0.1, duration: 0.5 }}
-                    className="maya-gradient h-2 rounded-full"
+                    className="amrikyy-gradient h-2 rounded-full"
                   />
                 </div>
               </div>

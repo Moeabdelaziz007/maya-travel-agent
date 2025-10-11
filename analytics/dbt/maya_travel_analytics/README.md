@@ -1,13 +1,13 @@
-# Maya Travel Agent Analytics - dbt Project
+# Amrikyy Travel Agent Analytics - dbt Project
 
 ## Overview
 
-This dbt project provides comprehensive analytics models for the Maya Travel Agent platform, enabling data-driven insights into user behavior, conversion funnels, system performance, and business KPIs.
+This dbt project provides comprehensive analytics models for the Amrikyy Travel Agent platform, enabling data-driven insights into user behavior, conversion funnels, system performance, and business KPIs.
 
 ## Project Structure
 
 ```
-analytics/dbt/maya_travel_analytics/
+analytics/dbt/amrikyy_travel_analytics/
 ├── models/
 │   ├── staging/                    # Raw data staging models
 │   │   ├── stg_telegram_messages.sql
@@ -82,7 +82,7 @@ pip install dbt-core dbt-postgres
 
 2. **Navigate to project directory**:
 ```bash
-cd analytics/dbt/maya_travel_analytics
+cd analytics/dbt/amrikyy_travel_analytics
 ```
 
 3. **Configure environment variables**:

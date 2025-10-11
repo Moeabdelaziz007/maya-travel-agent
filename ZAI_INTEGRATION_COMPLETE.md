@@ -2,7 +2,7 @@
 
 ## ✅ **تم التكامل بنجاح!**
 
-تم دمج Z.ai GLM-4.6 مع Maya Trips AI Assistant بنجاح. إليك ملخص شامل للتكامل:
+تم دمج Z.ai GLM-4.6 مع Amrikyy Trips AI Assistant بنجاح. إليك ملخص شامل للتكامل:
 
 ---
 
@@ -134,7 +134,7 @@ curl http://localhost:5000/api/ai/health
 curl -X POST http://localhost:5000/api/ai/chat \
   -H "Content-Type: application/json" \
   -d '{
-    "message": "مرحباً، أنا Maya! كيف يمكنني مساعدتك؟",
+    "message": "مرحباً، أنا Amrikyy! كيف يمكنني مساعدتك؟",
     "userId": "test_user"
   }'
 ```
@@ -156,7 +156,7 @@ curl -X POST http://localhost:5000/api/ai/travel-recommendations \
 ## 🎨 **الميزات المتاحة في Frontend:**
 
 ### **1. AI Chat Interface:**
-- ✅ محادثة مباشرة مع Maya AI
+- ✅ محادثة مباشرة مع Amrikyy AI
 - ✅ اقتراحات ذكية
 - ✅ مؤشر الكتابة
 - ✅ دعم الصوت (قريباً)
@@ -198,7 +198,7 @@ curl -X POST http://localhost:5000/api/ai/travel-recommendations \
 ### **1. Logs:**
 ```bash
 # Backend logs
-🤖 Maya AI Chat - User: user_123, Message: أريد تخطيط رحلة...
+🤖 Amrikyy AI Chat - User: user_123, Message: أريد تخطيط رحلة...
 🗺️ Travel Recommendations - Tokyo, Budget: $2500, Duration: 7 days
 💰 Budget Analysis - Paris, Budget: $3000
 ```
@@ -228,7 +228,7 @@ curl -X POST http://localhost:5000/api/ai/travel-recommendations \
 
 ## 🎉 **تهانينا!**
 
-تم تكامل Z.ai GLM-4.6 بنجاح مع Maya Trips! 
+تم تكامل Z.ai GLM-4.6 بنجاح مع Amrikyy Trips! 
 
 **المشروع الآن يحتوي على:**
 - ✅ AI Assistant ذكي مع GLM-4.6
@@ -250,4 +250,4 @@ curl -X POST http://localhost:5000/api/ai/travel-recommendations \
 3. راجع console logs
 4. اختبر endpoints فردياً
 
-**Maya AI جاهز لخدمتك!** 🤖✨
+**Amrikyy AI جاهز لخدمتك!** 🤖✨

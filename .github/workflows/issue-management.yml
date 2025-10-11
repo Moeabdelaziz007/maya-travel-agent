@@ -68,7 +68,7 @@ jobs:
           if (body.includes('telegram') || body.includes('bot') || body.includes('mini app')) {
             labels.push('telegram');
           }
-          if (body.includes('ai') || body.includes('maya') || body.includes('assistant')) {
+          if (body.includes('ai') || body.includes('amrikyy') || body.includes('assistant')) {
             labels.push('ai');
           }
           if (body.includes('payment') || body.includes('stripe') || body.includes('billing')) {

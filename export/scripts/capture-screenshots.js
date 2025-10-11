@@ -28,8 +28,8 @@ class ScreenshotCapturer {
       const grafanaScreenshots = {
         metadata: {
           exportDate: new Date().toISOString(),
-          dashboard: 'Maya Travel Agent Production Dashboard',
-          url: 'http://localhost:3000/d/maya-travel-agent',
+          dashboard: 'Amrikyy Travel Agent Production Dashboard',
+          url: 'http://localhost:3000/d/amrikyy-travel-agent',
           panels: [
             {
               id: 1,
@@ -106,8 +106,8 @@ class ScreenshotCapturer {
       const dataikuScreenshots = {
         metadata: {
           exportDate: new Date().toISOString(),
-          project: 'MAYA_TRAVEL_AGENT',
-          url: 'https://dataiku.maya-travel-agent.com',
+          project: 'AMRIKYY_TRAVEL_AGENT',
+          url: 'https://dataiku.amrikyy-travel-agent.com',
           sections: [
             {
               name: 'Project Overview',
@@ -170,12 +170,12 @@ class ScreenshotCapturer {
       const collibraScreenshots = {
         metadata: {
           exportDate: new Date().toISOString(),
-          instance: 'maya.collibra.com',
+          instance: 'amrikyy.collibra.com',
           sections: [
             {
               name: 'Data Domains',
               screenshot: 'collibra-domains.png',
-              description: 'Hierarchical view of Maya Travel Agent data domains'
+              description: 'Hierarchical view of Amrikyy Travel Agent data domains'
             },
             {
               name: 'Data Assets',
@@ -445,7 +445,7 @@ graph TB
               type: 'User flow diagram',
               description: 'Complete user journey from discovery to booking',
               steps: [
-                'Discover Maya via web/social',
+                'Discover Amrikyy via web/social',
                 'Sign up and create profile',
                 'Plan trip with AI assistance',
                 'Get price predictions',

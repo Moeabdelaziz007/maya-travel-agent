@@ -9,6 +9,10 @@ require('dotenv').config();
 const metrics = require('./src/monitoring/metrics');
 const HealthChecker = require('./src/monitoring/health-check');
 
+// Import Redis service
+const redisService = require('./src/services/redis-service');
+const RedisSessionStore = require('./src/services/redis-session-store');
+
 // Import new security middleware
 const {
   securityHeaders,
@@ -26,6 +30,15 @@ const PORT = process.env.PORT || 5000;
 
 // Initialize health checker
 const healthChecker = new HealthChecker();
+
+// Initialize Redis service (if configured)
+let redisInitialized = false;
+if (process.env.REDIS_HOST || process.env.REDIS_URL) {
+  console.log('🔴 Redis configured, will initialize on first request...');
+  redisInitialized = true;
+} else {
+  console.log('💾 Redis not configured, using memory stores');
+}
 
 // Configure security middleware
 console.log('🛡️ Configuring security middleware...');
@@ -86,7 +99,18 @@ app.get('/api/openapi.json', (req, res) => {
   }
 });
 
-// Health check endpoint
+// Health check endpoint (for Railway and load balancers)
+app.get('/health', (req, res) => {
+  res.json({
+    status: 'healthy',
+    service: 'amrikyy-backend',
+    timestamp: new Date().toISOString(),
+    uptime: process.uptime(),
+    version: '2.0.0',
+  });
+});
+
+// Health check endpoint (API version)
 app.get('/api/health', (req, res) => {
   res.json({
     status: 'healthy',
@@ -389,7 +413,7 @@ app.use('*', (req, res) => {
 
 // Start server
 app.listen(PORT, () => {
-  console.log('🚀 Maya Travel Agent v2.0 - Enhanced Server with Dataiku ML');
+  console.log('🚀 Amrikyy Travel Agent v2.0 - Enhanced Server with Dataiku ML');
   console.log(`📍 Port: ${PORT}`);
   console.log('🌐 Frontend: http://localhost:3000');
   console.log(`🔧 Backend API: http://localhost:${PORT}`);

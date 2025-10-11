@@ -124,7 +124,7 @@ it('handles trip creation', () => {
 
 **Root Cause**:
 
-- Component rebranded from "Maya" to "Amrikyy"
+- Component rebranded from "Amrikyy" to "Amrikyy"
 - Loading text changed from "Loading your travel assistant..." to "Loading your AI platform..."
 - Test mocks didn't match component logic
 

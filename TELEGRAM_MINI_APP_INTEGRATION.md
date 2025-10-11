@@ -95,7 +95,7 @@ npm run dev
 - ✅ Transaction history
 
 ### 4. AI Assistant:
-- ✅ Chat with Maya AI
+- ✅ Chat with Amrikyy AI
 - ✅ Travel recommendations
 - ✅ Budget advice
 

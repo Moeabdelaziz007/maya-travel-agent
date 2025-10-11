@@ -17,15 +17,69 @@ class HealthChecker {
    * Register default health checks
    */
   registerDefaultChecks() {
+    // Redis connectivity check
+    this.registerCheck('redis', async () => {
+      try {
+        const redisService = require('../services/redis-service');
+
+        // Check if Redis is configured
+        if (!process.env.REDIS_HOST && !process.env.REDIS_URL) {
+          return { status: 'not_configured', message: 'Redis not configured' };
+        }
+
+        const startTime = Date.now();
+        const healthResult = await redisService.healthCheck();
+        const responseTime = Date.now() - startTime;
+
+        if (healthResult.status === 'healthy') {
+          return {
+            status: 'healthy',
+            message: 'Redis is responding normally',
+            response_time: responseTime,
+            uptime: healthResult.uptime,
+            memory_used: healthResult.memory.used,
+            connections: healthResult.connections.connected,
+            hit_rate: healthResult.metrics
+              ? Math.round(healthResult.metrics.hitRate * 100) / 100
+              : 0,
+          };
+        } else {
+          return {
+            status: 'unhealthy',
+            message: healthResult.message || 'Redis health check failed',
+            response_time: responseTime,
+            error: healthResult.message,
+          };
+        }
+      } catch (error) {
+        logger.error('Redis health check failed:', error.message);
+        return {
+          status: 'error',
+          message: 'Redis health check threw an exception',
+          response_time: 0,
+          error: error.message,
+        };
+      }
+    });
+
     // Database connectivity check
     this.registerCheck('database', async () => {
       try {
-        if (!process.env.SUPABASE_URL || process.env.SUPABASE_URL === 'your_supabase_url_here') {
+        if (
+          !process.env.SUPABASE_URL ||
+          process.env.SUPABASE_URL === 'your_supabase_url_here'
+        ) {
           return { status: 'disabled', message: 'Supabase URL not configured' };
         }
 
-        if (!process.env.SUPABASE_ANON_KEY || process.env.SUPABASE_ANON_KEY === 'your_supabase_anon_key_here') {
-          return { status: 'disabled', message: 'Supabase anon key not configured' };
+        if (
+          !process.env.SUPABASE_ANON_KEY ||
+          process.env.SUPABASE_ANON_KEY === 'your_supabase_anon_key_here'
+        ) {
+          return {
+            status: 'disabled',
+            message: 'Supabase anon key not configured',
+          };
         }
 
         const supabase = createClient(
@@ -39,7 +93,8 @@ class HealthChecker {
           .limit(1)
           .single();
 
-        if (error && error.code !== 'PGRST116') { // PGRST116 is "no rows returned"
+        if (error && error.code !== 'PGRST116') {
+          // PGRST116 is "no rows returned"
           throw error;
         }
 
@@ -60,13 +115,13 @@ class HealthChecker {
         const response = await axios.get('https://api.zai.ai/health', {
           timeout: 5000,
           headers: {
-            'Authorization': `Bearer ${process.env.ZAI_API_KEY}`
-          }
+            Authorization: `Bearer ${process.env.ZAI_API_KEY}`,
+          },
         });
 
         return {
           status: response.status === 200 ? 'healthy' : 'degraded',
-          response_time: response.data.response_time || 0
+          response_time: response.data.response_time || 0,
         };
       } catch (error) {
         logger.error('Z.ai API health check failed:', error.message);
@@ -78,16 +133,22 @@ class HealthChecker {
     this.registerCheck('telegram_bot', async () => {
       try {
         if (!process.env.TELEGRAM_BOT_TOKEN) {
-          return { status: 'disabled', message: 'Telegram bot token not configured' };
+          return {
+            status: 'disabled',
+            message: 'Telegram bot token not configured',
+          };
         }
 
-        const response = await axios.get(`https://api.telegram.org/bot${process.env.TELEGRAM_BOT_TOKEN}/getMe`, {
-          timeout: 5000
-        });
+        const response = await axios.get(
+          `https://api.telegram.org/bot${process.env.TELEGRAM_BOT_TOKEN}/getMe`,
+          {
+            timeout: 5000,
+          }
+        );
 
         return {
           status: response.data.ok ? 'healthy' : 'unhealthy',
-          bot_info: response.data.result
+          bot_info: response.data.result,
         };
       } catch (error) {
         logger.error('Telegram Bot health check failed:', error.message);
@@ -105,21 +166,25 @@ class HealthChecker {
         const usedMemory = memUsage.heapUsed + memUsage.external;
         const memoryUsagePercent = (usedMemory / totalMemory) * 100;
 
-        const healthStatus = memoryUsagePercent > 90 ? 'unhealthy' :
-          memoryUsagePercent > 75 ? 'degraded' : 'healthy';
+        const healthStatus =
+          memoryUsagePercent > 90
+            ? 'unhealthy'
+            : memoryUsagePercent > 75
+            ? 'degraded'
+            : 'healthy';
 
         return {
           status: healthStatus,
           memory: {
             used: Math.round(usedMemory / 1024 / 1024), // MB
             total: Math.round(totalMemory / 1024 / 1024), // MB
-            usage_percent: Math.round(memoryUsagePercent * 100) / 100
+            usage_percent: Math.round(memoryUsagePercent * 100) / 100,
           },
           cpu: {
             user: cpuUsage.user,
-            system: cpuUsage.system
+            system: cpuUsage.system,
           },
-          uptime: process.uptime()
+          uptime: process.uptime(),
         };
       } catch (error) {
         logger.error('System resources health check failed:', error.message);
@@ -132,13 +197,18 @@ class HealthChecker {
       try {
         // This would need to be integrated with the actual cache system
         // For now, return healthy if cache is enabled
-        const cacheEnabled = !!(process.env.JSONBIN_API_KEY || process.env.REDIS_URL);
+        const cacheEnabled = !!(
+          process.env.JSONBIN_API_KEY || process.env.REDIS_URL
+        );
 
         if (!cacheEnabled) {
           return { status: 'disabled', message: 'Cache not configured' };
         }
 
-        return { status: 'healthy', type: process.env.REDIS_URL ? 'redis' : 'jsonbin' };
+        return {
+          status: 'healthy',
+          type: process.env.REDIS_URL ? 'redis' : 'jsonbin',
+        };
       } catch (error) {
         logger.error('Cache system health check failed:', error.message);
         return { status: 'unhealthy', error: error.message };
@@ -181,13 +251,13 @@ class HealthChecker {
         results[name] = {
           ...result,
           timestamp: new Date().toISOString(),
-          check_duration: Date.now() - startTime
+          check_duration: Date.now() - startTime,
         };
       } catch (error) {
         results[name] = {
           status: 'error',
           error: error.message,
-          timestamp: new Date().toISOString()
+          timestamp: new Date().toISOString(),
         };
       }
     }
@@ -208,13 +278,13 @@ class HealthChecker {
       const result = await checkFunction();
       return {
         ...result,
-        timestamp: new Date().toISOString()
+        timestamp: new Date().toISOString(),
       };
     } catch (error) {
       return {
         status: 'error',
         error: error.message,
-        timestamp: new Date().toISOString()
+        timestamp: new Date().toISOString(),
       };
     }
   }
@@ -223,7 +293,7 @@ class HealthChecker {
    * Calculate overall health status
    */
   calculateOverallHealth(results) {
-    const statuses = Object.values(results).map(r => r.status);
+    const statuses = Object.values(results).map((r) => r.status);
 
     if (statuses.includes('unhealthy') || statuses.includes('error')) {
       return 'unhealthy';
@@ -233,7 +303,7 @@ class HealthChecker {
       return 'degraded';
     }
 
-    if (statuses.every(s => s === 'healthy' || s === 'disabled')) {
+    if (statuses.every((s) => s === 'healthy' || s === 'disabled')) {
       return 'healthy';
     }
 
@@ -256,11 +326,16 @@ class HealthChecker {
       checks: results,
       summary: {
         total_checks: Object.keys(results).length,
-        healthy: Object.values(results).filter(r => r.status === 'healthy').length,
-        degraded: Object.values(results).filter(r => r.status === 'degraded').length,
-        unhealthy: Object.values(results).filter(r => r.status === 'unhealthy' || r.status === 'error').length,
-        disabled: Object.values(results).filter(r => r.status === 'disabled').length
-      }
+        healthy: Object.values(results).filter((r) => r.status === 'healthy')
+          .length,
+        degraded: Object.values(results).filter((r) => r.status === 'degraded')
+          .length,
+        unhealthy: Object.values(results).filter(
+          (r) => r.status === 'unhealthy' || r.status === 'error'
+        ).length,
+        disabled: Object.values(results).filter((r) => r.status === 'disabled')
+          .length,
+      },
     };
   }
 
@@ -274,7 +349,7 @@ class HealthChecker {
       status: report.overall_status,
       timestamp: report.timestamp,
       uptime: report.uptime,
-      version: report.version
+      version: report.version,
     };
   }
 }

@@ -23,7 +23,7 @@ class ServiceBus {
       'compression.type': 'gzip',
 
       // Consumer configuration
-      'group.id': config.groupId || 'maya-service-bus',
+      'group.id': config.groupId || 'amrikyy-service-bus',
       'auto.offset.reset': 'latest',
       'enable.auto.commit': true,
       'auto.commit.interval.ms': 5000,
@@ -222,7 +222,7 @@ class ServiceBus {
           value: JSON.stringify({
             ...event,
             timestamp: new Date().toISOString(),
-            source: 'maya-service-bus'
+            source: 'amrikyy-service-bus'
           }),
           headers: {
             'event-type': event.type || 'generic',

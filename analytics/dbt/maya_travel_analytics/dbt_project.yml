@@ -1,6 +1,6 @@
-name: maya_travel_analytics
+name: amrikyy_travel_analytics
 
-profile: maya_travel_analytics
+profile: amrikyy_travel_analytics
 
 seed-paths: ["seeds"]
 model-paths: ["models"]
@@ -13,11 +13,11 @@ clean-targets:
 
 seeds:
   # Builds seeds into '<your_schema_name>_raw'
-  maya_travel_analytics:
+  amrikyy_travel_analytics:
     +schema: raw
 
 models:
-  maya_travel_analytics:
+  amrikyy_travel_analytics:
     # Materialize staging models as views, intermediate as views, marts as tables
     staging:
       +materialized: view

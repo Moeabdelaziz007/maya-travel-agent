@@ -1,0 +1,40 @@
+
+> amrikyy-backend@1.0.0 dev
+> nodemon server.js
+
+[33m[nodemon] 3.1.10[39m
+[33m[nodemon] to restart at any time, enter `rs`[39m
+[33m[nodemon] watching path(s): *.*[39m
+[33m[nodemon] watching extensions: js,mjs,cjs,json[39m
+[32m[nodemon] starting `node server.js`[39m
+🔴 Redis Config: localhost:6379 (DB: 0)
+💾 Redis not configured, using memory stores
+🛡️ Configuring security middleware...
+💾 Using memory-based rate limiting (Redis not configured)...
+✅ Security middleware configured
+✅ Using Supabase as database (MongoDB not required)
+🌐 Serving static auth pages from frontend directory
+/Users/Shared/maya-travel-agent/node_modules/bindings/bindings.js:121
+        throw e;
+        ^
+
+Error: The module '/Users/Shared/maya-travel-agent/node_modules/@confluentinc/kafka-javascript/build/Release/confluent-kafka-javascript.node'
+was compiled against a different Node.js version using
+NODE_MODULE_VERSION 115. This version of Node.js requires
+NODE_MODULE_VERSION 127. Please try re-compiling or re-installing
+the module (for instance, using `npm rebuild` or `npm install`).
+    at Object..node (node:internal/modules/cjs/loader:1732:18)
+    at Module.load (node:internal/modules/cjs/loader:1289:32)
+    at Function._load (node:internal/modules/cjs/loader:1108:12)
+    at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:220:24)
+    at Module.require (node:internal/modules/cjs/loader:1311:12)
+    at require (node:internal/modules/helpers:136:16)
+    at bindings (/Users/Shared/maya-travel-agent/node_modules/bindings/bindings.js:112:48)
+    at Object.<anonymous> (/Users/Shared/maya-travel-agent/node_modules/@confluentinc/kafka-javascript/librdkafka.js:10:32)
+    at Module._compile (node:internal/modules/cjs/loader:1554:14) {
+  code: 'ERR_DLOPEN_FAILED'
+}
+
+Node.js v22.14.0
+[31m[nodemon] app crashed - waiting for file changes before starting...[39m
