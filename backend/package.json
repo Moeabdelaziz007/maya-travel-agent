@@ -9,11 +9,13 @@
     "build": "echo 'Backend build completed'",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
-    "test": "node test-simulation.js",
-    "test:simulation": "node test-simulation.js",
-    "test:unit": "echo 'Unit tests coming soon'",
+    "test": "npm run test:unit && npm run test:integration",
+    "test:unit": "jest src/tests/unit --coverage --passWithNoTests",
     "test:integration": "node src/tests/integration/complete-system-simulation.test.js",
-    "smoke-test": "node smoke-tests/smoke-test.js"
+    "test:api": "jest src/tests/api --passWithNoTests",
+    "test:security": "npm audit --audit-level=high",
+    "smoke-test": "node smoke-tests/smoke-test.js",
+    "test:simulation": "node test-simulation.js"
   },
   "dependencies": {
     "@confluentinc/kafka-javascript": "^1.6.0",
@@ -37,9 +39,13 @@
     "stripe": "^13.6.0"
   },
   "devDependencies": {
+    "@types/jest": "^30.0.0",
+    "@types/supertest": "^6.0.3",
     "chalk": "^5.6.2",
     "eslint": "^8.50.0",
-    "nodemon": "^3.1.10"
+    "jest": "^30.2.0",
+    "nodemon": "^3.1.10",
+    "supertest": "^7.1.4"
   },
   "keywords": [
     "ai",
