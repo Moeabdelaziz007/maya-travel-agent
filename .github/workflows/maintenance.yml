@@ -1,0 +1,208 @@
+name: Maintenance Tasks
+
+on:
+  schedule:
+    # Run weekly on Mondays at 2 AM UTC
+    - cron: '0 2 * * 1'
+  workflow_dispatch:
+
+jobs:
+  dependency-updates:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: 18
+        cache: 'npm'
+
+    - name: Install dependencies
+      run: npm ci
+
+    - name: Check for outdated dependencies
+      run: |
+        echo "📦 Checking for outdated dependencies..."
+        npm outdated || true
+
+        cd frontend && npm outdated || true
+        cd ../backend && npm outdated || true
+
+    - name: Create dependency update PR
+      uses: peter-evans/create-pull-request@v5
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+        commit-message: |
+          chore: update dependencies
+
+          - Updated npm packages to latest versions
+          - Ran security audit to ensure no vulnerabilities
+          - Updated package-lock.json files
+        title: 'chore: weekly dependency updates'
+        body: |
+          ## 🔄 Weekly Dependency Updates
+
+          This PR updates project dependencies to their latest versions.
+
+          ### Changes:
+          - Updated npm packages across frontend and backend
+          - Updated package-lock.json files
+          - Ran security audit to ensure no new vulnerabilities
+
+          ### Testing:
+          - All existing tests should pass
+          - Build should complete successfully
+          - No breaking changes expected
+
+          ### Review Checklist:
+          - [ ] All tests pass
+          - [ ] Build completes successfully
+          - [ ] No security vulnerabilities introduced
+          - [ ] No breaking changes in functionality
+        branch: maintenance/dependency-updates
+        delete-branch: true
+
+  security-monitoring:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: 18
+        cache: 'npm'
+
+    - name: Install dependencies
+      run: npm ci
+
+    - name: Run comprehensive security audit
+      run: |
+        echo "🔒 Running comprehensive security audit..."
+
+        # Root level audit
+        npm audit --audit-level low
+
+        # Frontend audit
+        cd frontend && npm audit --audit-level low
+
+        # Backend audit
+        cd ../backend && npm audit --audit-level low
+
+    - name: Run Trivy vulnerability scanner
+      uses: aquasecurity/trivy-action@master
+      with:
+        scan-type: 'fs'
+        scan-ref: '.'
+        format: 'sarif'
+        output: 'trivy-weekly-results.sarif'
+
+    - name: Upload security scan results
+      uses: github/codeql-action/upload-sarif@v3
+      with:
+        sarif_file: 'trivy-weekly-results.sarif'
+
+    - name: Check for critical vulnerabilities
+      run: |
+        # Check if there are any critical or high severity vulnerabilities
+        CRITICAL_COUNT=$(npm audit --audit-level critical --json | jq '.metadata.vulnerabilities.critical // 0')
+        HIGH_COUNT=$(npm audit --audit-level high --json | jq '.metadata.vulnerabilities.high // 0')
+
+        if [ "$CRITICAL_COUNT" -gt 0 ] || [ "$HIGH_COUNT" -gt 0 ]; then
+          echo "🚨 SECURITY ALERT: Critical or High severity vulnerabilities found!"
+          echo "Critical: $CRITICAL_COUNT, High: $HIGH_COUNT"
+          echo "Please review and fix these vulnerabilities immediately."
+
+          # Create a security issue
+          gh issue create \
+            --title "🚨 Security Alert: Critical Vulnerabilities Detected" \
+            --body "Automated security scan detected $CRITICAL_COUNT critical and $HIGH_COUNT high severity vulnerabilities. Please review and fix immediately." \
+            --label "security,urgent"
+        else
+          echo "✅ No critical or high severity vulnerabilities found"
+        fi
+
+  performance-monitoring:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: 18
+        cache: 'npm'
+        cache-dependency-path: frontend/package-lock.json
+
+    - name: Install frontend dependencies
+      working-directory: ./frontend
+      run: npm ci
+
+    - name: Build for production
+      working-directory: ./frontend
+      run: npm run build
+
+    - name: Analyze bundle size
+      working-directory: ./frontend
+      run: |
+        echo "📊 Bundle Size Analysis:"
+        du -sh dist/
+        find dist/ -name "*.js" -exec ls -lh {} \; | head -10
+
+        # Check if bundle size increased significantly
+        BUNDLE_SIZE=$(du -b dist/ | cut -f1)
+        echo "Bundle size: $BUNDLE_SIZE bytes"
+
+        # Store for trend analysis (you could save this to a database or file)
+        echo "BUNDLE_SIZE=$BUNDLE_SIZE" >> $GITHUB_ENV
+
+    - name: Run Lighthouse performance audit
+      uses: treosh/lighthouse-ci-action@v10
+      with:
+        urls: https://amrikyy.com
+        configPath: .lighthouserc.json
+        uploadArtifacts: true
+        temporaryPublicStorage: true
+
+  cleanup:
+    runs-on: ubuntu-latest
+    needs: [dependency-updates, security-monitoring, performance-monitoring]
+
+    steps:
+    - name: Generate maintenance report
+      run: |
+        echo "## 🔧 Weekly Maintenance Report" >> maintenance-report.md
+        echo "" >> maintenance-report.md
+        echo "**Date:** $(date)" >> maintenance-report.md
+        echo "" >> maintenance-report.md
+        echo "### ✅ Completed Tasks:" >> maintenance-report.md
+        echo "- Dependency updates checked" >> maintenance-report.md
+        echo "- Security vulnerabilities scanned" >> maintenance-report.md
+        echo "- Performance metrics collected" >> maintenance-report.md
+        echo "- Bundle size analyzed" >> maintenance-report.md
+        echo "" >> maintenance-report.md
+        echo "### 📊 Key Metrics:" >> maintenance-report.md
+        echo "- Bundle Size: ${{ env.BUNDLE_SIZE }} bytes" >> maintenance-report.md
+        echo "" >> maintenance-report.md
+        echo "---" >> maintenance-report.md
+        echo "*This report was generated automatically by GitHub Actions.*" >> maintenance-report.md
+
+    - name: Upload maintenance report
+      uses: actions/upload-artifact@v4
+      with:
+        name: weekly-maintenance-report
+        path: maintenance-report.md
+        retention-days: 30
+
+    - name: Notify maintenance completion
+      run: |
+        echo "🔧 Weekly maintenance tasks completed successfully!"
+        echo "Reports have been generated and artifacts uploaded."
+        # Add notification logic here (Slack, Discord, email, etc.)

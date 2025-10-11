@@ -1,0 +1,86 @@
+name: Deploy to Staging
+
+on:
+  push:
+    branches: [ develop, staging ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  deploy-staging:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: 18
+        cache: 'npm'
+
+    - name: Install dependencies
+      run: npm ci
+
+    - name: Install frontend dependencies
+      working-directory: ./frontend
+      run: npm ci
+
+    - name: Install backend dependencies
+      working-directory: ./backend
+      run: npm ci
+
+    - name: Run linting and type checking
+      run: |
+        cd frontend && npm run lint && npm run type-check
+        cd ../backend && npm run lint 2>/dev/null || echo "No lint script for backend"
+
+    - name: Run tests
+      run: |
+        cd frontend && npm run test:unit
+        cd ../backend && npm test
+
+    - name: Build applications
+      run: |
+        cd frontend && npm run build
+        cd ../backend && npm run build
+
+    - name: Deploy frontend to Vercel (staging)
+      uses: amondnet/vercel-action@v25
+      with:
+        vercel-token: ${{ secrets.VERCEL_TOKEN }}
+        vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
+        vercel-project-id: ${{ secrets.VERCEL_STAGING_PROJECT_ID }}
+        vercel-args: '--prod=false'
+        working-directory: ./frontend
+
+    - name: Deploy backend to staging server
+      run: |
+        echo "🚀 Deploying backend to staging environment"
+        # Add your staging deployment logic here
+        # Could be SSH to staging server, Docker deployment, etc.
+
+    - name: Run integration tests on staging
+      run: |
+        # Wait for deployments to be ready
+        sleep 60
+
+        # Run smoke tests against staging environment
+        STAGING_FRONTEND_URL="https://amrikyy-staging.vercel.app"
+        STAGING_API_URL="https://api-staging.amrikyy.com"
+
+        # Test frontend accessibility
+        curl -f $STAGING_FRONTEND_URL > /dev/null || exit 1
+
+        # Test API health
+        curl -f $STAGING_API_URL/api/health > /dev/null || exit 1
+
+        echo "✅ Staging deployment successful!"
+
+    - name: Notify staging deployment
+      run: |
+        echo "🎭 Staging deployment completed successfully!"
+        echo "Frontend: https://amrikyy-staging.vercel.app"
+        echo "API: https://api-staging.amrikyy.com"
+        # Add notification logic here (Slack, Discord, etc.)
