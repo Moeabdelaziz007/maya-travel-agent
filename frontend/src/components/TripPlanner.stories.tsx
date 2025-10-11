@@ -105,8 +105,11 @@ export const AddTripForm: Story = {
   },
   play: async ({ canvasElement }) => {
     // Click the "Add Trip" button to show the form
-    const addButton = canvasElement.querySelector('button:has-text("Add Trip")');
-    if (addButton) {
+    const buttons = canvasElement.querySelectorAll('button');
+    const addButton = Array.from(buttons).find(btn => 
+      btn.textContent?.includes('Add Trip')
+    );
+    if (addButton instanceof HTMLElement) {
       addButton.click();
     }
   },

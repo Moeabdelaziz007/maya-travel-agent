@@ -43,11 +43,13 @@ describe('App Component', () => {
     // Mock loading state
     vi.mocked(useAuth).mockReturnValue({
       user: null,
+      session: null,
       loading: true,
       signIn: vi.fn(),
       signUp: vi.fn(),
       signOut: vi.fn(),
-      error: null,
+      signInWithGoogle: vi.fn(),
+      signInWithGitHub: vi.fn(),
     });
 
     render(
@@ -63,11 +65,13 @@ describe('App Component', () => {
   it('displays Amrikyy branding when loaded', async () => {
     vi.mocked(useAuth).mockReturnValue({
       user: null,
+      session: null,
       loading: false,
       signIn: vi.fn(),
       signUp: vi.fn(),
       signOut: vi.fn(),
-      error: null,
+      signInWithGoogle: vi.fn(),
+      signInWithGitHub: vi.fn(),
     });
 
     render(
@@ -85,11 +89,13 @@ describe('App Component', () => {
   it('shows login form when not authenticated', async () => {
     vi.mocked(useAuth).mockReturnValue({
       user: null,
+      session: null,
       loading: false,
       signIn: vi.fn(),
       signUp: vi.fn(),
       signOut: vi.fn(),
-      error: null,
+      signInWithGoogle: vi.fn(),
+      signInWithGitHub: vi.fn(),
     });
 
     render(
