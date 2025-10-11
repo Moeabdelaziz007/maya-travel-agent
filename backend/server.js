@@ -1,3 +1,6 @@
+// Sentry must be required FIRST to capture all errors!
+const Sentry = require('./instrument');
+
 const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
@@ -8,6 +11,7 @@ require('dotenv').config();
 // Import monitoring modules
 const metrics = require('./src/monitoring/metrics');
 const HealthChecker = require('./src/monitoring/health-check');
+const logger = require('./src/utils/logger');
 
 // Import Redis service
 const redisService = require('./src/services/redis-service');

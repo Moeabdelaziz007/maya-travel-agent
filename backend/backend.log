@@ -2,37 +2,119 @@
 > amrikyy-backend@1.0.0 start
 > node server.js
 
+🔴 Redis Config: redis-13608.c84.us-east-1-2.ec2.redns.redis-cloud.com:13608 (DB: 0)
+🔴 Redis configured, will initialize on first request...
 🛡️ Configuring security middleware...
+🔴 Using Redis-based rate limiting...
+🔴 Setting up Redis-based rate limiting...
+ChangeWarning: The onLimitReached configuration option is deprecated and will be removed in express-rate-limit v7. See https://express-rate-limit.github.io/WRN_ERL_DEPRECATED_ON_LIMIT_REACHED/ for more information.
+    at _Validations.<anonymous> (/Users/Shared/maya-travel-agent/node_modules/express-rate-limit/dist/index.cjs:283:15)
+    at _Validations.wrap (/Users/Shared/maya-travel-agent/node_modules/express-rate-limit/dist/index.cjs:313:18)
+    at _Validations.onLimitReached (/Users/Shared/maya-travel-agent/node_modules/express-rate-limit/dist/index.cjs:281:10)
+    at parseOptions (/Users/Shared/maya-travel-agent/node_modules/express-rate-limit/dist/index.cjs:523:15)
+    at rateLimit (/Users/Shared/maya-travel-agent/node_modules/express-rate-limit/dist/index.cjs:583:18)
+    at createRedisRateLimiter (/Users/Shared/maya-travel-agent/backend/src/middleware/redis-rate-limit.js:72:10)
+    at configureRedisRateLimiting (/Users/Shared/maya-travel-agent/backend/src/middleware/redis-rate-limit.js:127:26)
+    at configureRateLimiting (/Users/Shared/maya-travel-agent/backend/src/middleware/security.js:104:7)
+    at Object.<anonymous> (/Users/Shared/maya-travel-agent/backend/server.js:53:1)
+    at Module._compile (node:internal/modules/cjs/loader:1554:14) {
+  code: 'WRN_ERL_DEPRECATED_ON_LIMIT_REACHED',
+  help: 'https://express-rate-limit.github.io/WRN_ERL_DEPRECATED_ON_LIMIT_REACHED/'
+}
+ChangeWarning: The onLimitReached configuration option is deprecated and will be removed in express-rate-limit v7. See https://express-rate-limit.github.io/WRN_ERL_DEPRECATED_ON_LIMIT_REACHED/ for more information.
+    at _Validations.<anonymous> (/Users/Shared/maya-travel-agent/node_modules/express-rate-limit/dist/index.cjs:283:15)
+    at _Validations.wrap (/Users/Shared/maya-travel-agent/node_modules/express-rate-limit/dist/index.cjs:313:18)
+    at _Validations.onLimitReached (/Users/Shared/maya-travel-agent/node_modules/express-rate-limit/dist/index.cjs:281:10)
+    at parseOptions (/Users/Shared/maya-travel-agent/node_modules/express-rate-limit/dist/index.cjs:523:15)
+    at rateLimit (/Users/Shared/maya-travel-agent/node_modules/express-rate-limit/dist/index.cjs:583:18)
+    at createRedisRateLimiter (/Users/Shared/maya-travel-agent/backend/src/middleware/redis-rate-limit.js:72:10)
+    at configureRedisRateLimiting (/Users/Shared/maya-travel-agent/backend/src/middleware/redis-rate-limit.js:138:22)
+    at configureRateLimiting (/Users/Shared/maya-travel-agent/backend/src/middleware/security.js:104:7)
+    at Object.<anonymous> (/Users/Shared/maya-travel-agent/backend/server.js:53:1)
+    at Module._compile (node:internal/modules/cjs/loader:1554:14) {
+  code: 'WRN_ERL_DEPRECATED_ON_LIMIT_REACHED',
+  help: 'https://express-rate-limit.github.io/WRN_ERL_DEPRECATED_ON_LIMIT_REACHED/'
+}
+ChangeWarning: The onLimitReached configuration option is deprecated and will be removed in express-rate-limit v7. See https://express-rate-limit.github.io/WRN_ERL_DEPRECATED_ON_LIMIT_REACHED/ for more information.
+    at _Validations.<anonymous> (/Users/Shared/maya-travel-agent/node_modules/express-rate-limit/dist/index.cjs:283:15)
+    at _Validations.wrap (/Users/Shared/maya-travel-agent/node_modules/express-rate-limit/dist/index.cjs:313:18)
+    at _Validations.onLimitReached (/Users/Shared/maya-travel-agent/node_modules/express-rate-limit/dist/index.cjs:281:10)
+    at parseOptions (/Users/Shared/maya-travel-agent/node_modules/express-rate-limit/dist/index.cjs:523:15)
+    at rateLimit (/Users/Shared/maya-travel-agent/node_modules/express-rate-limit/dist/index.cjs:583:18)
+    at createRedisRateLimiter (/Users/Shared/maya-travel-agent/backend/src/middleware/redis-rate-limit.js:72:10)
+    at configureRedisRateLimiting (/Users/Shared/maya-travel-agent/backend/src/middleware/redis-rate-limit.js:149:21)
+    at configureRateLimiting (/Users/Shared/maya-travel-agent/backend/src/middleware/security.js:104:7)
+    at Object.<anonymous> (/Users/Shared/maya-travel-agent/backend/server.js:53:1)
+    at Module._compile (node:internal/modules/cjs/loader:1554:14) {
+  code: 'WRN_ERL_DEPRECATED_ON_LIMIT_REACHED',
+  help: 'https://express-rate-limit.github.io/WRN_ERL_DEPRECATED_ON_LIMIT_REACHED/'
+}
+ChangeWarning: The onLimitReached configuration option is deprecated and will be removed in express-rate-limit v7. See https://express-rate-limit.github.io/WRN_ERL_DEPRECATED_ON_LIMIT_REACHED/ for more information.
+    at _Validations.<anonymous> (/Users/Shared/maya-travel-agent/node_modules/express-rate-limit/dist/index.cjs:283:15)
+    at _Validations.wrap (/Users/Shared/maya-travel-agent/node_modules/express-rate-limit/dist/index.cjs:313:18)
+    at _Validations.onLimitReached (/Users/Shared/maya-travel-agent/node_modules/express-rate-limit/dist/index.cjs:281:10)
+    at parseOptions (/Users/Shared/maya-travel-agent/node_modules/express-rate-limit/dist/index.cjs:523:15)
+    at rateLimit (/Users/Shared/maya-travel-agent/node_modules/express-rate-limit/dist/index.cjs:583:18)
+    at createRedisRateLimiter (/Users/Shared/maya-travel-agent/backend/src/middleware/redis-rate-limit.js:72:10)
+    at configureRedisRateLimiting (/Users/Shared/maya-travel-agent/backend/src/middleware/redis-rate-limit.js:160:26)
+    at configureRateLimiting (/Users/Shared/maya-travel-agent/backend/src/middleware/security.js:104:7)
+    at Object.<anonymous> (/Users/Shared/maya-travel-agent/backend/server.js:53:1)
+    at Module._compile (node:internal/modules/cjs/loader:1554:14) {
+  code: 'WRN_ERL_DEPRECATED_ON_LIMIT_REACHED',
+  help: 'https://express-rate-limit.github.io/WRN_ERL_DEPRECATED_ON_LIMIT_REACHED/'
+}
+✅ Redis-based rate limiting configured
 ✅ Security middleware configured
 ✅ Using Supabase as database (MongoDB not required)
 🌐 Serving static auth pages from frontend directory
-/Users/Shared/maya-travel-agent/node_modules/bindings/bindings.js:121
-        throw e;
-        ^
-
-Error: The module '/Users/Shared/maya-travel-agent/node_modules/@confluentinc/kafka-javascript/build/Release/confluent-kafka-javascript.node'
-was compiled against a different Node.js version using
-NODE_MODULE_VERSION 115. This version of Node.js requires
-NODE_MODULE_VERSION 127. Please try re-compiling or re-installing
-the module (for instance, using `npm rebuild` or `npm install`).
-    at Object..node (node:internal/modules/cjs/loader:1732:18)
-    at Module.load (node:internal/modules/cjs/loader:1289:32)
-    at Function._load (node:internal/modules/cjs/loader:1108:12)
-    at TracingChannel.traceSync (node:diagnostics_channel:322:14)
-    at wrapModuleLoad (node:internal/modules/cjs/loader:220:24)
-    at Module.require (node:internal/modules/cjs/loader:1311:12)
-    at require (node:internal/modules/helpers:136:16)
-    at bindings (/Users/Shared/maya-travel-agent/node_modules/bindings/bindings.js:112:48)
-    at Object.<anonymous> (/Users/Shared/maya-travel-agent/node_modules/@confluentinc/kafka-javascript/librdkafka.js:10:32)
-    at Module._compile (node:internal/modules/cjs/loader:1554:14) {
-  code: 'ERR_DLOPEN_FAILED'
+ℹ️ 2025-10-11T14:52:50.157Z - 🚀 Boss Agent initialized {
+  config: {
+    timeout: 30000,
+    maxRetries: 3,
+    parallelExecution: true,
+    enableMetrics: true,
+    enableConversationState: true,
+    storage: MockSupabaseClient { data: Map(0) {}, tables: Map(0) {} },
+    jsonbinApiKey: undefined,
+    enableSkillPersistence: true
+  },
+  timestamp: '2025-10-11T14:52:50.152Z'
 }
-
-Node.js v22.14.0
-npm error Lifecycle script `start` failed with error:
-npm error code 1
-npm error path /Users/Shared/maya-travel-agent/backend
-npm error workspace amrikyy-backend@1.0.0
-npm error location /Users/Shared/maya-travel-agent/backend
-npm error command failed
-npm error command sh -c node server.js
+⚠️ JSONbin API key not provided - caching disabled
+ℹ️ 2025-10-11T14:52:50.177Z - 🚍 Service Bus initialized { bootstrapServers: 'missing', groupId: 'amrikyy-skill-system' }
+ℹ️ 2025-10-11T14:52:50.178Z - 🧠 Skill System initialized {
+  enablePersistence: true,
+  cacheEnabled: false,
+  eventStreamingEnabled: true
+}
+⚠️ JSONbin API key not provided - caching disabled
+🔄 Hybrid Cache initialized { remoteEnabled: false, testMode: false }
+ℹ️ 2025-10-11T14:52:50.180Z - 🚍 Service Bus initialized { bootstrapServers: 'missing', groupId: 'amrikyy-enhanced-boss-agent' }
+ℹ️ 2025-10-11T14:52:50.186Z - ✅ Skill registered: EmpathyDetection { category: 'conversation', version: '1.0.0' }
+ℹ️ 2025-10-11T14:52:50.186Z - ✅ Skill registered: PersonalizedFriendship { category: 'relationship', version: '1.0.0' }
+ℹ️ 2025-10-11T14:52:50.187Z - ✅ Skill registered: DynamicVoiceAdaptation { category: 'conversation', version: '1.0.0' }
+ℹ️ 2025-10-11T14:52:50.188Z - ✅ Core skills registered successfully {}
+ℹ️ 2025-10-11T14:52:50.188Z - 🚀 Enhanced Boss Agent initialized with Skill System {
+  skillsRegistered: 3,
+  agentsRegistered: 0,
+  cacheEnabled: false,
+  eventStreamingEnabled: false
+}
+❌ 2025-10-11T14:52:50.216Z - Failed to initialize Fivetran service: Fivetran credentials not configured
+ℹ️ 2025-10-11T14:52:50.483Z - ✅ QFO Routes mounted successfully {}
+⚠️ Failed to initialize Telegram Bot: Cannot find module './src/ai/amrikyyPersona'
+Require stack:
+- /Users/Shared/maya-travel-agent/backend/advanced-telegram-bot.js
+- /Users/Shared/maya-travel-agent/backend/server.js
+📊 Monitoring setup will continue without Telegram Bot
+🚀 Amrikyy Travel Agent v2.0 - Enhanced Server with Dataiku ML
+📍 Port: 5000
+🌐 Frontend: http://localhost:3000
+🔧 Backend API: http://localhost:5000
+🎯 Boss Agent: http://localhost:5000/api/orchestration
+🔮 Dataiku ML: http://localhost:5000/api/dataiku
+🧠 Skills System: Enabled
+💰 Price Monitoring: Ready
+📊 Enhanced Analytics: Active
+🤖 AI Integration: Z.ai GLM-4.6 + Boss Agent
+🔮 ML Models: Flight & Hotel Price Prediction, User Churn Analysis

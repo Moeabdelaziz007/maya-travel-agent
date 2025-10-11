@@ -1,0 +1,76 @@
+
+> ecmw@1.0.0 test
+> jest
+
+FAIL src/tests/ECMWCore.test.ts
+  ECMWCore
+    Initialization
+      ✓ should initialize with all features enabled (5 ms)
+      ✓ should initialize with minimal features when disabled (2 ms)
+    Request Processing
+      ✓ should process a simple travel planning request (7 ms)
+      ✕ should handle emotional context in requests (3 ms)
+      ✓ should generate backup plans when PlanB is enabled (2 ms)
+    User Context Management
+      ✓ should create new user context for unknown users (2 ms)
+      ✓ should update existing user context (3 ms)
+    Performance Monitoring
+      ✓ should track execution metrics (2 ms)
+      ✓ should handle concurrent requests efficiently (5 ms)
+    Error Handling
+      ✓ should handle invalid user input gracefully (1 ms)
+      ✓ should handle missing context gracefully
+    Cost Calculation
+      ✓ should calculate costs accurately (1 ms)
+      ✓ should track cumulative costs (1 ms)
+    System Health
+      ✓ should provide health metrics (1 ms)
+      ✓ should handle graceful shutdown (2 ms)
+  Integration Tests
+    ✕ should handle complex multi-intent travel request (3 ms)
+    ✓ should learn from repeated interactions (2 ms)
+  Performance Tests
+    ✓ should handle high load efficiently (4 ms)
+    ✓ should maintain performance under concurrent load (18 ms)
+  Error Recovery Tests
+    ✓ should recover from partial failures (1 ms)
+    ✓ should handle resource exhaustion gracefully (5 ms)
+
+  ● ECMWCore › Request Processing › should handle emotional context in requests
+
+    expect(received).toBeDefined()
+
+    Received: undefined
+
+      94 |
+      95 |       expect(result).toBeDefined();
+    > 96 |       expect(result.emotionalImpact).toBeDefined();
+         |                                      ^
+      97 |     });
+      98 |
+      99 |     it('should generate backup plans when PlanB is enabled', async () => {
+
+      at Object.<anonymous> (src/tests/ECMWCore.test.ts:96:38)
+
+  ● Integration Tests › should handle complex multi-intent travel request
+
+    expect(received).toBeDefined()
+
+    Received: undefined
+
+      321 |     expect(result).toBeDefined();
+      322 |     expect(result.success).toBe(true);
+    > 323 |     expect(result.emotionalImpact).toBeDefined();
+          |                                    ^
+      324 |     expect(result.carbonSaved).toBeDefined();
+      325 |     expect(result.backupPlans).toBeDefined();
+      326 |   });
+
+      at Object.<anonymous> (src/tests/ECMWCore.test.ts:323:36)
+
+Test Suites: 1 failed, 1 total
+Tests:       2 failed, 19 passed, 21 total
+Snapshots:   0 total
+Time:        1.776 s
+Ran all test suites.
+Force exiting Jest: Have you considered using `--detectOpenHandles` to detect async operations that kept running after all tests finished?

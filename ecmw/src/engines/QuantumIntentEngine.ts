@@ -67,7 +67,10 @@ export class QuantumIntentEngine {
     const processedInput = this.preprocessInput(input);
 
     // Step 2: Create quantum superposition of possible intents
-    const superposition = await this.createSuperposition(processedInput, context);
+    const superposition = await this.createSuperposition(
+      processedInput,
+      context
+    );
 
     // Step 3: Apply quantum interference and decoherence
     const interferedStates = this.applyQuantumInterference(superposition);
@@ -78,7 +81,10 @@ export class QuantumIntentEngine {
     // Step 5: Calculate secondary intents and context factors
     const secondaryIntents = this.extractSecondaryIntents(interferedStates);
     const contextFactors = this.analyzeContextFactors(context, processedInput);
-    const emotionalWeight = this.calculateEmotionalWeight(processedInput, context);
+    const emotionalWeight = this.calculateEmotionalWeight(
+      processedInput,
+      context
+    );
     const temporalContext = this.extractTemporalContext();
 
     return {
@@ -88,7 +94,7 @@ export class QuantumIntentEngine {
       quantumStates: interferedStates,
       contextFactors,
       emotionalWeight,
-      temporalContext
+      temporalContext,
     };
   }
 
@@ -114,8 +120,14 @@ export class QuantumIntentEngine {
 
     // Travel-related intents
     const travelIntents = [
-      'book_flight', 'book_hotel', 'plan_trip', 'get_recommendations',
-      'check_weather', 'find_restaurants', 'cultural_info', 'emergency_help'
+      'book_flight',
+      'book_hotel',
+      'plan_trip',
+      'get_recommendations',
+      'check_weather',
+      'find_restaurants',
+      'cultural_info',
+      'emergency_help',
     ];
 
     for (const intent of travelIntents) {
@@ -123,12 +135,13 @@ export class QuantumIntentEngine {
       const phase = this.calculateIntentPhase(intent, context);
       const coherence = this.calculateCoherence(intent, context);
 
-      if (amplitude > 0.1) { // Only include significant states
+      if (amplitude > 0.1) {
+        // Only include significant states
         states.push({
           intent,
           amplitude,
           phase,
-          coherence
+          coherence,
         });
       }
     }
@@ -159,13 +172,14 @@ export class QuantumIntentEngine {
       }
 
       // Apply decoherence based on coherence threshold
-      const coherenceFactor = states[i].coherence > this.config.coherenceThreshold ? 1 : 0.5;
+      const coherenceFactor =
+        states[i].coherence > this.config.coherenceThreshold ? 1 : 0.5;
 
       interferedStates.push({
         ...states[i],
         amplitude: Math.max(0, Math.min(1, totalAmplitude * coherenceFactor)),
         phase: totalPhase,
-        coherence: states[i].coherence * coherenceFactor
+        coherence: states[i].coherence * coherenceFactor,
       });
     }
 
@@ -175,7 +189,10 @@ export class QuantumIntentEngine {
   /**
    * Collapse superposition to primary intent
    */
-  private collapseToPrimaryIntent(states: QuantumState[]): { intent: string; confidence: number } {
+  private collapseToPrimaryIntent(states: QuantumState[]): {
+    intent: string;
+    confidence: number;
+  } {
     if (states.length === 0) {
       return { intent: 'unknown', confidence: 0 };
     }
@@ -190,7 +207,7 @@ export class QuantumIntentEngine {
 
     return {
       intent: primaryState.intent,
-      confidence: Math.min(1, confidence)
+      confidence: Math.min(1, confidence),
     };
   }
 
@@ -199,10 +216,10 @@ export class QuantumIntentEngine {
    */
   private extractSecondaryIntents(states: QuantumState[]): string[] {
     return states
-      .filter(state => state.amplitude > 0.3)
+      .filter((state) => state.amplitude > 0.3)
       .sort((a, b) => b.amplitude - a.amplitude)
       .slice(1, 4) // Top 3 secondary intents
-      .map(state => state.intent);
+      .map((state) => state.intent);
   }
 
   /**
@@ -217,22 +234,24 @@ export class QuantumIntentEngine {
 
     // Keyword matching
     const keywords = this.getIntentKeywords(intent);
-    const matches = keywords.filter(keyword =>
+    const matches = keywords.filter((keyword) =>
       input.includes(keyword.toLowerCase())
     ).length;
     amplitude += matches * 0.2;
 
     // Context-based weighting
     if (context.preferences) {
-      const contextMatches = Object.values(context.preferences).some(pref =>
-        typeof pref === 'string' && pref.toLowerCase().includes(intent.split('_')[1] || intent)
+      const contextMatches = Object.values(context.preferences).some(
+        (pref) =>
+          typeof pref === 'string' &&
+          pref.toLowerCase().includes(intent.split('_')[1] || intent)
       );
       if (contextMatches) amplitude += 0.3;
     }
 
     // Historical behavior
     if (context.travelHistory) {
-      const historicalRelevance = context.travelHistory.some(trip =>
+      const historicalRelevance = context.travelHistory.some((trip) =>
         trip.destination.toLowerCase().includes(intent.split('_')[1] || intent)
       );
       if (historicalRelevance) amplitude += 0.2;
@@ -258,7 +277,7 @@ export class QuantumIntentEngine {
   private calculateCoherence(intent: string, context: UserContext): number {
     // Higher coherence for intents that match user history
     if (context.travelHistory && context.travelHistory.length > 0) {
-      const relevantTrips = context.travelHistory.filter(trip =>
+      const relevantTrips = context.travelHistory.filter((trip) =>
         trip.destination.toLowerCase().includes(intent.split('_')[1] || intent)
       ).length;
 
@@ -276,12 +295,15 @@ export class QuantumIntentEngine {
     state2: QuantumState
   ): { amplitude: number; phase: number } {
     const phaseDifference = Math.abs(state1.phase - state2.phase);
-    const interferenceAmplitude = state1.amplitude * state2.amplitude *
-      Math.cos(phaseDifference) * this.config.interferenceSensitivity;
+    const interferenceAmplitude =
+      state1.amplitude *
+      state2.amplitude *
+      Math.cos(phaseDifference) *
+      this.config.interferenceSensitivity;
 
     return {
       amplitude: interferenceAmplitude,
-      phase: phaseDifference
+      phase: phaseDifference,
     };
   }
 
@@ -300,7 +322,7 @@ export class QuantumIntentEngine {
         factor: 'user_preferences',
         weight: 0.8,
         influence: 'positive',
-        source: 'user_history'
+        source: 'user_history',
       });
     }
 
@@ -310,7 +332,7 @@ export class QuantumIntentEngine {
         factor: 'travel_history',
         weight: Math.min(1, context.travelHistory.length / 10),
         influence: 'positive',
-        source: 'user_history'
+        source: 'user_history',
       });
     }
 
@@ -319,8 +341,9 @@ export class QuantumIntentEngine {
       factors.push({
         factor: 'emotional_state',
         weight: context.emotionalState === 'excited' ? 0.9 : 0.6,
-        influence: context.emotionalState === 'stressed' ? 'negative' : 'positive',
-        source: 'current_context'
+        influence:
+          context.emotionalState === 'stressed' ? 'negative' : 'positive',
+        source: 'current_context',
       });
     }
 
@@ -329,8 +352,9 @@ export class QuantumIntentEngine {
     factors.push({
       factor: 'time_urgency',
       weight: temporalContext.urgency === 'high' ? 0.9 : 0.5,
-      influence: temporalContext.urgency === 'critical' ? 'negative' : 'neutral',
-      source: 'external_data'
+      influence:
+        temporalContext.urgency === 'critical' ? 'negative' : 'neutral',
+      source: 'external_data',
     });
 
     return factors.slice(0, 5); // Limit to top 5 factors
@@ -339,17 +363,38 @@ export class QuantumIntentEngine {
   /**
    * Calculate emotional weight of the input
    */
-  private calculateEmotionalWeight(input: string, context: UserContext): number {
+  private calculateEmotionalWeight(
+    input: string,
+    context: UserContext
+  ): number {
     let weight = 0.5; // Neutral baseline
 
     // Emotional keywords
-    const positiveWords = ['excited', 'happy', 'amazing', 'wonderful', 'love', 'great'];
-    const negativeWords = ['worried', 'stressed', 'tired', 'frustrated', 'problem', 'issue'];
+    const positiveWords = [
+      'excited',
+      'happy',
+      'amazing',
+      'wonderful',
+      'love',
+      'great',
+    ];
+    const negativeWords = [
+      'worried',
+      'stressed',
+      'tired',
+      'frustrated',
+      'problem',
+      'issue',
+    ];
 
-    const positiveMatches = positiveWords.filter(word => input.includes(word)).length;
-    const negativeMatches = negativeWords.filter(word => input.includes(word)).length;
+    const positiveMatches = positiveWords.filter((word) =>
+      input.includes(word)
+    ).length;
+    const negativeMatches = negativeWords.filter((word) =>
+      input.includes(word)
+    ).length;
 
-    weight += (positiveMatches * 0.1) - (negativeMatches * 0.1);
+    weight += positiveMatches * 0.1 - negativeMatches * 0.1;
 
     // Context emotional state
     if (context.emotionalState === 'excited') weight += 0.2;
@@ -381,7 +426,7 @@ export class QuantumIntentEngine {
       timeOfDay: hour,
       dayOfWeek,
       season,
-      urgency
+      urgency,
     };
   }
 
@@ -397,7 +442,14 @@ export class QuantumIntentEngine {
       check_weather: ['weather', 'rain', 'sunny', 'temperature', 'forecast'],
       find_restaurants: ['restaurant', 'food', 'eat', 'dining', 'cuisine'],
       cultural_info: ['culture', 'history', 'museum', 'tradition', 'local'],
-      emergency_help: ['emergency', 'help', 'problem', 'issue', 'urgent', 'assistance']
+      emergency_help: [
+        'emergency',
+        'help',
+        'problem',
+        'issue',
+        'urgent',
+        'assistance',
+      ],
     };
 
     return keywordMap[intent] || [];
@@ -411,12 +463,22 @@ export class QuantumIntentEngine {
     const basePatterns: Record<string, QuantumState[]> = {
       travel_planning: [
         { intent: 'plan_trip', amplitude: 0.8, phase: 0, coherence: 0.9 },
-        { intent: 'get_recommendations', amplitude: 0.6, phase: Math.PI/4, coherence: 0.8 }
+        {
+          intent: 'get_recommendations',
+          amplitude: 0.6,
+          phase: Math.PI / 4,
+          coherence: 0.8,
+        },
       ],
       booking: [
         { intent: 'book_flight', amplitude: 0.9, phase: 0, coherence: 0.95 },
-        { intent: 'book_hotel', amplitude: 0.7, phase: Math.PI/3, coherence: 0.85 }
-      ]
+        {
+          intent: 'book_hotel',
+          amplitude: 0.7,
+          phase: Math.PI / 3,
+          coherence: 0.85,
+        },
+      ],
     };
 
     for (const [pattern, states] of Object.entries(basePatterns)) {
@@ -431,7 +493,7 @@ export class QuantumIntentEngine {
     let hash = 0;
     for (let i = 0; i < str.length; i++) {
       const char = str.charCodeAt(i);
-      hash = ((hash << 5) - hash) + char;
+      hash = (hash << 5) - hash + char;
       hash = hash & hash; // Convert to 32-bit integer
     }
     return Math.abs(hash);
@@ -444,7 +506,7 @@ export class QuantumIntentEngine {
     const contextStr = JSON.stringify({
       preferences: context.preferences,
       emotionalState: context.emotionalState,
-      travelHistory: context.travelHistory?.slice(-3) // Last 3 trips
+      travelHistory: context.travelHistory?.slice(-3), // Last 3 trips
     });
     return this.hashString(contextStr);
   }
@@ -468,6 +530,45 @@ export class QuantumIntentEngine {
    */
   updateConfig(newConfig: Partial<QuantumIntentConfig>): void {
     this.config = { ...this.config, ...newConfig };
+  }
+
+  /**
+   * Get engine metrics
+   */
+  async getMetrics(): Promise<any> {
+    return {
+      totalPatterns: this.intentPatterns.size,
+      contextHistorySize: this.contextHistory.length,
+      config: this.config,
+    };
+  }
+
+  /**
+   * Health check for the engine
+   */
+  async healthCheck(): Promise<boolean> {
+    try {
+      // Test basic functionality
+      await this.analyzeIntent('test query', {
+        userId: 'test',
+        sessionId: 'test',
+        preferences: {},
+        travelHistory: [],
+      });
+      return true;
+    } catch {
+      return false;
+    }
+  }
+
+  /**
+   * Cleanup resources
+   */
+  async cleanup(): Promise<void> {
+    // Cleanup resources
+    this.intentPatterns.clear();
+    this.contextHistory = [];
+    console.log('✅ QuantumIntentEngine cleaned up');
   }
 }
 
