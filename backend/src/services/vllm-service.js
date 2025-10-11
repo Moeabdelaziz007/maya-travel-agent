@@ -39,7 +39,7 @@ class VLLMService {
   }
 
   async generateTravelPlan(params) {
-    if (!this.isConnected && !await this.connect()) {
+    if (!this.isConnected && !(await this.connect())) {
       throw new Error('vLLM service not available');
     }
 
@@ -52,7 +52,7 @@ class VLLMService {
         budget,
         duration,
         interests: interests || [],
-        query: query || `Plan a trip to ${destination}`
+        query: query || `Plan a trip to ${destination}`,
       });
 
       console.log('🧠 Generating travel plan with vLLM...');
@@ -62,12 +62,13 @@ class VLLMService {
         messages: [
           {
             role: 'system',
-            content: 'You are Amrikyy, an advanced AI travel assistant powered by quantum-enhanced processing. Provide detailed, personalized travel recommendations with specific costs, timings, and local insights.'
+            content:
+              'You are Amrikyy, an advanced AI travel assistant powered by quantum-enhanced processing. Provide detailed, personalized travel recommendations with specific costs, timings, and local insights.',
           },
           {
             role: 'user',
-            content: prompt
-          }
+            content: prompt,
+          },
         ],
         temperature: 0.7,
         max_tokens: 2000,
@@ -85,10 +86,9 @@ class VLLMService {
           model: this.model,
           processingTime: response.usage?.total_tokens || 0,
           tokens: response.usage,
-          generatedAt: new Date().toISOString()
-        }
+          generatedAt: new Date().toISOString(),
+        },
       };
-
     } catch (error) {
       console.error('❌ vLLM generation failed:', error.message);
       throw error;
@@ -129,20 +129,20 @@ Format your response as a structured JSON object with these sections. Be specifi
         summary: content.substring(0, 500),
         fullResponse: content,
         structured: false,
-        error: 'Response not in expected JSON format'
+        error: 'Response not in expected JSON format',
       };
     }
   }
 
   async streamResponse(query, userData, onChunk) {
-    if (!this.isConnected && !await this.connect()) {
+    if (!this.isConnected && !(await this.connect())) {
       throw new Error('vLLM service not available');
     }
 
     try {
       const prompt = this.buildTravelPrompt({
         ...userData,
-        query
+        query,
       });
 
       const stream = await this.client.chat.completions.create({
@@ -150,12 +150,13 @@ Format your response as a structured JSON object with these sections. Be specifi
         messages: [
           {
             role: 'system',
-            content: 'You are Amrikyy, a quantum-enhanced AI travel assistant. Provide streaming responses with real-time travel planning.'
+            content:
+              'You are Amrikyy, a quantum-enhanced AI travel assistant. Provide streaming responses with real-time travel planning.',
           },
           {
             role: 'user',
-            content: prompt
-          }
+            content: prompt,
+          },
         ],
         temperature: 0.7,
         max_tokens: 2000,
@@ -184,14 +185,14 @@ Format your response as a structured JSON object with these sections. Be specifi
         baseURL: this.baseURL,
         model: this.model,
         availableModels: models.data?.length || 0,
-        timestamp: Date.now()
+        timestamp: Date.now(),
       };
     } catch (error) {
       return {
         status: 'unhealthy',
         connected: false,
         error: error.message,
-        timestamp: Date.now()
+        timestamp: Date.now(),
       };
     }
   }
@@ -202,7 +203,7 @@ Format your response as a structured JSON object with these sections. Be specifi
     return {
       status: 'limited',
       message: 'Detailed metrics available via vLLM server endpoints',
-      timestamp: Date.now()
+      timestamp: Date.now(),
     };
   }
 
