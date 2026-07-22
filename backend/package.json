@@ -78,7 +78,7 @@
     "redis": "^4.6.13",
     "resend": "^6.2.2",
     "sentiment": "^5.0.2",
-    "sqlite3": "^5.1.7",
+    "sqlite3": "^6.0.1",
     "stripe": "^13.11.0",
     "swagger-jsdoc": "^3.7.0",
     "swagger-ui-express": "^5.0.0",
