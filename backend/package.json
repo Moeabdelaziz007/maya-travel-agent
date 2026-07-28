@@ -63,7 +63,7 @@
     "langsmith": "^0.3.74",
     "lodash": "^4.17.21",
     "moment": "^2.29.4",
-    "mongoose": "^7.0.0",
+    "mongoose": "^7.8.11",
     "morgan": "^1.10.0",
     "multer": "^2.0.2",
     "natural": "^6.7.0",
