@@ -33,7 +33,7 @@
     "framer-motion": "^11.3.2",
     "googleapis": "^140.0.1",
     "ioredis": "^5.8.2",
-    "joi": "^18.0.1",
+    "joi": "^18.2.5",
     "lucide-react": "^0.546.0",
     "node-telegram-bot-api": "^0.63.0",
     "puppeteer": "^24.26.1",
